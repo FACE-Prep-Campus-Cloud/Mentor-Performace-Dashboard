@@ -356,17 +356,18 @@ body {
 .badge-rose    { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
 
 /* ── ENHANCED MENTOR CARDS ── */
-.mentor-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.mentor-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
 
 .mentor-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-top: 3px solid var(--gold-mid);
   border-radius: var(--radius);
-  padding: 20px 22px;
+  padding: 18px 18px;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s, transform 0.2s;
   position: relative;
+  min-width: 0;
 }
 .mentor-card.top-performer { border-top-color: #f5c842; }
 .mentor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
@@ -387,7 +388,8 @@ body {
   font-size: 15px; font-weight: 400;
   color: var(--ink); line-height: 1.3;
   margin-bottom: 4px;
-  padding-right: 56px;
+  padding-right: 52px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .mentor-dept-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
 .dept-tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
@@ -416,7 +418,7 @@ body {
 /* 3-col mini stats row */
 .mentor-mini-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px; margin-bottom: 12px;
+  gap: 8px; margin-bottom: 10px;
 }
 .mentor-mini {
   text-align: center;
@@ -440,30 +442,10 @@ body {
 .trend-down { background: #fee2e2; color: #7f1d1d; }
 .trend-flat { background: #fef3c7; color: #78350f; }
 
-/* progress bars */
-.mentor-bar-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
-.mentor-bar-item {}
-.mentor-bar-label-row {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 3px;
-}
-.mentor-bar-lbl {
-  font-size: 9px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3);
-}
-.mentor-bar-val { font-size: 11px; font-weight: 500; color: var(--ink2); }
-.mentor-bar-track {
-  height: 5px; background: var(--border2); border-radius: 99px; overflow: hidden;
-}
-.mentor-bar-fill {
-  height: 100%; border-radius: 99px;
-  transition: width 0.7s cubic-bezier(.22,1,.36,1);
-}
-
 /* sparkline row */
 .mentor-sparkline-row {
   display: flex; align-items: center; gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .mentor-sparkline-lbl {
   font-size: 9px; font-weight: 600;
@@ -1012,8 +994,6 @@ function renderMentorCards() {
     const rankLabel = globalIdx === 0 ? '# 1' : globalIdx === 1 ? '# 2' : globalIdx === 2 ? '# 3' : `# ${globalIdx+1}`;
     const trend = getTrend(m);
     const [perfLabel, perfClass] = getPerfPill(m.rating);
-    const barColor  = getBarColor(m.consistency);
-    const barColor2 = getBarColor(m.satisfiedPct);
     const tags = m.depts.map(d => {
       const s = deptStyle(d);
       return `<span class="dept-tag" style="color:${s.color};background:${s.bg};border-color:${s.border}">${d}</span>`;
@@ -1047,27 +1027,6 @@ function renderMentorCards() {
         <div class="mentor-mini">
           <div class="mentor-mini-lbl">Percentile</div>
           <div class="mentor-mini-val">${m.percentile}<span style="font-size:10px;color:var(--ink3)">th</span></div>
-        </div>
-      </div>
-
-      <div class="mentor-bar-group">
-        <div class="mentor-bar-item">
-          <div class="mentor-bar-label-row">
-            <span class="mentor-bar-lbl">Consistency</span>
-            <span class="mentor-bar-val">${m.consistency}%</span>
-          </div>
-          <div class="mentor-bar-track">
-            <div class="mentor-bar-fill" style="width:${m.consistency}%;background:${barColor}"></div>
-          </div>
-        </div>
-        <div class="mentor-bar-item">
-          <div class="mentor-bar-label-row">
-            <span class="mentor-bar-lbl">Satisfaction (≥ 4.0)</span>
-            <span class="mentor-bar-val">${m.satisfiedPct}%</span>
-          </div>
-          <div class="mentor-bar-track">
-            <div class="mentor-bar-fill" style="width:${m.satisfiedPct}%;background:${barColor2}"></div>
-          </div>
         </div>
       </div>
 
