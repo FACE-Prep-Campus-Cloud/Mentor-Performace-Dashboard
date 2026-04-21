@@ -992,7 +992,6 @@ function renderMentorCards() {
     const globalIdx = MENTORS.indexOf(m);
     const rankClass = getRankClass(globalIdx);
     const rankLabel = globalIdx === 0 ? '# 1' : globalIdx === 1 ? '# 2' : globalIdx === 2 ? '# 3' : `# ${globalIdx+1}`;
-    const trend = getTrend(m);
     const [perfLabel, perfClass] = getPerfPill(m.rating);
     const tags = m.depts.map(d => {
       const s = deptStyle(d);
@@ -1015,26 +1014,6 @@ function renderMentorCards() {
         </div>
       </div>
 
-      <div class="mentor-mini-row">
-        <div class="mentor-mini">
-          <div class="mentor-mini-lbl">Responses</div>
-          <div class="mentor-mini-val">${m.responses}</div>
-        </div>
-        <div class="mentor-mini">
-          <div class="mentor-mini-lbl">Trend</div>
-          <span class="trend-chip ${trend.cls}">${trend.arrow} ${trend.label}</span>
-        </div>
-        <div class="mentor-mini">
-          <div class="mentor-mini-lbl">Percentile</div>
-          <div class="mentor-mini-val">${m.percentile}<span style="font-size:10px;color:var(--ink3)">th</span></div>
-        </div>
-      </div>
-
-      <div class="mentor-sparkline-row">
-        <div class="mentor-sparkline-lbl">Rating trend</div>
-        <canvas class="mentor-sparkline-canvas" data-mentor="${m.name}" height="26" style="height:26px;flex:1"></canvas>
-      </div>
-
       <hr class="mentor-divider">
       <div class="mentor-status-row">
         <span class="mentor-status-lbl">Overall Status</span>
@@ -1043,14 +1022,6 @@ function renderMentorCards() {
     </div>`;
   }).join('');
 
-  /* draw sparklines after DOM is painted */
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.mentor-sparkline-canvas').forEach(canvas => {
-      const name = canvas.dataset.mentor;
-      const m = MENTORS.find(x => x.name === name);
-      if (m) drawSparkline(canvas, syntheticSparkline(m));
-    });
-  });
 }
 
 function renderTable() {
