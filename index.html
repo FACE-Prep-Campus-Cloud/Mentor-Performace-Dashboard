@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Performance Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root {
+  --bg:        #fdf8ed;
+  --bg2:       #f5e9c8;
+  --surface:   #ffffff;
+  --surface2:  #fdf4e0;
+  --border:    rgba(120,80,10,0.10);
+  --border2:   rgba(120,80,10,0.22);
+  --ink:       #2a1800;
+  --ink2:      #4a2e00;
+  --ink3:      #8a6020;
+  --ink4:      #c09840;
+  --accent:      #7a4f00;
+  --accent-lt:   #fde9a0;
+  --accent-md:   #e6b84a;
+  --rose:      #7f1d1d;
+  --rose-lt:   #fee2e2;
+  --amber:     #78350f;
+  --amber-lt:  #fef3c7;
+  --gold-dark:   #5c3600;
+  --gold-mid:    #c48a00;
+  --gold-light:  #fde9a0;
+  --gold-bright: #f5c842;
+  --shadow-sm: 0 1px 3px rgba(120,80,10,0.08), 0 1px 2px rgba(120,80,10,0.04);
+  --shadow-md: 0 4px 16px rgba(120,80,10,0.12), 0 1px 4px rgba(120,80,10,0.07);
+  --shadow-lg: 0 12px 40px rgba(120,80,10,0.16), 0 4px 12px rgba(120,80,10,0.08);
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --radius:       14px;
+  --radius-sm:    8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.4s, visibility 0.4s;
+  flex-direction: column; gap: 20px;
+}
+.loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.spinner {
+  width: 48px; height: 48px;
+  border: 3px solid var(--gold-light);
+  border-top-color: var(--gold-mid);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--ink3); font-weight: 500; }
+.error-message {
+  max-width: 500px; padding: 20px;
+  background: var(--rose-lt); border: 1px solid var(--rose);
+  border-radius: var(--radius); color: var(--rose);
+  font-size: 13px; line-height: 1.6; display: none;
+}
+.error-message.show { display: block; }
+.error-message strong { display: block; margin-bottom: 10px; font-size: 14px; }
+
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 64px 1fr;
+  min-height: 100vh;
+}
+
+/* TOPBAR */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  background: linear-gradient(135deg, #4a2800 0%, #7a4f00 60%, #a06e00 100%);
+  border-bottom: 1px solid rgba(245,200,66,0.20);
+  box-shadow: 0 2px 16px rgba(90,50,0,0.30);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.logo { display: flex; align-items: center; flex: 1; min-width: 0; overflow: hidden; }
+.logo-name {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 400;
+  color: #fde9a0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 0; }
+
+.college-dropdown-wrap { position: relative; }
+.college-select-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  background: rgba(253,233,160,0.12);
+  border: 1px solid rgba(253,233,160,0.32);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  color: #fde9a0; cursor: pointer; transition: all 0.15s;
+  white-space: nowrap; max-width: 220px; overflow: hidden;
+}
+.college-select-btn:hover { background: rgba(253,233,160,0.22); }
+.college-select-btn .btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.college-select-btn .caret { flex-shrink: 0; font-size: 9px; transition: transform 0.2s; }
+.college-select-btn.open .caret { transform: rotate(180deg); }
+
+.college-dropdown {
+  position: absolute; top: calc(100% + 6px); right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  min-width: 280px; max-width: 340px;
+  max-height: 380px; overflow-y: auto;
+  z-index: 200; display: none;
+}
+.college-dropdown.open { display: block; animation: dropDown 0.18s cubic-bezier(.22,1,.36,1); }
+@keyframes dropDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+.college-dropdown-item {
+  padding: 10px 16px;
+  font-size: 12.5px; color: var(--ink2);
+  cursor: pointer; border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+  display: flex; align-items: center; gap: 8px; line-height: 1.4;
+}
+.college-dropdown-item:last-child { border-bottom: none; }
+.college-dropdown-item:hover { background: var(--gold-light); color: var(--gold-dark); }
+.college-dropdown-item.active { background: var(--gold-light); color: var(--gold-dark); font-weight: 500; }
+.college-dropdown-item .item-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border2); flex-shrink: 0; margin-top: 2px;
+}
+.college-dropdown-item.active .item-dot { background: var(--gold-mid); }
+
+.download-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: var(--gold-bright); color: var(--gold-dark);
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.01em;
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(160,110,0,0.35);
+  white-space: nowrap;
+}
+.download-btn:hover { background: #f0be30; transform: translateY(-1px); }
+.download-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.faceprep-logo {
+  height: 42px; width: auto; object-fit: contain; display: block;
+  filter: brightness(1) invert(0) opacity(1);
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: linear-gradient(180deg, #4a2800 0%, #5c3600 100%);
+  border-right: 1px solid rgba(245,200,66,0.15);
+  padding: 24px 0;
+  display: flex; flex-direction: column; gap: 2px;
+  box-shadow: 2px 0 16px rgba(90,50,0,0.22);
+}
+
+.nav-group-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(253,233,160,0.40);
+  padding: 12px 22px 5px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 22px;
+  color: rgba(253,233,160,0.65);
+  font-size: 13.5px; font-weight: 400;
+  cursor: pointer;
+  border-left: 2.5px solid transparent;
+  transition: all 0.15s;
+}
+.nav-item:hover { color: #fde9a0; background: rgba(253,233,160,0.07); }
+.nav-item.active {
+  color: #fde9a0;
+  background: rgba(253,233,160,0.13);
+  border-left-color: var(--gold-bright);
+  font-weight: 500;
+}
+.nav-icon {
+  width: 28px; height: 28px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; background: transparent; transition: background 0.15s;
+}
+.nav-item.active .nav-icon { background: rgba(253,233,160,0.13); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 22px 0;
+  border-top: 1px solid rgba(253,233,160,0.12);
+}
+.sidebar-footer-label { font-size: 11px; color: rgba(253,233,160,0.35); }
+.sidebar-footer-val { font-size: 13px; font-weight: 500; color: rgba(253,233,160,0.70); margin-top: 1px; }
+
+.refresh-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 10px;
+}
+.refresh-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px;
+  background: rgba(253,233,160,0.10);
+  border: 1px solid rgba(253,233,160,0.25);
+  border-radius: var(--radius-sm);
+  color: rgba(253,233,160,0.75);
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.refresh-btn:hover { background: rgba(253,233,160,0.20); color: #fde9a0; }
+.refresh-btn svg { width: 12px; height: 12px; transition: transform 0.5s; }
+.refresh-btn.spinning svg { transform: rotate(360deg); }
+
+/* MAIN */
+.main {
+  overflow-y: auto;
+  padding: 32px 36px;
+  display: flex; flex-direction: column; gap: 26px;
+  background: var(--bg);
+}
+
+.page-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.page-eyebrow {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--gold-mid); margin-bottom: 4px;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 400;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.1;
+}
+.page-sub { font-size: 13px; color: var(--ink3); margin-top: 5px; }
+
+.filter-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+.filter-chip {
+  padding: 7px 16px; border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: var(--surface); color: var(--ink3);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body);
+  transition: all 0.15s; box-shadow: var(--shadow-sm);
+}
+.filter-chip:hover { color: var(--gold-dark); border-color: var(--gold-mid); }
+.filter-chip.active {
+  background: var(--gold-dark); color: #fde9a0;
+  border-color: var(--gold-dark);
+  box-shadow: 0 2px 8px rgba(120,80,0,0.25);
+}
+
+.panel { display: none; flex-direction: column; gap: 22px; }
+.panel.active { display: flex; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.panel.active > * { animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both; }
+.panel.active > *:nth-child(1) { animation-delay: 0.03s; }
+.panel.active > *:nth-child(2) { animation-delay: 0.08s; }
+.panel.active > *:nth-child(3) { animation-delay: 0.13s; }
+.panel.active > *:nth-child(4) { animation-delay: 0.18s; }
+
+/* METRIC CARDS */
+.metrics-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--gold-mid);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  position: relative; overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.metric-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.metric-card::after {
+  content: ''; position: absolute;
+  bottom: -18px; right: -18px;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--gold-light); opacity: 0.55;
+}
+.metric-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3); }
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 34px; font-weight: 400;
+  line-height: 1.05; letter-spacing: -0.02em; margin-top: 3px;
+  color: var(--gold-dark);
+}
+.metric-sub { font-size: 12px; color: var(--ink3); margin-top: 5px; display: flex; align-items: center; gap: 6px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-sm);
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 400; color: var(--ink);
+}
+
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.chart-mentors-wrap { position: relative; }
+
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 500;
+  padding: 3px 10px; border-radius: 20px;
+}
+.badge-primary { background: var(--gold-light); color: var(--gold-dark); border: 1px solid var(--accent-md); }
+.badge-gold    { background: var(--gold-light); color: var(--gold-dark); border: 1px solid var(--accent-md); }
+.badge-green   { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.badge-blue    { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.badge-amber   { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
+.badge-rose    { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+
+/* ── ENHANCED MENTOR CARDS ── */
+.mentor-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+
+.mentor-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--gold-mid);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
+}
+.mentor-card.top-performer { border-top-color: #f5c842; }
+.mentor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+/* rank badge top-right */
+.mentor-rank-badge {
+  position: absolute; top: 14px; right: 16px;
+  font-size: 10px; font-weight: 600;
+  padding: 2px 9px; border-radius: 20px;
+}
+.rank-gold   { background: #f5c842; color: #3d2200; }
+.rank-silver { background: #e8e8e8; color: #3a3a3a; }
+.rank-bronze { background: #f0c498; color: #5c2e00; }
+.rank-other  { background: var(--surface2); color: var(--ink3); border: 1px solid var(--border2); }
+
+.mentor-name {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 400;
+  color: var(--ink); line-height: 1.3;
+  margin-bottom: 4px;
+  padding-right: 56px;
+}
+.mentor-dept-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+.dept-tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
+
+/* main stats: rating + subjects */
+.mentor-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.mentor-stat {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  text-align: center;
+}
+.mentor-stat-lbl {
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink3); margin-bottom: 3px;
+}
+.mentor-stat-val {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 400;
+  line-height: 1.1; color: var(--gold-dark);
+}
+.mentor-stat-val .unit { font-size: 11px; color: var(--ink3); font-family: var(--font-body); }
+
+/* 3-col mini stats row */
+.mentor-mini-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-bottom: 12px;
+}
+.mentor-mini {
+  text-align: center;
+}
+.mentor-mini-lbl {
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink3); margin-bottom: 3px;
+}
+.mentor-mini-val {
+  font-size: 13px; font-weight: 500; color: var(--ink);
+}
+
+/* trend chip */
+.trend-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 20px;
+}
+.trend-up   { background: #d1fae5; color: #065f46; }
+.trend-down { background: #fee2e2; color: #7f1d1d; }
+.trend-flat { background: #fef3c7; color: #78350f; }
+
+/* progress bars */
+.mentor-bar-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+.mentor-bar-item {}
+.mentor-bar-label-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 3px;
+}
+.mentor-bar-lbl {
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3);
+}
+.mentor-bar-val { font-size: 11px; font-weight: 500; color: var(--ink2); }
+.mentor-bar-track {
+  height: 5px; background: var(--border2); border-radius: 99px; overflow: hidden;
+}
+.mentor-bar-fill {
+  height: 100%; border-radius: 99px;
+  transition: width 0.7s cubic-bezier(.22,1,.36,1);
+}
+
+/* sparkline row */
+.mentor-sparkline-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px;
+}
+.mentor-sparkline-lbl {
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink3); white-space: nowrap; min-width: 72px;
+}
+.mentor-sparkline-canvas { flex: 1; display: block; }
+
+/* divider */
+.mentor-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+/* status footer */
+.mentor-status-row {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.mentor-status-lbl {
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3);
+}
+.mentor-perf-pill {
+  font-size: 11px; font-weight: 500;
+  padding: 3px 11px; border-radius: 20px;
+}
+.perf-excellent { background: var(--gold-light); color: var(--gold-dark); border: 1px solid #e6b84a; }
+.perf-good      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.perf-average   { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
+.perf-needs     { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+
+/* TABLE */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10.5px; font-weight: 600; color: #fde9a0;
+  text-transform: uppercase; letter-spacing: 0.09em;
+  border-bottom: 1.5px solid rgba(253,233,160,0.15);
+  background: linear-gradient(135deg, #4a2800 0%, #7a4f00 100%);
+  white-space: nowrap;
+}
+thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+thead th:last-child  { border-radius: 0 var(--radius-sm) 0 0; }
+tbody td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--ink); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--surface2); }
+tbody tr { transition: background 0.12s; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--gold-mid); border-radius: 99px; }
+.college-dropdown::-webkit-scrollbar { width: 4px; }
+.college-dropdown::-webkit-scrollbar-thumb { background: var(--gold-mid); }
+
+@media print {
+  .topbar, .sidebar, .filter-row, .sidebar-footer { display: none !important; }
+  .shell { display: block !important; }
+  .main { padding: 0 !important; overflow: visible !important; }
+  .panel { display: flex !important; page-break-after: always; }
+  .panel:last-child { page-break-after: avoid; }
+  body { background: white !important; }
+}
+
+@media (max-width: 960px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 20px; }
+  .metrics-row { grid-template-columns: 1fr 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .mentor-cards { grid-template-columns: 1fr; }
+  .logo-name { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Loading data...</div>
+  <div class="error-message" id="errorMessage">
+    <strong>⚠ Unable to load data</strong>
+    Make sure the Google Sheet is set to "Anyone with the link can view".
+    <br><br>
+    <strong>Steps to fix:</strong><br>
+    1. Open your Google Sheet<br>
+    2. Click "Share" → "Anyone with the link" → "Viewer"<br>
+    3. Refresh this page
+  </div>
+</div>
+
+<div class="shell">
+
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-name" id="logoInstitutionName">Select a College</div>
+  </div>
+  <div class="topbar-right">
+    <div class="college-dropdown-wrap" id="collegeDropdownWrap">
+      <button class="college-select-btn" id="collegeSelectBtn" onclick="toggleDropdown()">
+        <span class="btn-label" id="collegeBtnLabel">Select College</span>
+        <span class="caret">▼</span>
+      </button>
+      <div class="college-dropdown" id="collegeDropdown"></div>
+    </div>
+    <img src="image.webp" alt="FacePrep Campus" class="faceprep-logo">
+    <button class="download-btn" id="downloadBtn" onclick="downloadAllPages()">
+      ↓ Download Report
+    </button>
+  </div>
+</header>
+
+<aside class="sidebar">
+  <div class="nav-group-label">Analytics</div>
+  <div class="nav-item active" onclick="showPanel('summary',this)">
+    <span class="nav-icon">▦</span> Summary
+  </div>
+  <div class="nav-item" onclick="showPanel('mentors',this)">
+    <span class="nav-icon">◉</span> Mentor Performance
+  </div>
+  <div class="nav-item" onclick="showPanel('feedback',this)">
+    <span class="nav-icon">≡</span> Feedback Table
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-label">Data Source</div>
+    <div class="sidebar-footer-val">Google Sheets (Live)</div>
+    <div class="refresh-row">
+      <div>
+        <div class="sidebar-footer-label" style="margin-top:8px">Last Updated</div>
+        <div class="sidebar-footer-val" id="lastUpdated">—</div>
+      </div>
+      <button class="refresh-btn" id="refreshBtn" onclick="refreshData()" title="Refresh data">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13.5 2.5A7 7 0 1 0 14 8"/>
+          <path d="M14 2.5V6h-3.5"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-eyebrow" id="pageEyebrow">Performance Analytics</div>
+      <div class="page-title" id="pageTitle">Overview</div>
+      <div class="page-sub" id="pageSub">Select a college to load data</div>
+    </div>
+    <div class="filter-row" id="deptFilterRow" style="visibility:hidden">
+      <button class="filter-chip active" onclick="setDeptFilter('all',this)">All</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY PANEL -->
+  <div class="panel active" id="panel-summary">
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">Avg Overall Rating</div>
+        <div class="metric-value" id="avgRating">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total Responses</div>
+        <div class="metric-value" id="totalResponses">—</div>
+        <div class="metric-sub" id="responseSub">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Mentors Tracked</div>
+        <div class="metric-value" id="mentorCount">—</div>
+        <div class="metric-sub" id="mentorSub">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Top Performer</div>
+        <div class="metric-value" id="subjectCount" style="font-size: 20px;">—</div>
+        <div class="metric-sub" id="subjectSub">—</div>
+      </div>
+    </div>
+    <div class="charts-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Mentor Ratings</div>
+          <span class="badge badge-gold" id="topMentorsBadge">—</span>
+        </div>
+        <div class="chart-mentors-wrap" id="topMentorsWrap">
+          <canvas id="topMentorsChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Rating Distribution</div>
+          <span class="badge badge-primary" id="distBadge">All ratings</span>
+        </div>
+        <div style="position:relative;height:260px"><canvas id="distributionChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENTOR PERFORMANCE PANEL -->
+  <div class="panel" id="panel-mentors">
+    <div class="mentor-cards" id="mentorGrid">
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">Select a college to view mentor performance</div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK TABLE PANEL -->
+  <div class="panel" id="panel-feedback">
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Department</th><th>Mentor</th><th>Subject</th>
+              <th>Rating</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="feedbackBody">
+            <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--ink3)">Select a college to view feedback</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--ink4);padding:0 4px">* Live data from Google Sheets.</div>
+  </div>
+</main>
+</div>
+
+<script>
+const COLLEGES = [
+  { name: "Kamaraj College", gid: "0" },
+  { name: "Kamaraj Women's College", gid: "1140723423" },
+  { name: "SDNB Vaishnav College for Women", gid: "340022065" },
+  { name: "Patrician College of Arts & Science", gid: "1890731138" },
+  { name: "TERF's College of Arts and Science", gid: "1010908578" },
+  { name: "Sree Saraswathi Thyagaraja College", gid: "1363163794" },
+  { name: "TJS College of Arts and Science", gid: "1776412956" },
+  { name: "Bharathidasan College of Arts & Science", gid: "2085937367" },
+  { name: "Nagarathinam Angalammal Arts & Science College", gid: "407392563" },
+  { name: "Vinayaga Mission's Research Foundation School of Arts & Science", gid: "1231492996" },
+  { name: "Sri Amaraavathi College of Arts & Science", gid: "1223988020" },
+  { name: "Takshashila University", gid: "1833417744" },
+  { name: "Study World Group of Institution", gid: "1261765001" },
+  { name: "Rathinam College of Arts & Science", gid: "1707229573" },
+  { name: "Noorul Islam Centre for Higher Education (NICHE)", gid: "1044442080" },
+  { name: "AMET University", gid: "1257152100" },
+  { name: "Joy University", gid: "185512483" },
+  { name: "Sasurie College of Arts and Science", gid: "1553065051" },
+  { name: "Alliance University", gid: "361218329" },
+  { name: "Kristu Jayanti University", gid: "2101380937" },
+  { name: "S-VYASA University", gid: "29895230" },
+  { name: "Asian School of Business", gid: "1108050649" }
+];
+
+const SHEET_ID = '19HsWARl8RFNZ6nc-bUCBKKEN39JkQVxCBfbNCUSe2_4';
+let currentCollege = null, MENTORS = [], TABLE_DATA = [], DEPT_LIST = [];
+let currentPanel = 'summary', currentDeptFilter = 'all';
+const chartsInit = { summary: false };
+let chartInstances = {};
+
+const DIST_BUCKETS = [
+  { label: '1 – 2', min: 1,   max: 2,    color: '#e24b4a' },
+  { label: '2 – 3', min: 2,   max: 3,    color: '#d97706' },
+  { label: '3 – 4', min: 3,   max: 4,    color: '#c48a00' },
+  { label: '4 – 5', min: 4,   max: 5.01, color: '#5c3600' },
+];
+
+function getRatingBuckets() {
+  const counts = DIST_BUCKETS.map(() => 0);
+  TABLE_DATA.forEach(row => {
+    const r = row.rating;
+    for (let i = 0; i < DIST_BUCKETS.length; i++) {
+      if (r >= DIST_BUCKETS[i].min && r < DIST_BUCKETS[i].max) { counts[i]++; break; }
+    }
+  });
+  return counts;
+}
+
+function topMentorsChartHeight(count) { return Math.max(200, count * 38); }
+
+function buildDropdown() {
+  document.getElementById('collegeDropdown').innerHTML = COLLEGES.map((c,i) =>
+    `<div class="college-dropdown-item" id="dditem-${i}" onclick="selectCollege(${i})"><span class="item-dot"></span>${c.name}</div>`
+  ).join('');
+}
+
+function toggleDropdown() {
+  const dd = document.getElementById('collegeDropdown'), btn = document.getElementById('collegeSelectBtn');
+  const isOpen = dd.classList.contains('open');
+  dd.classList.toggle('open', !isOpen); btn.classList.toggle('open', !isOpen);
+  if (!isOpen) document.addEventListener('click', closeDropdownOutside, { once: true, capture: true });
+}
+
+function closeDropdownOutside(e) {
+  if (!document.getElementById('collegeDropdownWrap').contains(e.target)) {
+    document.getElementById('collegeDropdown').classList.remove('open');
+    document.getElementById('collegeSelectBtn').classList.remove('open');
+  }
+}
+
+function selectCollege(idx) {
+  currentCollege = COLLEGES[idx];
+  document.querySelectorAll('.college-dropdown-item').forEach((el,i) => el.classList.toggle('active', i===idx));
+  document.getElementById('collegeBtnLabel').textContent = currentCollege.name;
+  document.getElementById('logoInstitutionName').textContent = currentCollege.name;
+  document.getElementById('collegeDropdown').classList.remove('open');
+  document.getElementById('collegeSelectBtn').classList.remove('open');
+  loadSheetData();
+}
+
+function refreshData() {
+  if (!currentCollege) { alert('Please select a college first.'); return; }
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning'); btn.disabled = true;
+  loadSheetData().finally(() => {
+    setTimeout(() => { btn.classList.remove('spinning'); btn.disabled = false; }, 600);
+  });
+}
+
+async function loadSheetData() {
+  if (!currentCollege) { alert('Please select a college first.'); return; }
+  const overlay = document.getElementById('loadingOverlay'), errEl = document.getElementById('errorMessage');
+  document.getElementById('loadingText').textContent = `Loading data for ${currentCollege.name}...`;
+  overlay.classList.remove('hidden'); errEl.classList.remove('show');
+  return new Promise((resolve, reject) => {
+    fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${currentCollege.gid}`)
+      .then(r => { if (!r.ok) throw new Error('Fetch failed'); return r.text(); })
+      .then(text => {
+        Papa.parse(text, {
+          header: true, skipEmptyLines: true,
+          complete(res) {
+            processSheetData(res.data); renderAllData();
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+            setTimeout(() => overlay.classList.add('hidden'), 500);
+            resolve();
+          },
+          error() { throw new Error('Parse failed'); }
+        });
+      })
+      .catch(err => { console.error(err); errEl.classList.add('show'); reject(err); });
+  });
+}
+
+/* ── compute stdDev for consistency ── */
+function stdDev(arr) {
+  if (arr.length < 2) return 0;
+  const avg = arr.reduce((a,b) => a+b,0) / arr.length;
+  const variance = arr.map(r => (r-avg)**2).reduce((a,b) => a+b,0) / arr.length;
+  return Math.sqrt(variance);
+}
+
+function processSheetData(rows) {
+  TABLE_DATA = [];
+  const mentorStats = {}, deptSet = new Set(), subjectSet = new Set();
+  rows.forEach(row => {
+    const dept = row.department || 'Unknown';
+    if (dept !== 'Unknown') deptSet.add(dept);
+    for (let i = 1; i <= 7; i++) {
+      const sn = row[`subject${i}_Name`], mn = row[`subject${i}_Mentor`], rt = parseFloat(row[`subject${i}_Rating`]);
+      if (sn && mn && !isNaN(rt) && rt > 0) {
+        subjectSet.add(sn);
+        TABLE_DATA.push({ dept, mentor: mn, subject: sn, rating: rt });
+        if (!mentorStats[mn]) mentorStats[mn] = { name: mn, depts: new Set([dept]), ratings: [], subjects: new Set() };
+        mentorStats[mn].depts.add(dept);
+        mentorStats[mn].ratings.push(rt);
+        mentorStats[mn].subjects.add(sn);
+      }
+    }
+  });
+
+  MENTORS = Object.values(mentorStats).map(m => {
+    const avg = m.ratings.reduce((a,b) => a+b,0) / m.ratings.length;
+    const sd = stdDev(m.ratings);
+    const consistency = Math.max(0, Math.round((1 - sd / 2) * 100));
+    const satisfiedPct = Math.round(m.ratings.filter(r => r >= 4.0).length / m.ratings.length * 100);
+    return {
+      name: m.name,
+      depts: Array.from(m.depts),
+      rating: parseFloat(avg.toFixed(1)),
+      subjects: m.subjects.size,
+      responses: m.ratings.length,
+      consistency,
+      satisfiedPct,
+    };
+  }).sort((a,b) => b.rating - a.rating);
+
+  /* assign percentile rank after sorting */
+  MENTORS.forEach((m, idx) => {
+    m.percentile = MENTORS.length > 1
+      ? Math.round((1 - idx / (MENTORS.length - 1)) * 100)
+      : 100;
+  });
+
+  DEPT_LIST = Array.from(deptSet).sort();
+  updateDeptFilters();
+
+  const tot = TABLE_DATA.length;
+  const avg = tot > 0 ? TABLE_DATA.reduce((s,r) => s+r.rating, 0) / tot : 0;
+  document.getElementById('avgRating').textContent = avg > 0 ? `${avg.toFixed(1)} / 5` : '—';
+  document.getElementById('totalResponses').textContent = rows.length;
+  document.getElementById('responseSub').textContent = `${tot} subject ratings`;
+  document.getElementById('mentorCount').textContent = MENTORS.length;
+  document.getElementById('mentorSub').textContent = `Across ${DEPT_LIST.length} departments`;
+
+  const topMentor = MENTORS.length > 0 ? MENTORS[0] : null;
+  if (topMentor) {
+    document.getElementById('subjectCount').textContent = topMentor.name;
+    document.getElementById('subjectSub').textContent = `${topMentor.rating.toFixed(1)} rating · ${topMentor.subjects} subjects`;
+  } else {
+    document.getElementById('subjectCount').textContent = '—';
+    document.getElementById('subjectSub').textContent = 'No data';
+  }
+  document.getElementById('pageSub').textContent = `${DEPT_LIST.length} departments · ${MENTORS.length} mentors · ${subjectSet.size} subjects`;
+}
+
+function updateDeptFilters() {
+  const fr = document.getElementById('deptFilterRow');
+  fr.innerHTML = '<button class="filter-chip active" onclick="setDeptFilter(\'all\',this)">All</button>';
+  DEPT_LIST.forEach(dept => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-chip'; btn.textContent = dept;
+    btn.onclick = function() { setDeptFilter(dept, this); };
+    fr.appendChild(btn);
+  });
+}
+
+function renderAllData() {
+  renderMentorCards(); renderTable();
+  if (!chartsInit.summary) { initSummaryCharts(); chartsInit.summary = true; } else { updateSummaryCharts(); }
+}
+
+function statusBadge(r) {
+  if (r >= 4.3) return '<span class="badge badge-gold">Excellent</span>';
+  if (r >= 4.0) return '<span class="badge badge-green">Good</span>';
+  if (r >= 3.5) return '<span class="badge badge-amber">Average</span>';
+  return '<span class="badge badge-rose">Needs work</span>';
+}
+
+function deptStyle(d) {
+  if (d.includes('BCA')) return { color:'#5c3600', bg:'#fde9a0', border:'#e6b84a' };
+  if (d.includes('BBA')) return { color:'#3d2200', bg:'#f5c842', border:'#c48a00' };
+  return { color:'#4a2e00', bg:'#fff3cc', border:'#e6b84a' };
+}
+
+/* ── helpers for enhanced mentor cards ── */
+function getBarColor(val) {
+  if (val >= 85) return '#5c3600';
+  if (val >= 65) return '#c48a00';
+  return '#e24b4a';
+}
+
+function getTrend(m) {
+  /* We don't have historical snapshots from a single sheet load, so
+     we derive a proxy trend from the difference between the mentor's
+     rating and the college average. If you add snapshot storage later,
+     swap this with real delta. */
+  const allAvg = MENTORS.reduce((s,x) => s+x.rating, 0) / (MENTORS.length || 1);
+  const diff = m.rating - allAvg;
+  if (diff > 0.3)  return { label: 'Above avg', cls: 'trend-up',   arrow: '↑' };
+  if (diff < -0.3) return { label: 'Below avg', cls: 'trend-down', arrow: '↓' };
+  return { label: 'At avg', cls: 'trend-flat', arrow: '→' };
+}
+
+function getPerfPill(r) {
+  if (r >= 4.3) return ['Excellent', 'perf-excellent'];
+  if (r >= 4.0) return ['Good',      'perf-good'];
+  if (r >= 3.5) return ['Average',   'perf-average'];
+  return ['Needs work', 'perf-needs'];
+}
+
+function getRankClass(idx) {
+  if (idx === 0) return 'rank-gold';
+  if (idx === 1) return 'rank-silver';
+  if (idx === 2) return 'rank-bronze';
+  return 'rank-other';
+}
+
+/* Draw a simple sparkline on a canvas from a normalised data array */
+function drawSparkline(canvas, data) {
+  const W = canvas.offsetWidth || 90, H = canvas.height;
+  canvas.width = W;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  if (!data || data.length < 2) return;
+  const mn = Math.min(...data) - 0.1, mx = Math.max(...data) + 0.1;
+  const pts = data.map((v, i) => ({
+    x: (i / (data.length - 1)) * (W - 4) + 2,
+    y: H - 2 - ((v - mn) / (mx - mn)) * (H - 4)
+  }));
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) {
+    const cx = (pts[i-1].x + pts[i].x) / 2;
+    ctx.bezierCurveTo(cx, pts[i-1].y, cx, pts[i].y, pts[i].x, pts[i].y);
+  }
+  ctx.strokeStyle = '#c48a00'; ctx.lineWidth = 1.5; ctx.stroke();
+  const last = pts[pts.length - 1];
+  ctx.beginPath(); ctx.arc(last.x, last.y, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = '#5c3600'; ctx.fill();
+}
+
+/* Generate a synthetic sparkline from a mentor's rating (±consistency variation) */
+function syntheticSparkline(m) {
+  /* 6 data points: simulate slight progression towards current rating */
+  const noise = (1 - m.consistency / 100) * 0.4;
+  return Array.from({length: 6}, (_, i) => {
+    const progress = i / 5;
+    const jitter = (Math.random() - 0.5) * noise;
+    const base = m.rating - (1 - progress) * noise * 0.8;
+    return Math.min(5, Math.max(1, parseFloat((base + jitter).toFixed(2))));
+  });
+}
+
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  currentPanel = id;
+  const meta = { summary:['Performance Analytics','Overview'], mentors:['Mentor Analytics','Performance'], feedback:['Student Feedback','Feedback Table'] };
+  document.getElementById('pageEyebrow').textContent = meta[id][0];
+  document.getElementById('pageTitle').textContent = meta[id][1];
+  document.getElementById('deptFilterRow').style.visibility = (id==='mentors'||id==='feedback') ? 'visible' : 'hidden';
+  if (id==='mentors') renderMentorCards();
+  if (id==='feedback') renderTable();
+}
+
+function setDeptFilter(val, btn) {
+  currentDeptFilter = val;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (currentPanel==='mentors') renderMentorCards();
+  if (currentPanel==='feedback') renderTable();
+}
+
+/* ── ENHANCED MENTOR CARDS ── */
+function renderMentorCards() {
+  const list = currentDeptFilter==='all'
+    ? MENTORS
+    : MENTORS.filter(m => m.depts.some(d => d===currentDeptFilter));
+
+  if (!list.length) {
+    document.getElementById('mentorGrid').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">No mentors found</div>';
+    return;
+  }
+
+  document.getElementById('mentorGrid').innerHTML = list.map((m, idx) => {
+    const globalIdx = MENTORS.indexOf(m);
+    const rankClass = getRankClass(globalIdx);
+    const rankLabel = globalIdx === 0 ? '# 1' : globalIdx === 1 ? '# 2' : globalIdx === 2 ? '# 3' : `# ${globalIdx+1}`;
+    const trend = getTrend(m);
+    const [perfLabel, perfClass] = getPerfPill(m.rating);
+    const barColor  = getBarColor(m.consistency);
+    const barColor2 = getBarColor(m.satisfiedPct);
+    const tags = m.depts.map(d => {
+      const s = deptStyle(d);
+      return `<span class="dept-tag" style="color:${s.color};background:${s.bg};border-color:${s.border}">${d}</span>`;
+    }).join('');
+
+    return `<div class="mentor-card ${globalIdx===0?'top-performer':''}">
+      <div class="mentor-rank-badge ${rankClass}">${rankLabel}</div>
+      <div class="mentor-name">${m.name}</div>
+      <div class="mentor-dept-tags">${tags}</div>
+
+      <div class="mentor-stats-row">
+        <div class="mentor-stat">
+          <div class="mentor-stat-lbl">Avg Rating</div>
+          <div class="mentor-stat-val">${m.rating.toFixed(1)}<span class="unit">/5</span></div>
+        </div>
+        <div class="mentor-stat">
+          <div class="mentor-stat-lbl">Subjects</div>
+          <div class="mentor-stat-val">${m.subjects}</div>
+        </div>
+      </div>
+
+      <div class="mentor-mini-row">
+        <div class="mentor-mini">
+          <div class="mentor-mini-lbl">Responses</div>
+          <div class="mentor-mini-val">${m.responses}</div>
+        </div>
+        <div class="mentor-mini">
+          <div class="mentor-mini-lbl">Trend</div>
+          <span class="trend-chip ${trend.cls}">${trend.arrow} ${trend.label}</span>
+        </div>
+        <div class="mentor-mini">
+          <div class="mentor-mini-lbl">Percentile</div>
+          <div class="mentor-mini-val">${m.percentile}<span style="font-size:10px;color:var(--ink3)">th</span></div>
+        </div>
+      </div>
+
+      <div class="mentor-bar-group">
+        <div class="mentor-bar-item">
+          <div class="mentor-bar-label-row">
+            <span class="mentor-bar-lbl">Consistency</span>
+            <span class="mentor-bar-val">${m.consistency}%</span>
+          </div>
+          <div class="mentor-bar-track">
+            <div class="mentor-bar-fill" style="width:${m.consistency}%;background:${barColor}"></div>
+          </div>
+        </div>
+        <div class="mentor-bar-item">
+          <div class="mentor-bar-label-row">
+            <span class="mentor-bar-lbl">Satisfaction (≥ 4.0)</span>
+            <span class="mentor-bar-val">${m.satisfiedPct}%</span>
+          </div>
+          <div class="mentor-bar-track">
+            <div class="mentor-bar-fill" style="width:${m.satisfiedPct}%;background:${barColor2}"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mentor-sparkline-row">
+        <div class="mentor-sparkline-lbl">Rating trend</div>
+        <canvas class="mentor-sparkline-canvas" data-mentor="${m.name}" height="26" style="height:26px;flex:1"></canvas>
+      </div>
+
+      <hr class="mentor-divider">
+      <div class="mentor-status-row">
+        <span class="mentor-status-lbl">Overall Status</span>
+        <span class="mentor-perf-pill ${perfClass}">${perfLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  /* draw sparklines after DOM is painted */
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.mentor-sparkline-canvas').forEach(canvas => {
+      const name = canvas.dataset.mentor;
+      const m = MENTORS.find(x => x.name === name);
+      if (m) drawSparkline(canvas, syntheticSparkline(m));
+    });
+  });
+}
+
+function renderTable() {
+  const data = currentDeptFilter==='all' ? TABLE_DATA : TABLE_DATA.filter(r => r.dept===currentDeptFilter);
+  document.getElementById('feedbackBody').innerHTML = data.length > 0 ? data.map(r => {
+    const s = deptStyle(r.dept);
+    return `<tr>
+      <td><span class="badge" style="color:${s.color};background:${s.bg};border:1px solid ${s.border}">${r.dept}</span></td>
+      <td style="font-weight:600;font-size:13.5px">${r.mentor}</td>
+      <td style="color:var(--ink3);font-size:12px;max-width:250px">${r.subject}</td>
+      <td><span style="font-family:var(--font-display);font-size:16px;font-weight:400;color:var(--gold-dark)">${r.rating.toFixed(1)}</span><span style="color:var(--ink4);font-size:11px">/5</span></td>
+      <td>${statusBadge(r.rating)}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--ink3)">No feedback data found</td></tr>';
+}
+
+Chart.defaults.font.family = 'Inter';
+Chart.defaults.color = '#8a6020';
+
+function initSummaryCharts() {
+  const top = MENTORS.slice(0, Math.min(15, MENTORS.length));
+  const chartH = topMentorsChartHeight(top.length);
+  const wrap = document.getElementById('topMentorsWrap');
+  wrap.style.height = chartH + 'px';
+
+  chartInstances.topMentors = new Chart(document.getElementById('topMentorsChart'), {
+    type: 'bar',
+    data: {
+      labels: top.map(m => m.name),
+      datasets: [{
+        data: top.map(m => m.rating),
+        backgroundColor: top.map((m,i) => i===0?'#5c3600':i===top.length-1?'#f5c842':'#c48a00'),
+        borderRadius: 5, borderSkipped: false, barThickness: 22
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => { const mentor = top[ctx.dataIndex]; return `${ctx.parsed.x.toFixed(1)} / 5.0 (${mentor.subjects} subjects, ${mentor.responses} responses)`; } } },
+        datalabels: { anchor:'end', align:'end', color:'#2a1800', font:{weight:'bold',size:11}, formatter: v => v.toFixed(1) }
+      },
+      scales: {
+        x: { min:0, max:5, ticks:{stepSize:1,font:{size:10},callback:v=>v.toFixed(1)}, grid:{color:'rgba(120,80,10,0.07)'}, border:{display:false} },
+        y: { ticks:{font:{size:11},autoSkip:false}, grid:{display:false}, border:{display:false} }
+      },
+      layout: { padding: { right: 40 } }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  const bucketCounts = getRatingBuckets();
+  chartInstances.distribution = new Chart(document.getElementById('distributionChart'), {
+    type: 'doughnut',
+    data: {
+      labels: DIST_BUCKETS.map(b => b.label),
+      datasets: [{ data: bucketCounts, backgroundColor: DIST_BUCKETS.map(b => b.color), borderWidth:3, borderColor:'#ffffff', hoverOffset:8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '58%',
+      plugins: {
+        legend: {
+          display: true, position: 'bottom',
+          labels: {
+            font:{size:11}, boxWidth:12, padding:14, color:'#8a6020',
+            generateLabels(chart) {
+              return chart.data.labels.map((label, i) => {
+                const value = chart.data.datasets[0].data[i];
+                const total = chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+                const pct = total > 0 ? ((value/total)*100).toFixed(0) : 0;
+                return { text:`${label}: ${value} (${pct}%)`, fillStyle:chart.data.datasets[0].backgroundColor[i], hidden:false, index:i };
+              });
+            }
+          }
+        },
+        tooltip: { callbacks: { label(ctx) { const t=ctx.dataset.data.reduce((a,b)=>a+b,0); const pct=t>0?((ctx.parsed/t)*100).toFixed(1):0; return `${ctx.label}: ${ctx.parsed} (${pct}%)`; } } },
+        datalabels: { color:'#fff', font:{weight:'bold',size:13}, formatter: v => v > 0 ? v : '' }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  document.getElementById('topMentorsBadge').textContent = top.length > 0 ? `Top ${top.length}` : 'No data';
+  document.getElementById('distBadge').textContent = `${TABLE_DATA.length} ratings`;
+}
+
+function updateSummaryCharts() {
+  if (chartInstances.topMentors) {
+    const top = MENTORS.slice(0, Math.min(15, MENTORS.length));
+    const chartH = topMentorsChartHeight(top.length);
+    document.getElementById('topMentorsWrap').style.height = chartH + 'px';
+    chartInstances.topMentors.data.labels = top.map(m => m.name);
+    chartInstances.topMentors.data.datasets[0].data = top.map(m => m.rating);
+    chartInstances.topMentors.data.datasets[0].backgroundColor = top.map((m,i) => i===0?'#5c3600':i===top.length-1?'#f5c842':'#c48a00');
+    chartInstances.topMentors.update();
+    document.getElementById('topMentorsBadge').textContent = top.length > 0 ? `Top ${top.length}` : 'No data';
+  }
+  if (chartInstances.distribution) {
+    const bucketCounts = getRatingBuckets();
+    chartInstances.distribution.data.datasets[0].data = bucketCounts;
+    chartInstances.distribution.update();
+    document.getElementById('distBadge').textContent = `${TABLE_DATA.length} ratings`;
+  }
+}
+
+/* ── DOWNLOAD ── */
+function downloadAllPages() {
+  if (!TABLE_DATA.length) { alert('No data to download. Please select a college first.'); return; }
+  const collegeName = currentCollege?.name || 'Report';
+  const now = new Date().toLocaleString();
+  const avgRating = document.getElementById('avgRating').textContent;
+  const totalResp = document.getElementById('totalResponses').textContent;
+  const mentorCnt = document.getElementById('mentorCount').textContent;
+  const topName   = document.getElementById('subjectCount').textContent;
+  const topSub    = document.getElementById('subjectSub').textContent;
+
+  const metricsHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px">
+    ${[
+      ['Avg Overall Rating', avgRating, ''],
+      ['Total Responses', totalResp, document.getElementById('responseSub').textContent],
+      ['Mentors Tracked', mentorCnt, document.getElementById('mentorSub').textContent],
+      ['Top Performer', topName, topSub]
+    ].map(([lbl,val,sub]) => `<div style="background:#fff;border:1px solid rgba(120,80,10,0.10);border-top:3px solid #c48a00;border-radius:14px;padding:18px 20px">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#8a6020;margin-bottom:6px">${lbl}</div>
+      <div style="font-family:Georgia,serif;font-size:${val.length>15?'16px':'28px'};color:#5c3600;line-height:1.1">${val}</div>
+      ${sub?`<div style="font-size:11px;color:#8a6020;margin-top:4px">${sub}</div>`:''}
+    </div>`).join('')}
+  </div>`;
+
+  const mentorRowsHTML = MENTORS.map((m,idx) => `
+    <tr style="background:${idx%2===0?'#fff':'#fdf8ed'}">
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);font-weight:600;color:#2a1800">${m.name}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#4a2e00">${m.depts.join(', ')}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);font-family:Georgia,serif;font-size:18px;color:#5c3600">${m.rating.toFixed(1)}<span style="font-size:11px;color:#c09840">/5</span></td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.subjects}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.responses}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.consistency}%</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.satisfiedPct}%</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.percentile}th</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08)">${statusBadgeInline(m.rating)}</td>
+    </tr>`).join('');
+
+  const feedbackRowsHTML = TABLE_DATA.map((r,idx) => `
+    <tr style="background:${idx%2===0?'#fff':'#fdf8ed'}">
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08)">${r.dept}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);font-weight:600;color:#2a1800">${r.mentor}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#8a6020;font-size:12px">${r.subject}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);font-family:Georgia,serif;font-size:16px;color:#5c3600">${r.rating.toFixed(1)}<span style="font-size:11px;color:#c09840">/5</span></td>
+      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08)">${statusBadgeInline(r.rating)}</td>
+    </tr>`).join('');
+
+  const tableHead = (cols) => `<thead><tr>${cols.map(c=>`<th style="text-align:left;padding:11px 14px;font-size:10px;font-weight:600;color:#fde9a0;text-transform:uppercase;letter-spacing:0.09em;background:linear-gradient(135deg,#4a2800,#7a4f00)">${c}</th>`).join('')}</tr></thead>`;
+  const sectionStyle = 'margin-bottom:40px';
+  const sectionTitleStyle = 'font-family:Georgia,serif;font-size:20px;font-weight:400;color:#5c3600;border-bottom:2px solid #e6b84a;padding-bottom:10px;margin-bottom:18px';
+
+  const bucketCounts = getRatingBuckets();
+  const maxC = Math.max(...bucketCounts, 1);
+
+  const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Performance Report — ${collegeName}</title>
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;background:#fdf8ed;color:#2a1800;font-size:13px;line-height:1.6;}
+.report-header{background:linear-gradient(135deg,#4a2800,#7a4f00,#a06e00);color:#fde9a0;padding:28px 40px;display:flex;align-items:center;justify-content:space-between;}
+.report-header h1{font-family:Georgia,serif;font-size:26px;font-weight:400;}.report-header p{font-size:12px;opacity:0.75;margin-top:4px;}
+.report-meta{text-align:right;font-size:11px;opacity:0.75;}.report-body{padding:36px 40px;max-width:1100px;margin:0 auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+@media print{.report-header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}thead tr{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.page-break{page-break-before:always;}}
+</style></head><body>
+<div class="report-header"><div><h1>Performance Report</h1><p>${collegeName}</p></div>
+<div class="report-meta"><div>Generated: ${now}</div><div>${MENTORS.length} mentors · ${DEPT_LIST.length} departments</div></div></div>
+<div class="report-body">
+<div style="${sectionStyle}"><div style="${sectionTitleStyle}">Summary Overview</div>${metricsHTML}
+<div style="background:#fff;border:1px solid rgba(120,80,10,0.10);border-radius:14px;padding:18px 20px">
+<div style="font-size:12px;color:#8a6020;margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em">Rating Distribution</div>
+<div style="font-size:11px;color:#c09840;margin-bottom:12px">Based on ${TABLE_DATA.length} individual subject ratings</div>
+<div style="display:flex;gap:10px;align-items:flex-end;height:80px">
+${bucketCounts.map((count,i)=>{const pct=(count/maxC*100).toFixed(0);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font-size:11px;font-weight:600;color:${DIST_BUCKETS[i].color}">${count}</div><div style="width:100%;background:${DIST_BUCKETS[i].color};height:${pct}%;min-height:4px;border-radius:4px 4px 0 0"></div><div style="font-size:9px;color:#8a6020;text-align:center;line-height:1.2">${DIST_BUCKETS[i].label}</div></div>`;}).join('')}
+</div></div></div>
+<div style="${sectionStyle}" class="page-break"><div style="${sectionTitleStyle}">Mentor Performance</div>
+<table>${tableHead(['Mentor Name','Department(s)','Avg Rating','Subjects','Responses','Consistency','Satisfaction','Percentile','Status'])}<tbody>${mentorRowsHTML}</tbody></table></div>
+<div style="${sectionStyle}" class="page-break"><div style="${sectionTitleStyle}">Feedback Table</div>
+<table>${tableHead(['Department','Mentor','Subject','Rating','Status'])}<tbody>${feedbackRowsHTML}</tbody></table>
+<div style="font-size:11px;color:#c09840;margin-top:10px">* Data sourced live from Google Sheets</div></div>
+</div></body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Report-${collegeName.replace(/[^a-z0-9]/gi,'-')}-${new Date().toISOString().split('T')[0]}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function statusBadgeInline(r) {
+  if (r >= 4.3) return '<span style="background:#fde9a0;color:#5c3600;border:1px solid #e6b84a;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Excellent</span>';
+  if (r >= 4.0) return '<span style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Good</span>';
+  if (r >= 3.5) return '<span style="background:#fef3c7;color:#78350f;border:1px solid #fcd34d;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Average</span>';
+  return '<span style="background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Needs work</span>';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildDropdown();
+  document.getElementById('loadingOverlay').classList.add('hidden');
+});
+</script>
+</body>
+</html>
