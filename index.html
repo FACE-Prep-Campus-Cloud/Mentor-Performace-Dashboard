@@ -372,7 +372,6 @@ body {
 .mentor-card.top-performer { border-top-color: #f5c842; }
 .mentor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
 
-/* rank badge top-right */
 .mentor-rank-badge {
   position: absolute; top: 14px; right: 16px;
   font-size: 10px; font-weight: 600;
@@ -394,7 +393,6 @@ body {
 .mentor-dept-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
 .dept-tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
 
-/* main stats: rating + subjects */
 .mentor-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
 .mentor-stat {
   background: var(--surface2);
@@ -415,49 +413,8 @@ body {
 }
 .mentor-stat-val .unit { font-size: 11px; color: var(--ink3); font-family: var(--font-body); }
 
-/* 3-col mini stats row */
-.mentor-mini-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px; margin-bottom: 10px;
-}
-.mentor-mini {
-  text-align: center;
-}
-.mentor-mini-lbl {
-  font-size: 9px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--ink3); margin-bottom: 3px;
-}
-.mentor-mini-val {
-  font-size: 13px; font-weight: 500; color: var(--ink);
-}
-
-/* trend chip */
-.trend-chip {
-  display: inline-flex; align-items: center; gap: 3px;
-  font-size: 11px; font-weight: 600;
-  padding: 2px 8px; border-radius: 20px;
-}
-.trend-up   { background: #d1fae5; color: #065f46; }
-.trend-down { background: #fee2e2; color: #7f1d1d; }
-.trend-flat { background: #fef3c7; color: #78350f; }
-
-/* sparkline row */
-.mentor-sparkline-row {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 10px;
-}
-.mentor-sparkline-lbl {
-  font-size: 9px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--ink3); white-space: nowrap; min-width: 72px;
-}
-.mentor-sparkline-canvas { flex: 1; display: block; }
-
-/* divider */
 .mentor-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
 
-/* status footer */
 .mentor-status-row {
   display: flex; justify-content: space-between; align-items: center;
 }
@@ -473,6 +430,61 @@ body {
 .perf-good      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
 .perf-average   { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
 .perf-needs     { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+
+/* ── NPS CARD ── */
+.nps-overview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-sm);
+}
+.nps-gauge-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin: 10px 0 18px;
+}
+.nps-gauge-svg { width: 200px; height: 110px; }
+.nps-score-big {
+  font-family: var(--font-display);
+  font-size: 42px; font-weight: 400;
+  color: var(--gold-dark);
+  line-height: 1; margin-top: -8px;
+}
+.nps-score-label { font-size: 11px; color: var(--ink3); margin-top: 4px; font-weight: 500; }
+.nps-segment-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-top: 12px;
+}
+.nps-seg {
+  text-align: center; padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.nps-seg-val {
+  font-family: var(--font-display);
+  font-size: 22px; color: var(--gold-dark);
+}
+.nps-seg-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); margin-top: 2px; }
+.nps-seg-pct { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+.nps-seg.promoters   { background: #d1fae5; border-color: #6ee7b7; }
+.nps-seg.promoters .nps-seg-val { color: #065f46; }
+.nps-seg.promoters .nps-seg-lbl { color: #065f46; }
+.nps-seg.passives    { background: #fef3c7; border-color: #fcd34d; }
+.nps-seg.passives .nps-seg-val  { color: #78350f; }
+.nps-seg.passives .nps-seg-lbl  { color: #78350f; }
+.nps-seg.detractors  { background: #fee2e2; border-color: #fca5a5; }
+.nps-seg.detractors .nps-seg-val { color: #7f1d1d; }
+.nps-seg.detractors .nps-seg-lbl { color: #7f1d1d; }
+.nps-formula-note { font-size: 10px; color: var(--ink4); margin-top: 10px; text-align: center; }
+
+/* ── NPS TABLE SECTION ── */
+.nps-table-section { margin-top: 6px; }
+.nps-bars-wrap { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+.nps-bar-row { display: grid; grid-template-columns: 28px 1fr 48px; gap: 10px; align-items: center; }
+.nps-bar-num { font-size: 11px; font-weight: 600; color: var(--ink3); text-align: center; }
+.nps-bar-track { background: var(--bg2); border-radius: 4px; height: 18px; overflow: hidden; }
+.nps-bar-fill  { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.nps-bar-count { font-size: 11px; color: var(--ink3); text-align: right; }
 
 /* TABLE */
 .table-wrap { overflow-x: auto; }
@@ -620,7 +632,9 @@ tbody tr { transition: background 0.12s; }
         <div class="metric-sub" id="subjectSub">—</div>
       </div>
     </div>
+
     <div class="charts-grid">
+      <!-- Mentor Ratings Chart -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">Mentor Ratings</div>
@@ -630,12 +644,51 @@ tbody tr { transition: background 0.12s; }
           <canvas id="topMentorsChart"></canvas>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Rating Distribution</div>
-          <span class="badge badge-primary" id="distBadge">All ratings</span>
+
+      <!-- NPS Overview Card (replaces Rating Distribution) -->
+      <div class="nps-overview-card">
+        <div class="card-header" style="margin-bottom:8px;">
+          <div class="card-title">Net Promoter Score (NPS)</div>
+          <span class="badge badge-primary" id="npsBadge">—</span>
         </div>
-        <div style="position:relative;height:260px"><canvas id="distributionChart"></canvas></div>
+
+        <div class="nps-gauge-wrap">
+          <svg class="nps-gauge-svg" viewBox="0 0 200 110" id="npsGaugeSvg">
+            <!-- Background arc -->
+            <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#f5e9c8" stroke-width="18" stroke-linecap="round"/>
+            <!-- Colored arc filled by JS -->
+            <path id="npsArcFill" d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#c48a00" stroke-width="18" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+            <!-- Needle base -->
+            <circle cx="100" cy="100" r="6" fill="#5c3600"/>
+            <!-- Needle -->
+            <line id="npsNeedle" x1="100" y1="100" x2="100" y2="28" stroke="#5c3600" stroke-width="2.5" stroke-linecap="round" transform="rotate(0,100,100)"/>
+            <!-- Scale labels -->
+            <text x="14" y="108" font-size="9" fill="#8a6020" text-anchor="middle" font-family="Inter,sans-serif">-100</text>
+            <text x="100" y="16" font-size="9" fill="#8a6020" text-anchor="middle" font-family="Inter,sans-serif">0</text>
+            <text x="186" y="108" font-size="9" fill="#8a6020" text-anchor="middle" font-family="Inter,sans-serif">+100</text>
+          </svg>
+          <div class="nps-score-big" id="npsScoreBig">—</div>
+          <div class="nps-score-label" id="npsScoreLabel">No data loaded</div>
+        </div>
+
+        <div class="nps-segment-row">
+          <div class="nps-seg promoters">
+            <div class="nps-seg-val" id="npsPromotersCount">—</div>
+            <div class="nps-seg-lbl">Promoters</div>
+            <div class="nps-seg-pct" id="npsPromotersPct">score 9–10</div>
+          </div>
+          <div class="nps-seg passives">
+            <div class="nps-seg-val" id="npsPassivesCount">—</div>
+            <div class="nps-seg-lbl">Passives</div>
+            <div class="nps-seg-pct" id="npsPassivesPct">score 7–8</div>
+          </div>
+          <div class="nps-seg detractors">
+            <div class="nps-seg-val" id="npsDetractorsCount">—</div>
+            <div class="nps-seg-lbl">Detractors</div>
+            <div class="nps-seg-pct" id="npsDetractorsPct">score 1–6</div>
+          </div>
+        </div>
+        <div class="nps-formula-note">NPS = % Promoters − % Detractors &nbsp;·&nbsp; Scale: −100 to +100</div>
       </div>
     </div>
   </div>
@@ -664,6 +717,51 @@ tbody tr { transition: background 0.12s; }
         </table>
       </div>
     </div>
+
+    <!-- NPS Section below feedback table -->
+    <div class="card nps-table-section" id="npsTableSection">
+      <div class="card-header">
+        <div class="card-title">NPS Score Distribution</div>
+        <span class="badge badge-primary" id="npsTableBadge">—</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#065f46;margin-bottom:4px;">Promoters (9–10)</div>
+          <div style="font-family:var(--font-display);font-size:28px;color:#065f46;" id="npsT_promoters">—</div>
+          <div style="font-size:11px;color:#065f46;margin-top:2px;" id="npsT_promotersPct">—</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#78350f;margin-bottom:4px;">Passives (7–8)</div>
+          <div style="font-family:var(--font-display);font-size:28px;color:#78350f;" id="npsT_passives">—</div>
+          <div style="font-size:11px;color:#78350f;margin-top:2px;" id="npsT_passivesPct">—</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#7f1d1d;margin-bottom:4px;">Detractors (1–6)</div>
+          <div style="font-family:var(--font-display);font-size:28px;color:#7f1d1d;" id="npsT_detractors">—</div>
+          <div style="font-size:11px;color:#7f1d1d;margin-top:2px;" id="npsT_detractorsPct">—</div>
+        </div>
+      </div>
+
+      <div class="card-title" style="font-size:13px;margin-bottom:10px;">Score breakdown (1–10)</div>
+      <div class="nps-bars-wrap" id="npsBarList">
+        <div style="text-align:center;padding:20px;color:var(--ink3)">Select a college to view NPS data</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:4px;">Avg NPS Score</div>
+          <div style="font-family:var(--font-display);font-size:26px;color:var(--gold-dark);" id="npsT_avg">—</div>
+          <div style="font-size:11px;color:var(--ink3);">out of 10</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:4px;">NPS Index</div>
+          <div style="font-family:var(--font-display);font-size:26px;" id="npsT_index">—</div>
+          <div style="font-size:11px;color:var(--ink3);">% promoters − % detractors</div>
+        </div>
+      </div>
+    </div>
+
     <div style="font-size:11px;color:var(--ink4);padding:0 4px">* Live data from Google Sheets.</div>
   </div>
 </main>
@@ -697,27 +795,10 @@ const COLLEGES = [
 
 const SHEET_ID = '19HsWARl8RFNZ6nc-bUCBKKEN39JkQVxCBfbNCUSe2_4';
 let currentCollege = null, MENTORS = [], TABLE_DATA = [], DEPT_LIST = [];
+let NPS_DATA = { scores: [], promoters: 0, passives: 0, detractors: 0, npsIndex: 0, avg: 0, total: 0 };
 let currentPanel = 'summary', currentDeptFilter = 'all';
 const chartsInit = { summary: false };
 let chartInstances = {};
-
-const DIST_BUCKETS = [
-  { label: '1 – 2', min: 1,   max: 2,    color: '#e24b4a' },
-  { label: '2 – 3', min: 2,   max: 3,    color: '#d97706' },
-  { label: '3 – 4', min: 3,   max: 4,    color: '#c48a00' },
-  { label: '4 – 5', min: 4,   max: 5.01, color: '#5c3600' },
-];
-
-function getRatingBuckets() {
-  const counts = DIST_BUCKETS.map(() => 0);
-  TABLE_DATA.forEach(row => {
-    const r = row.rating;
-    for (let i = 0; i < DIST_BUCKETS.length; i++) {
-      if (r >= DIST_BUCKETS[i].min && r < DIST_BUCKETS[i].max) { counts[i]++; break; }
-    }
-  });
-  return counts;
-}
 
 function topMentorsChartHeight(count) { return Math.max(200, count * 38); }
 
@@ -784,20 +865,23 @@ async function loadSheetData() {
   });
 }
 
-/* ── compute stdDev for consistency ── */
-function stdDev(arr) {
-  if (arr.length < 2) return 0;
-  const avg = arr.reduce((a,b) => a+b,0) / arr.length;
-  const variance = arr.map(r => (r-avg)**2).reduce((a,b) => a+b,0) / arr.length;
-  return Math.sqrt(variance);
-}
-
 function processSheetData(rows) {
   TABLE_DATA = [];
   const mentorStats = {}, deptSet = new Set(), subjectSet = new Set();
+
+  // NPS parsing
+  const npsScores = [];
   rows.forEach(row => {
     const dept = row.department || 'Unknown';
     if (dept !== 'Unknown') deptSet.add(dept);
+
+    // Parse NPS score from sheet column
+    const npsRaw = row['nps_score'] || row['NPS Score'] || row['nps score'] || row['NPSScore'] || '';
+    const npsVal = parseInt(npsRaw, 10);
+    if (!isNaN(npsVal) && npsVal >= 1 && npsVal <= 10) {
+      npsScores.push(npsVal);
+    }
+
     for (let i = 1; i <= 7; i++) {
       const sn = row[`subject${i}_Name`], mn = row[`subject${i}_Mentor`], rt = parseFloat(row[`subject${i}_Rating`]);
       if (sn && mn && !isNaN(rt) && rt > 0) {
@@ -811,35 +895,42 @@ function processSheetData(rows) {
     }
   });
 
+  // Compute NPS stats
+  const total = npsScores.length;
+  const promoters  = npsScores.filter(s => s >= 9).length;
+  const passives   = npsScores.filter(s => s >= 7 && s <= 8).length;
+  const detractors = npsScores.filter(s => s <= 6).length;
+  const npsIndex   = total > 0 ? Math.round((promoters / total - detractors / total) * 100) : null;
+  const avg        = total > 0 ? (npsScores.reduce((a,b)=>a+b,0)/total) : 0;
+
+  // Score frequency map 1-10
+  const scoreFreq = {};
+  for (let i = 1; i <= 10; i++) scoreFreq[i] = 0;
+  npsScores.forEach(s => { if (scoreFreq[s] !== undefined) scoreFreq[s]++; });
+
+  NPS_DATA = { scores: npsScores, promoters, passives, detractors, npsIndex, avg, total, scoreFreq };
+
   MENTORS = Object.values(mentorStats).map(m => {
     const avg = m.ratings.reduce((a,b) => a+b,0) / m.ratings.length;
-    const sd = stdDev(m.ratings);
-    const consistency = Math.max(0, Math.round((1 - sd / 2) * 100));
-    const satisfiedPct = Math.round(m.ratings.filter(r => r >= 4.0).length / m.ratings.length * 100);
     return {
       name: m.name,
       depts: Array.from(m.depts),
       rating: parseFloat(avg.toFixed(1)),
       subjects: m.subjects.size,
       responses: m.ratings.length,
-      consistency,
-      satisfiedPct,
     };
   }).sort((a,b) => b.rating - a.rating);
 
-  /* assign percentile rank after sorting */
   MENTORS.forEach((m, idx) => {
-    m.percentile = MENTORS.length > 1
-      ? Math.round((1 - idx / (MENTORS.length - 1)) * 100)
-      : 100;
+    m.percentile = MENTORS.length > 1 ? Math.round((1 - idx / (MENTORS.length - 1)) * 100) : 100;
   });
 
   DEPT_LIST = Array.from(deptSet).sort();
   updateDeptFilters();
 
   const tot = TABLE_DATA.length;
-  const avg = tot > 0 ? TABLE_DATA.reduce((s,r) => s+r.rating, 0) / tot : 0;
-  document.getElementById('avgRating').textContent = avg > 0 ? `${avg.toFixed(1)} / 5` : '—';
+  const avgR = tot > 0 ? TABLE_DATA.reduce((s,r) => s+r.rating, 0) / tot : 0;
+  document.getElementById('avgRating').textContent = avgR > 0 ? `${avgR.toFixed(1)} / 5` : '—';
   document.getElementById('totalResponses').textContent = rows.length;
   document.getElementById('responseSub').textContent = `${tot} subject ratings`;
   document.getElementById('mentorCount').textContent = MENTORS.length;
@@ -868,8 +959,99 @@ function updateDeptFilters() {
 }
 
 function renderAllData() {
-  renderMentorCards(); renderTable();
+  renderMentorCards(); renderTable(); renderNPS();
   if (!chartsInit.summary) { initSummaryCharts(); chartsInit.summary = true; } else { updateSummaryCharts(); }
+}
+
+/* ── NPS RENDERING ── */
+function getNpsColor(index) {
+  if (index === null) return '#c48a00';
+  if (index >= 50) return '#065f46';
+  if (index >= 0)  return '#c48a00';
+  return '#7f1d1d';
+}
+
+function getNpsLabel(index) {
+  if (index === null) return 'No NPS data in sheet';
+  if (index >= 70) return 'Excellent · World Class';
+  if (index >= 50) return 'Excellent';
+  if (index >= 30) return 'Great';
+  if (index >= 0)  return 'Good';
+  if (index >= -20) return 'Needs Improvement';
+  return 'Critical';
+}
+
+function renderNPS() {
+  const { promoters, passives, detractors, npsIndex, avg, total, scoreFreq } = NPS_DATA;
+
+  // ── Overview card ──
+  const scoreDisplay = npsIndex !== null ? (npsIndex > 0 ? `+${npsIndex}` : `${npsIndex}`) : '—';
+  document.getElementById('npsScoreBig').textContent = scoreDisplay;
+  document.getElementById('npsScoreBig').style.color = getNpsColor(npsIndex);
+  document.getElementById('npsScoreLabel').textContent = total > 0 ? getNpsLabel(npsIndex) : 'No NPS data in sheet';
+  document.getElementById('npsBadge').textContent = total > 0 ? `${total} responses` : 'No data';
+
+  const promoPct = total > 0 ? Math.round(promoters / total * 100) : 0;
+  const passPct  = total > 0 ? Math.round(passives  / total * 100) : 0;
+  const detrPct  = total > 0 ? Math.round(detractors/ total * 100) : 0;
+
+  document.getElementById('npsPromotersCount').textContent = total > 0 ? promoters : '—';
+  document.getElementById('npsPassivesCount').textContent  = total > 0 ? passives  : '—';
+  document.getElementById('npsDetractorsCount').textContent= total > 0 ? detractors: '—';
+  document.getElementById('npsPromotersPct').textContent   = total > 0 ? `${promoPct}% · score 9–10` : 'score 9–10';
+  document.getElementById('npsPassivesPct').textContent    = total > 0 ? `${passPct}% · score 7–8`  : 'score 7–8';
+  document.getElementById('npsDetractorsPct').textContent  = total > 0 ? `${detrPct}% · score 1–6`  : 'score 1–6';
+
+  // Gauge needle + arc
+  if (npsIndex !== null) {
+    // map -100..+100 → 0..180 degrees (left to right)
+    const deg = ((npsIndex + 100) / 200) * 180;
+    const needle = document.getElementById('npsNeedle');
+    needle.setAttribute('transform', `rotate(${deg - 90},100,100)`);
+
+    // Arc: total arc length ≈ 251.2 (π * 80 * 1)
+    // fill proportional to (npsIndex+100)/200
+    const arcLen = 251.2;
+    const filled = (((npsIndex + 100) / 200)) * arcLen;
+    const arc = document.getElementById('npsArcFill');
+    arc.setAttribute('stroke', getNpsColor(npsIndex));
+    arc.setAttribute('stroke-dashoffset', (arcLen - filled).toFixed(1));
+  }
+
+  // ── Table section ──
+  document.getElementById('npsTableBadge').textContent = total > 0 ? `${total} responses` : 'No data';
+  document.getElementById('npsT_promoters').textContent    = total > 0 ? promoters  : '—';
+  document.getElementById('npsT_passives').textContent     = total > 0 ? passives   : '—';
+  document.getElementById('npsT_detractors').textContent   = total > 0 ? detractors : '—';
+  document.getElementById('npsT_promotersPct').textContent = total > 0 ? `${promoPct}% of responses` : '—';
+  document.getElementById('npsT_passivesPct').textContent  = total > 0 ? `${passPct}% of responses`  : '—';
+  document.getElementById('npsT_detractorsPct').textContent= total > 0 ? `${detrPct}% of responses`  : '—';
+  document.getElementById('npsT_avg').textContent          = total > 0 ? avg.toFixed(1) : '—';
+
+  const npsIdxEl = document.getElementById('npsT_index');
+  npsIdxEl.textContent = npsIndex !== null ? (npsIndex > 0 ? `+${npsIndex}` : `${npsIndex}`) : '—';
+  npsIdxEl.style.color = getNpsColor(npsIndex);
+
+  // Bar chart 1–10
+  if (total > 0 && scoreFreq) {
+    const maxCount = Math.max(...Object.values(scoreFreq), 1);
+    const barColors = {
+      1:'#e24b4a',2:'#e24b4a',3:'#e24b4a',4:'#e24b4a',5:'#e24b4a',6:'#e24b4a',
+      7:'#c48a00',8:'#c48a00',
+      9:'#065f46',10:'#065f46'
+    };
+    document.getElementById('npsBarList').innerHTML = Object.entries(scoreFreq).map(([score, count]) => `
+      <div class="nps-bar-row">
+        <div class="nps-bar-num">${score}</div>
+        <div class="nps-bar-track">
+          <div class="nps-bar-fill" style="width:${Math.round(count/maxCount*100)}%;background:${barColors[score]};"></div>
+        </div>
+        <div class="nps-bar-count">${count}</div>
+      </div>
+    `).join('');
+  } else {
+    document.getElementById('npsBarList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink3)">No NPS data found in sheet. Ensure column is named <code>nps_score</code>.</div>';
+  }
 }
 
 function statusBadge(r) {
@@ -885,25 +1067,6 @@ function deptStyle(d) {
   return { color:'#4a2e00', bg:'#fff3cc', border:'#e6b84a' };
 }
 
-/* ── helpers for enhanced mentor cards ── */
-function getBarColor(val) {
-  if (val >= 85) return '#5c3600';
-  if (val >= 65) return '#c48a00';
-  return '#e24b4a';
-}
-
-function getTrend(m) {
-  /* We don't have historical snapshots from a single sheet load, so
-     we derive a proxy trend from the difference between the mentor's
-     rating and the college average. If you add snapshot storage later,
-     swap this with real delta. */
-  const allAvg = MENTORS.reduce((s,x) => s+x.rating, 0) / (MENTORS.length || 1);
-  const diff = m.rating - allAvg;
-  if (diff > 0.3)  return { label: 'Above avg', cls: 'trend-up',   arrow: '↑' };
-  if (diff < -0.3) return { label: 'Below avg', cls: 'trend-down', arrow: '↓' };
-  return { label: 'At avg', cls: 'trend-flat', arrow: '→' };
-}
-
 function getPerfPill(r) {
   if (r >= 4.3) return ['Excellent', 'perf-excellent'];
   if (r >= 4.0) return ['Good',      'perf-good'];
@@ -916,42 +1079,6 @@ function getRankClass(idx) {
   if (idx === 1) return 'rank-silver';
   if (idx === 2) return 'rank-bronze';
   return 'rank-other';
-}
-
-/* Draw a simple sparkline on a canvas from a normalised data array */
-function drawSparkline(canvas, data) {
-  const W = canvas.offsetWidth || 90, H = canvas.height;
-  canvas.width = W;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, W, H);
-  if (!data || data.length < 2) return;
-  const mn = Math.min(...data) - 0.1, mx = Math.max(...data) + 0.1;
-  const pts = data.map((v, i) => ({
-    x: (i / (data.length - 1)) * (W - 4) + 2,
-    y: H - 2 - ((v - mn) / (mx - mn)) * (H - 4)
-  }));
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x, pts[0].y);
-  for (let i = 1; i < pts.length; i++) {
-    const cx = (pts[i-1].x + pts[i].x) / 2;
-    ctx.bezierCurveTo(cx, pts[i-1].y, cx, pts[i].y, pts[i].x, pts[i].y);
-  }
-  ctx.strokeStyle = '#c48a00'; ctx.lineWidth = 1.5; ctx.stroke();
-  const last = pts[pts.length - 1];
-  ctx.beginPath(); ctx.arc(last.x, last.y, 2.5, 0, Math.PI*2);
-  ctx.fillStyle = '#5c3600'; ctx.fill();
-}
-
-/* Generate a synthetic sparkline from a mentor's rating (±consistency variation) */
-function syntheticSparkline(m) {
-  /* 6 data points: simulate slight progression towards current rating */
-  const noise = (1 - m.consistency / 100) * 0.4;
-  return Array.from({length: 6}, (_, i) => {
-    const progress = i / 5;
-    const jitter = (Math.random() - 0.5) * noise;
-    const base = m.rating - (1 - progress) * noise * 0.8;
-    return Math.min(5, Math.max(1, parseFloat((base + jitter).toFixed(2))));
-  });
 }
 
 function showPanel(id, el) {
@@ -976,7 +1103,6 @@ function setDeptFilter(val, btn) {
   if (currentPanel==='feedback') renderTable();
 }
 
-/* ── ENHANCED MENTOR CARDS ── */
 function renderMentorCards() {
   const list = currentDeptFilter==='all'
     ? MENTORS
@@ -1002,7 +1128,6 @@ function renderMentorCards() {
       <div class="mentor-rank-badge ${rankClass}">${rankLabel}</div>
       <div class="mentor-name">${m.name}</div>
       <div class="mentor-dept-tags">${tags}</div>
-
       <div class="mentor-stats-row">
         <div class="mentor-stat">
           <div class="mentor-stat-lbl">Avg Rating</div>
@@ -1013,7 +1138,6 @@ function renderMentorCards() {
           <div class="mentor-stat-val">${m.subjects}</div>
         </div>
       </div>
-
       <hr class="mentor-divider">
       <div class="mentor-status-row">
         <span class="mentor-status-lbl">Overall Status</span>
@@ -1021,7 +1145,6 @@ function renderMentorCards() {
       </div>
     </div>`;
   }).join('');
-
 }
 
 function renderTable() {
@@ -1072,40 +1195,6 @@ function initSummaryCharts() {
     },
     plugins: [ChartDataLabels]
   });
-
-  const bucketCounts = getRatingBuckets();
-  chartInstances.distribution = new Chart(document.getElementById('distributionChart'), {
-    type: 'doughnut',
-    data: {
-      labels: DIST_BUCKETS.map(b => b.label),
-      datasets: [{ data: bucketCounts, backgroundColor: DIST_BUCKETS.map(b => b.color), borderWidth:3, borderColor:'#ffffff', hoverOffset:8 }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false, cutout: '58%',
-      plugins: {
-        legend: {
-          display: true, position: 'bottom',
-          labels: {
-            font:{size:11}, boxWidth:12, padding:14, color:'#8a6020',
-            generateLabels(chart) {
-              return chart.data.labels.map((label, i) => {
-                const value = chart.data.datasets[0].data[i];
-                const total = chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
-                const pct = total > 0 ? ((value/total)*100).toFixed(0) : 0;
-                return { text:`${label}: ${value} (${pct}%)`, fillStyle:chart.data.datasets[0].backgroundColor[i], hidden:false, index:i };
-              });
-            }
-          }
-        },
-        tooltip: { callbacks: { label(ctx) { const t=ctx.dataset.data.reduce((a,b)=>a+b,0); const pct=t>0?((ctx.parsed/t)*100).toFixed(1):0; return `${ctx.label}: ${ctx.parsed} (${pct}%)`; } } },
-        datalabels: { color:'#fff', font:{weight:'bold',size:13}, formatter: v => v > 0 ? v : '' }
-      }
-    },
-    plugins: [ChartDataLabels]
-  });
-
-  document.getElementById('topMentorsBadge').textContent = top.length > 0 ? `Top ${top.length}` : 'No data';
-  document.getElementById('distBadge').textContent = `${TABLE_DATA.length} ratings`;
 }
 
 function updateSummaryCharts() {
@@ -1119,12 +1208,6 @@ function updateSummaryCharts() {
     chartInstances.topMentors.update();
     document.getElementById('topMentorsBadge').textContent = top.length > 0 ? `Top ${top.length}` : 'No data';
   }
-  if (chartInstances.distribution) {
-    const bucketCounts = getRatingBuckets();
-    chartInstances.distribution.data.datasets[0].data = bucketCounts;
-    chartInstances.distribution.update();
-    document.getElementById('distBadge').textContent = `${TABLE_DATA.length} ratings`;
-  }
 }
 
 /* ── DOWNLOAD ── */
@@ -1137,6 +1220,8 @@ function downloadAllPages() {
   const mentorCnt = document.getElementById('mentorCount').textContent;
   const topName   = document.getElementById('subjectCount').textContent;
   const topSub    = document.getElementById('subjectSub').textContent;
+  const { promoters, passives, detractors, npsIndex, avg: npsAvg, total: npsTotal } = NPS_DATA;
+  const npsDisplay = npsIndex !== null ? (npsIndex > 0 ? `+${npsIndex}` : `${npsIndex}`) : 'N/A';
 
   const metricsHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px">
     ${[
@@ -1151,6 +1236,33 @@ function downloadAllPages() {
     </div>`).join('')}
   </div>`;
 
+  const npsHTML = npsTotal > 0 ? `
+    <div style="background:#fff;border:1px solid rgba(120,80,10,0.10);border-radius:14px;padding:20px;margin-bottom:24px">
+      <div style="font-family:Georgia,serif;font-size:18px;color:#5c3600;margin-bottom:14px;border-bottom:2px solid #e6b84a;padding-bottom:8px">Net Promoter Score (NPS)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <div style="text-align:center;padding:12px;background:#fdf8ed;border-radius:10px">
+          <div style="font-size:10px;color:#8a6020;font-weight:600;text-transform:uppercase;margin-bottom:4px">NPS Index</div>
+          <div style="font-family:Georgia,serif;font-size:28px;color:${npsIndex>=0?'#065f46':'#7f1d1d'}">${npsDisplay}</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#d1fae5;border-radius:10px">
+          <div style="font-size:10px;color:#065f46;font-weight:600;text-transform:uppercase;margin-bottom:4px">Promoters</div>
+          <div style="font-family:Georgia,serif;font-size:28px;color:#065f46">${promoters}</div>
+          <div style="font-size:11px;color:#065f46">${Math.round(promoters/npsTotal*100)}%</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#fef3c7;border-radius:10px">
+          <div style="font-size:10px;color:#78350f;font-weight:600;text-transform:uppercase;margin-bottom:4px">Passives</div>
+          <div style="font-family:Georgia,serif;font-size:28px;color:#78350f">${passives}</div>
+          <div style="font-size:11px;color:#78350f">${Math.round(passives/npsTotal*100)}%</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#fee2e2;border-radius:10px">
+          <div style="font-size:10px;color:#7f1d1d;font-weight:600;text-transform:uppercase;margin-bottom:4px">Detractors</div>
+          <div style="font-family:Georgia,serif;font-size:28px;color:#7f1d1d">${detractors}</div>
+          <div style="font-size:11px;color:#7f1d1d">${Math.round(detractors/npsTotal*100)}%</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#c09840;margin-top:10px">Avg NPS Score: ${npsAvg.toFixed(1)} / 10 · Based on ${npsTotal} responses</div>
+    </div>` : '';
+
   const mentorRowsHTML = MENTORS.map((m,idx) => `
     <tr style="background:${idx%2===0?'#fff':'#fdf8ed'}">
       <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);font-weight:600;color:#2a1800">${m.name}</td>
@@ -1158,9 +1270,6 @@ function downloadAllPages() {
       <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);font-family:Georgia,serif;font-size:18px;color:#5c3600">${m.rating.toFixed(1)}<span style="font-size:11px;color:#c09840">/5</span></td>
       <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.subjects}</td>
       <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.responses}</td>
-      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.consistency}%</td>
-      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.satisfiedPct}%</td>
-      <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08);color:#2a1800">${m.percentile}th</td>
       <td style="padding:10px 14px;border-bottom:1px solid rgba(120,80,10,0.08)">${statusBadgeInline(m.rating)}</td>
     </tr>`).join('');
 
@@ -1177,9 +1286,6 @@ function downloadAllPages() {
   const sectionStyle = 'margin-bottom:40px';
   const sectionTitleStyle = 'font-family:Georgia,serif;font-size:20px;font-weight:400;color:#5c3600;border-bottom:2px solid #e6b84a;padding-bottom:10px;margin-bottom:18px';
 
-  const bucketCounts = getRatingBuckets();
-  const maxC = Math.max(...bucketCounts, 1);
-
   const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>Performance Report — ${collegeName}</title>
 <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;background:#fdf8ed;color:#2a1800;font-size:13px;line-height:1.6;}
@@ -1192,15 +1298,9 @@ table{width:100%;border-collapse:collapse;font-size:13px;}
 <div class="report-header"><div><h1>Performance Report</h1><p>${collegeName}</p></div>
 <div class="report-meta"><div>Generated: ${now}</div><div>${MENTORS.length} mentors · ${DEPT_LIST.length} departments</div></div></div>
 <div class="report-body">
-<div style="${sectionStyle}"><div style="${sectionTitleStyle}">Summary Overview</div>${metricsHTML}
-<div style="background:#fff;border:1px solid rgba(120,80,10,0.10);border-radius:14px;padding:18px 20px">
-<div style="font-size:12px;color:#8a6020;margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em">Rating Distribution</div>
-<div style="font-size:11px;color:#c09840;margin-bottom:12px">Based on ${TABLE_DATA.length} individual subject ratings</div>
-<div style="display:flex;gap:10px;align-items:flex-end;height:80px">
-${bucketCounts.map((count,i)=>{const pct=(count/maxC*100).toFixed(0);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font-size:11px;font-weight:600;color:${DIST_BUCKETS[i].color}">${count}</div><div style="width:100%;background:${DIST_BUCKETS[i].color};height:${pct}%;min-height:4px;border-radius:4px 4px 0 0"></div><div style="font-size:9px;color:#8a6020;text-align:center;line-height:1.2">${DIST_BUCKETS[i].label}</div></div>`;}).join('')}
-</div></div></div>
+<div style="${sectionStyle}"><div style="${sectionTitleStyle}">Summary Overview</div>${metricsHTML}${npsHTML}</div>
 <div style="${sectionStyle}" class="page-break"><div style="${sectionTitleStyle}">Mentor Performance</div>
-<table>${tableHead(['Mentor Name','Department(s)','Avg Rating','Subjects','Responses','Consistency','Satisfaction','Percentile','Status'])}<tbody>${mentorRowsHTML}</tbody></table></div>
+<table>${tableHead(['Mentor Name','Department(s)','Avg Rating','Subjects','Responses','Status'])}<tbody>${mentorRowsHTML}</tbody></table></div>
 <div style="${sectionStyle}" class="page-break"><div style="${sectionTitleStyle}">Feedback Table</div>
 <table>${tableHead(['Department','Mentor','Subject','Rating','Status'])}<tbody>${feedbackRowsHTML}</tbody></table>
 <div style="font-size:11px;color:#c09840;margin-top:10px">* Data sourced live from Google Sheets</div></div>
