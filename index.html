@@ -100,10 +100,6 @@ body {
   from { stroke-dashoffset: 251.2; }
 }
 
-@keyframes needleSweep {
-  from { transform: rotate(-90deg); }
-}
-
 @keyframes floatBounce {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
@@ -122,12 +118,6 @@ body {
   0% { transform: scale(0.5); opacity: 0; }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes needleWobble {
-  0%, 100% { transform: rotate(var(--needle-angle)) translateY(0); }
-  25% { transform: rotate(var(--needle-angle)) translateY(-2px); }
-  75% { transform: rotate(var(--needle-angle)) translateY(2px); }
 }
 
 @keyframes segmentPulse {
@@ -781,6 +771,7 @@ tbody tr { transition: background 0.12s; }
         </div>
 
         <div class="nps-gauge-wrap">
+          <!-- FIX: needle is a <g> element rotated via SVG transform only; no CSS transform conflicts -->
           <svg class="nps-gauge-svg" viewBox="0 0 200 115" id="npsGaugeSvg">
             <!-- Background arc -->
             <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#f5e9c8" stroke-width="18" stroke-linecap="round"/>
@@ -788,14 +779,15 @@ tbody tr { transition: background 0.12s; }
             <path id="npsArcFill" d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#c48a00" stroke-width="18" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
             <!-- Pulsing ring effect -->
             <circle id="npsPulseRing" cx="100" cy="100" r="6" fill="none" stroke="#c48a00" stroke-width="2" opacity="0"/>
-            <!-- Needle base circle with glow -->
-            <circle cx="100" cy="100" r="6" fill="#5c3600" id="npsNeedleBase"/>
-            <!-- Needle -->
-            <line id="npsNeedle" x1="100" y1="100" x2="100" y2="28" stroke="#5c3600" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90,100,100)"/>
+            <!-- Needle group: rotate this g element only, keeps needle+base together -->
+            <g id="npsNeedleGroup" transform="rotate(-90,100,100)">
+              <line x1="100" y1="100" x2="100" y2="28" stroke="#5c3600" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="100" cy="100" r="6" fill="#5c3600"/>
+            </g>
             <!-- Scale labels -->
-            <text x="8" y="82" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif" id="npsLabel1">-100</text>
-            <text x="100" y="8" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif" id="npsLabel2">0</text>
-            <text x="192" y="82" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif" id="npsLabel3">+100</text>
+            <text x="8" y="82" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">-100</text>
+            <text x="100" y="8" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">0</text>
+            <text x="192" y="82" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">+100</text>
           </svg>
           <div class="nps-score-big" id="npsScoreBig">—</div>
           <div class="nps-score-label" id="npsScoreLabel">No data loaded</div>
@@ -928,6 +920,9 @@ let NPS_DATA = { scores: [], promoters: 0, passives: 0, detractors: 0, npsIndex:
 let currentPanel = 'summary', currentDeptFilter = 'all';
 const chartsInit = { summary: false };
 let chartInstances = {};
+
+// Track active needle animation frame so we can cancel on refresh
+let needleAnimRAF = null;
 
 function topMentorsChartHeight(count) { return Math.max(200, count * 38); }
 
@@ -1113,84 +1108,95 @@ function getNpsLabel(index) {
   return 'Critical';
 }
 
-function animateNPSNeedle(targetDeg, duration = 1500) {
-  const needle = document.getElementById('npsNeedle');
+/**
+ * FIX: Animate the needle group using only SVG transform attribute.
+ * No CSS transform / style.animation on the needle — that caused the
+ * needle to detach from its base circle on repeated calls.
+ */
+function animateNPSNeedle(targetDeg, duration) {
+  duration = duration || 1500;
+  const group = document.getElementById('npsNeedleGroup');
+
+  // Cancel any in-flight animation
+  if (needleAnimRAF) {
+    cancelAnimationFrame(needleAnimRAF);
+    needleAnimRAF = null;
+  }
+
+  // Always start from the hard-left position (-90 deg)
   const startDeg = -90;
   const startTime = performance.now();
-  
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
-  
-  function animate(currentTime) {
-    const elapsed = currentTime - startTime;
+
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function step(now) {
+    const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    const easedProgress = easeOutCubic(progress);
-    const currentDeg = startDeg + (targetDeg - startDeg) * easedProgress;
-    
-    needle.setAttribute('transform', `rotate(${currentDeg},100,100)`);
-    
+    const current = startDeg + (targetDeg - startDeg) * easeOutCubic(progress);
+    // Only use SVG transform attribute — never style.transform on this element
+    group.setAttribute('transform', `rotate(${current},100,100)`);
     if (progress < 1) {
-      requestAnimationFrame(animate);
+      needleAnimRAF = requestAnimationFrame(step);
     } else {
-      // Start wobble animation after needle settles
-      needle.style.setProperty('--needle-angle', `${targetDeg}deg`);
-      needle.style.transformOrigin = '100px 100px';
-      needle.style.animation = 'needleWobble 0.8s ease-in-out 1';
-      
-      setTimeout(() => {
-        needle.style.animation = '';
-      }, 800);
+      needleAnimRAF = null;
+      // Subtle settle wobble using SVG SMIL (no CSS transform clash)
+      const wobbleAmt = 2;
+      let wobbleStart = null;
+      const wobbleDur = 600;
+      function wobble(ts) {
+        if (!wobbleStart) wobbleStart = ts;
+        const t = Math.min((ts - wobbleStart) / wobbleDur, 1);
+        const decay = 1 - t;
+        const offset = Math.sin(t * Math.PI * 4) * wobbleAmt * decay;
+        group.setAttribute('transform', `rotate(${targetDeg + offset},100,100)`);
+        if (t < 1) needleAnimRAF = requestAnimationFrame(wobble);
+        else {
+          group.setAttribute('transform', `rotate(${targetDeg},100,100)`);
+          needleAnimRAF = null;
+        }
+      }
+      needleAnimRAF = requestAnimationFrame(wobble);
     }
   }
-  
-  requestAnimationFrame(animate);
+
+  needleAnimRAF = requestAnimationFrame(step);
 }
 
-function animateCounter(element, target, duration = 1000, suffix = '') {
-  const start = 0;
+function animateCounter(element, target, duration, suffix) {
+  duration = duration || 1000;
+  suffix = suffix || '';
   const startTime = performance.now();
   const isNegative = target < 0;
   const absTarget = Math.abs(target);
-  
-  function easeOutQuad(t) {
-    return t * (2 - t);
-  }
-  
+
+  function easeOutQuad(t) { return t * (2 - t); }
+
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    const easedProgress = easeOutQuad(progress);
-    const current = Math.round(start + absTarget * easedProgress);
+    const current = Math.round(absTarget * easeOutQuad(progress));
     const displayValue = isNegative ? -current : current;
-    
     element.textContent = (displayValue > 0 ? '+' : '') + displayValue + suffix;
-    
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      // Add pop-in animation
-      element.style.animation = 'scorePopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    }
+    if (progress < 1) requestAnimationFrame(animate);
+    else element.style.animation = 'scorePopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
   }
-  
   requestAnimationFrame(animate);
 }
 
 function renderNPS() {
   const { promoters, passives, detractors, npsIndex, avg, total, scoreFreq } = NPS_DATA;
 
-  const scoreDisplay = npsIndex !== null ? (npsIndex > 0 ? `+${npsIndex}` : `${npsIndex}`) : '—';
   const scoreBigEl = document.getElementById('npsScoreBig');
   scoreBigEl.style.color = getNpsColor(npsIndex);
-  
-  // Animate the NPS score counter
+  // Clear any leftover CSS animation from previous run
+  scoreBigEl.style.animation = '';
+
   if (npsIndex !== null) {
     animateCounter(scoreBigEl, npsIndex, 1200, '');
   } else {
     scoreBigEl.textContent = '—';
   }
-  
+
   document.getElementById('npsScoreLabel').textContent = total > 0 ? getNpsLabel(npsIndex) : 'No NPS data in sheet';
   document.getElementById('npsBadge').textContent = total > 0 ? `${total} responses` : 'No data';
 
@@ -1206,57 +1212,46 @@ function renderNPS() {
   document.getElementById('npsDetractorsPct').textContent  = total > 0 ? `${detrPct}% · score 1–6`  : 'score 1–6';
 
   if (npsIndex !== null) {
-    const deg = ((npsIndex + 100) / 200) * 180;
-    
-    // Animate needle sweep
-    animateNPSNeedle(deg - 90, 1500);
-    
-    // Animate arc fill with glow
+    // degree mapping: -100 → -90deg, +100 → +90deg
+    const targetDeg = ((npsIndex + 100) / 200) * 180 - 90;
+    animateNPSNeedle(targetDeg, 1500);
+
+    // Arc fill animation
     const arcLen = 251.2;
-    const filled = (((npsIndex + 100) / 200)) * arcLen;
+    const filled = ((npsIndex + 100) / 200) * arcLen;
     const arc = document.getElementById('npsArcFill');
     const arcColor = getNpsColor(npsIndex);
     arc.setAttribute('stroke', arcColor);
-    
-    // Reset and animate
+    // Reset transition so it re-fires on refresh
+    arc.style.transition = 'none';
     arc.style.strokeDashoffset = arcLen;
-    arc.style.filter = 'drop-shadow(0 0 0 rgba(196,138,0,0))';
-    setTimeout(() => {
-      arc.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1), filter 1.5s ease-in-out';
-      arc.style.strokeDashoffset = (arcLen - filled).toFixed(1);
-      arc.style.filter = `drop-shadow(0 0 12px ${arcColor}90) drop-shadow(0 0 24px ${arcColor}60)`;
-    }, 100);
-    
-    // Add continuous glow animation to arc
-    setTimeout(() => {
-      arc.style.animation = 'gaugeGlow 3s ease-in-out infinite';
-    }, 1600);
-    
-    // Add pulsing glow to needle base
-    const needleBase = document.getElementById('npsNeedleBase');
-    needleBase.style.animation = 'pulseGlow 2s ease-in-out infinite';
-    needleBase.style.animationDelay = '1.5s';
-    
-    // Add pulsing ring effect
+    arc.style.filter = 'none';
+    // Force reflow then animate
+    arc.getBoundingClientRect();
+    arc.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1), filter 1.5s ease-in-out';
+    arc.style.strokeDashoffset = (arcLen - filled).toFixed(1);
+    arc.style.filter = `drop-shadow(0 0 12px ${arcColor}90) drop-shadow(0 0 24px ${arcColor}60)`;
+
+    // Pulsing ring
     const pulseRing = document.getElementById('npsPulseRing');
     pulseRing.setAttribute('stroke', arcColor);
+    pulseRing.style.animation = 'none';
+    pulseRing.getBoundingClientRect();
     pulseRing.style.animation = 'ringPulse 2s ease-in-out infinite';
     pulseRing.style.animationDelay = '1.5s';
-    
-    // Animate scale labels
-    const labels = ['npsLabel1', 'npsLabel2', 'npsLabel3'];
-    labels.forEach((id, idx) => {
-      const label = document.getElementById(id);
-      label.style.animation = `labelBounce 0.6s ease-in-out`;
-      label.style.animationDelay = `${1.2 + idx * 0.15}s`;
+
+    // Segment entrance
+    document.querySelectorAll('.nps-seg').forEach((seg, idx) => {
+      seg.style.animation = 'none';
+      seg.getBoundingClientRect();
+      seg.style.animation = `slideUp 0.5s cubic-bezier(.22,1,.36,1) both`;
+      seg.style.animationDelay = `${1.1 + idx * 0.1}s`;
     });
-    
-    // Animate segments with pulse
-    const segments = document.querySelectorAll('.nps-seg');
-    segments.forEach((seg, idx) => {
-      seg.style.animation = `slideUp 0.5s cubic-bezier(.22,1,.36,1) both, segmentPulse 2s ease-in-out infinite`;
-      seg.style.animationDelay = `${1.1 + idx * 0.1}s, ${2 + idx * 0.2}s`;
-    });
+  } else {
+    // Reset needle to left position when no data
+    const group = document.getElementById('npsNeedleGroup');
+    if (needleAnimRAF) { cancelAnimationFrame(needleAnimRAF); needleAnimRAF = null; }
+    group.setAttribute('transform', 'rotate(-90,100,100)');
   }
 
   document.getElementById('npsTableBadge').textContent = total > 0 ? `${total} responses` : 'No data';
@@ -1288,12 +1283,9 @@ function renderNPS() {
         <div class="nps-bar-count">${count}</div>
       </div>
     `).join('');
-    
-    // Animate bars after a short delay
     setTimeout(() => {
       document.querySelectorAll('.nps-bar-fill').forEach(bar => {
-        const targetWidth = bar.getAttribute('data-width');
-        bar.style.width = targetWidth + '%';
+        bar.style.width = bar.getAttribute('data-width') + '%';
       });
     }, 200);
   } else {
