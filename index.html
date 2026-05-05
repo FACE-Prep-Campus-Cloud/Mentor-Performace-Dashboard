@@ -70,6 +70,45 @@ body {
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes pulseGlow {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(196,138,0,0.6)); }
+  50% { filter: drop-shadow(0 0 16px rgba(196,138,0,0.9)); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes arcFill {
+  from { stroke-dashoffset: 251.2; }
+}
+
+@keyframes needleSweep {
+  from { transform: rotate(-90deg); }
+}
+
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
 .loading-text { font-size: 13px; color: var(--ink3); font-weight: 500; }
 .error-message {
   max-width: 500px; padding: 20px;
@@ -443,14 +482,27 @@ body {
   display: flex; flex-direction: column; align-items: center;
   margin: 10px 0 18px;
 }
-.nps-gauge-svg { width: 200px; height: 115px; overflow: visible; }
+.nps-gauge-svg { 
+  width: 200px; 
+  height: 115px; 
+  overflow: visible;
+}
 .nps-score-big {
   font-family: var(--font-display);
   font-size: 42px; font-weight: 400;
   color: var(--gold-dark);
   line-height: 1; margin-top: -8px;
+  animation: scaleIn 0.6s cubic-bezier(.22,1,.36,1) both;
+  animation-delay: 0.8s;
 }
-.nps-score-label { font-size: 11px; color: var(--ink3); margin-top: 4px; font-weight: 500; }
+.nps-score-label { 
+  font-size: 11px; 
+  color: var(--ink3); 
+  margin-top: 4px; 
+  font-weight: 500;
+  animation: slideUp 0.5s cubic-bezier(.22,1,.36,1) both;
+  animation-delay: 1s;
+}
 .nps-segment-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
   gap: 8px; margin-top: 12px;
@@ -459,7 +511,11 @@ body {
   text-align: center; padding: 10px 8px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
+  animation: slideUp 0.5s cubic-bezier(.22,1,.36,1) both;
 }
+.nps-seg:nth-child(1) { animation-delay: 1.1s; }
+.nps-seg:nth-child(2) { animation-delay: 1.2s; }
+.nps-seg:nth-child(3) { animation-delay: 1.3s; }
 .nps-seg-val {
   font-family: var(--font-display);
   font-size: 22px; color: var(--gold-dark);
@@ -480,10 +536,48 @@ body {
 /* NPS TABLE SECTION */
 .nps-table-section { margin-top: 6px; }
 .nps-bars-wrap { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
-.nps-bar-row { display: grid; grid-template-columns: 28px 1fr 48px; gap: 10px; align-items: center; }
+.nps-bar-row { 
+  display: grid; 
+  grid-template-columns: 28px 1fr 48px; 
+  gap: 10px; 
+  align-items: center;
+  animation: slideUp 0.3s cubic-bezier(.22,1,.36,1) both;
+}
+.nps-bar-row:nth-child(1) { animation-delay: 0.05s; }
+.nps-bar-row:nth-child(2) { animation-delay: 0.1s; }
+.nps-bar-row:nth-child(3) { animation-delay: 0.15s; }
+.nps-bar-row:nth-child(4) { animation-delay: 0.2s; }
+.nps-bar-row:nth-child(5) { animation-delay: 0.25s; }
+.nps-bar-row:nth-child(6) { animation-delay: 0.3s; }
+.nps-bar-row:nth-child(7) { animation-delay: 0.35s; }
+.nps-bar-row:nth-child(8) { animation-delay: 0.4s; }
+.nps-bar-row:nth-child(9) { animation-delay: 0.45s; }
+.nps-bar-row:nth-child(10) { animation-delay: 0.5s; }
 .nps-bar-num { font-size: 11px; font-weight: 600; color: var(--ink3); text-align: center; }
 .nps-bar-track { background: var(--bg2); border-radius: 4px; height: 18px; overflow: hidden; }
-.nps-bar-fill  { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.nps-bar-fill  { 
+  height: 100%; 
+  border-radius: 4px; 
+  transition: width 0.8s cubic-bezier(.22,1,.36,1);
+  position: relative;
+  overflow: hidden;
+}
+.nps-bar-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.3) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
 .nps-bar-count { font-size: 11px; color: var(--ink3); text-align: right; }
 
 /* TABLE */
@@ -658,11 +752,11 @@ tbody tr { transition: background 0.12s; }
             <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#f5e9c8" stroke-width="18" stroke-linecap="round"/>
             <!-- Colored arc filled by JS -->
             <path id="npsArcFill" d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#c48a00" stroke-width="18" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
-            <!-- Needle base -->
-            <circle cx="100" cy="100" r="6" fill="#5c3600"/>
+            <!-- Needle base circle with glow -->
+            <circle cx="100" cy="100" r="6" fill="#5c3600" id="npsNeedleBase"/>
             <!-- Needle -->
-            <line id="npsNeedle" x1="100" y1="100" x2="100" y2="28" stroke="#5c3600" stroke-width="2.5" stroke-linecap="round" transform="rotate(0,100,100)"/>
-            <!-- Scale labels — moved outward with better color -->
+            <line id="npsNeedle" x1="100" y1="100" x2="100" y2="28" stroke="#5c3600" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90,100,100)"/>
+            <!-- Scale labels -->
             <text x="8" y="82" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">-100</text>
             <text x="100" y="8" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">0</text>
             <text x="192" y="82" font-size="9" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">+100</text>
@@ -983,12 +1077,72 @@ function getNpsLabel(index) {
   return 'Critical';
 }
 
+function animateNPSNeedle(targetDeg, duration = 1500) {
+  const needle = document.getElementById('npsNeedle');
+  const startDeg = -90;
+  const startTime = performance.now();
+  
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+  
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutCubic(progress);
+    const currentDeg = startDeg + (targetDeg - startDeg) * easedProgress;
+    
+    needle.setAttribute('transform', `rotate(${currentDeg},100,100)`);
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  }
+  
+  requestAnimationFrame(animate);
+}
+
+function animateCounter(element, target, duration = 1000, suffix = '') {
+  const start = 0;
+  const startTime = performance.now();
+  const isNegative = target < 0;
+  const absTarget = Math.abs(target);
+  
+  function easeOutQuad(t) {
+    return t * (2 - t);
+  }
+  
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutQuad(progress);
+    const current = Math.round(start + absTarget * easedProgress);
+    const displayValue = isNegative ? -current : current;
+    
+    element.textContent = (displayValue > 0 ? '+' : '') + displayValue + suffix;
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  }
+  
+  requestAnimationFrame(animate);
+}
+
 function renderNPS() {
   const { promoters, passives, detractors, npsIndex, avg, total, scoreFreq } = NPS_DATA;
 
   const scoreDisplay = npsIndex !== null ? (npsIndex > 0 ? `+${npsIndex}` : `${npsIndex}`) : '—';
-  document.getElementById('npsScoreBig').textContent = scoreDisplay;
-  document.getElementById('npsScoreBig').style.color = getNpsColor(npsIndex);
+  const scoreBigEl = document.getElementById('npsScoreBig');
+  scoreBigEl.style.color = getNpsColor(npsIndex);
+  
+  // Animate the NPS score counter
+  if (npsIndex !== null) {
+    animateCounter(scoreBigEl, npsIndex, 1200, '');
+  } else {
+    scoreBigEl.textContent = '—';
+  }
+  
   document.getElementById('npsScoreLabel').textContent = total > 0 ? getNpsLabel(npsIndex) : 'No NPS data in sheet';
   document.getElementById('npsBadge').textContent = total > 0 ? `${total} responses` : 'No data';
 
@@ -1005,14 +1159,27 @@ function renderNPS() {
 
   if (npsIndex !== null) {
     const deg = ((npsIndex + 100) / 200) * 180;
-    const needle = document.getElementById('npsNeedle');
-    needle.setAttribute('transform', `rotate(${deg - 90},100,100)`);
-
+    
+    // Animate needle sweep
+    animateNPSNeedle(deg - 90, 1500);
+    
+    // Animate arc fill
     const arcLen = 251.2;
     const filled = (((npsIndex + 100) / 200)) * arcLen;
     const arc = document.getElementById('npsArcFill');
     arc.setAttribute('stroke', getNpsColor(npsIndex));
-    arc.setAttribute('stroke-dashoffset', (arcLen - filled).toFixed(1));
+    
+    // Reset and animate
+    arc.style.strokeDashoffset = arcLen;
+    setTimeout(() => {
+      arc.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
+      arc.style.strokeDashoffset = (arcLen - filled).toFixed(1);
+    }, 100);
+    
+    // Add pulsing glow to needle base
+    const needleBase = document.getElementById('npsNeedleBase');
+    needleBase.style.animation = 'pulseGlow 2s ease-in-out infinite';
+    needleBase.style.animationDelay = '1.5s';
   }
 
   document.getElementById('npsTableBadge').textContent = total > 0 ? `${total} responses` : 'No data';
@@ -1039,11 +1206,19 @@ function renderNPS() {
       <div class="nps-bar-row">
         <div class="nps-bar-num">${score}</div>
         <div class="nps-bar-track">
-          <div class="nps-bar-fill" style="width:${Math.round(count/maxCount*100)}%;background:${barColors[score]};"></div>
+          <div class="nps-bar-fill" style="width:0%;background:${barColors[score]};" data-width="${Math.round(count/maxCount*100)}"></div>
         </div>
         <div class="nps-bar-count">${count}</div>
       </div>
     `).join('');
+    
+    // Animate bars after a short delay
+    setTimeout(() => {
+      document.querySelectorAll('.nps-bar-fill').forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width');
+        bar.style.width = targetWidth + '%';
+      });
+    }, 200);
   } else {
     document.getElementById('npsBarList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink3)">No NPS data found in sheet. Ensure column is named <code>nps_score</code>.</div>';
   }
