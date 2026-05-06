@@ -1060,7 +1060,6 @@ function processSheetData(rows) {
   const avgR = tot > 0 ? TABLE_DATA.reduce((s,r) => s+r.rating, 0) / tot : 0;
   document.getElementById('avgRating').textContent = avgR > 0 ? `${avgR.toFixed(1)} / 5` : '—';
   document.getElementById('totalResponses').textContent = rows.length;
-  document.getElementById('responseSub').textContent = `${tot} subject ratings`;
   document.getElementById('mentorCount').textContent = MENTORS.length;
   document.getElementById('mentorSub').textContent = `Across ${DEPT_LIST.length} departments`;
 
