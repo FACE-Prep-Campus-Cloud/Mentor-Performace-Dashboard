@@ -726,16 +726,12 @@ function getFilteredMentors(filterDept){
   if(!filterDept || filterDept==='all'){
     list = [...MENTORS];
   } else {
-    // Filter mentors who have this department
     list = MENTORS.filter(m=>m.depts.some(d=>d===filterDept));
   }
-  
-  // Recalculate ranks for filtered list
   list.forEach((m,idx)=>{
     m.filteredRank = idx + 1;
     m.filteredPercentile = list.length > 1 ? Math.round((1 - idx / (list.length - 1)) * 100) : 100;
   });
-  
   return list;
 }
 
@@ -1333,19 +1329,25 @@ function renderMentorTable(){
   document.getElementById('mtSumAvgXResp').textContent=sumAvgXResp>0?sumAvgXResp.toFixed(2):'—';
   document.getElementById('mentorTableCountBadge').textContent=list.length>0?`${list.length} mentors`:'No data';
   if(!list.length){document.getElementById('mentorTableBody').innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--ink3)">No mentors found for this department</td></tr>';return;}
-  
+
+  // ── FIX: show only the selected department when a filter is active ──
+  const deptLabel = (currentDeptFilter && currentDeptFilter !== 'all')
+    ? currentDeptFilter
+    : null; // null means show all depts
+
   const rankColors={1:'#f5c842',2:'#e0e0e0',3:'#f0c498'};
   document.getElementById('mentorTableBody').innerHTML=list.map(m=>{
-    // Use filteredRank instead of rank
     const displayRank = m.filteredRank;
     const rankBg=rankColors[displayRank]||'transparent';
     const rankColor=displayRank<=3?'#3d2200':'var(--ink3)';
     const rankBorder=displayRank<=3?'none':'1px solid var(--border2)';
-    const s=deptStyle(m.depts[0]||'');
+    // Show only the filtered dept; if "All", show all depts the mentor belongs to
+    const displayDept = deptLabel || m.depts.join(', ');
+    const s=deptStyle(deptLabel || m.depts[0]||'');
     return`<tr>
       <td style="text-align:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:${rankBg};border:${rankBorder};font-size:11px;font-weight:700;color:${rankColor};">${displayRank}</span></td>
       <td style="font-weight:600;font-size:13.5px;color:var(--ink);">${m.name}</td>
-      <td><span class="badge" style="color:${s.color};background:${s.bg};border:1px solid ${s.border}">${m.depts.join(', ')}</span></td>
+      <td><span class="badge" style="color:${s.color};background:${s.bg};border:1px solid ${s.border}">${displayDept}</span></td>
       <td style="text-align:center;"><span style="font-family:var(--font-display);font-size:18px;color:var(--gold-dark);">${m.rating.toFixed(2)}</span><span style="font-size:11px;color:var(--ink4);">/5</span></td>
       <td style="text-align:center;font-family:var(--font-display);font-size:16px;color:var(--ink2);">${m.responses}</td>
       <td style="text-align:center;font-family:var(--font-display);font-size:16px;color:var(--gold-dark);">${m.avgXResponses.toFixed(2)}</td>
