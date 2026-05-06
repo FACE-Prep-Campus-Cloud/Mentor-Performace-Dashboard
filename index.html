@@ -713,6 +713,32 @@ function updateDeptFilters(){
   });
 }
 
+function setDeptFilter(val,btn){
+  currentDeptFilter=val;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(currentPanel==='mentors'){renderMentorTable();renderInsightCharts(val);}
+}
+
+/* ── GET FILTERED MENTORS WITH RECALCULATED RANKS ── */
+function getFilteredMentors(filterDept){
+  let list;
+  if(!filterDept || filterDept==='all'){
+    list = [...MENTORS];
+  } else {
+    // Filter mentors who have this department
+    list = MENTORS.filter(m=>m.depts.some(d=>d===filterDept));
+  }
+  
+  // Recalculate ranks for filtered list
+  list.forEach((m,idx)=>{
+    m.filteredRank = idx + 1;
+    m.filteredPercentile = list.length > 1 ? Math.round((1 - idx / (list.length - 1)) * 100) : 100;
+  });
+  
+  return list;
+}
+
 /* ── RENDER ALL ── */
 function renderAllData(){
   renderMentorTable();
@@ -1054,14 +1080,6 @@ function showPanel(id,el){
   if(id==='nps'){renderNPSPanel();}
 }
 
-/* ── DEPT FILTER ── */
-function setDeptFilter(val,btn){
-  currentDeptFilter=val;
-  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  if(currentPanel==='mentors'){renderMentorTable();renderInsightCharts(val);}
-}
-
 /* ── INSIGHT CHART TAB SWITCH ── */
 function setInsightChart(type,btn){
   currentInsightChart=type;
@@ -1080,7 +1098,7 @@ function setInsightChart(type,btn){
 
 /* ── INSIGHT CHARTS ── */
 function renderInsightCharts(filterDept){
-  const list=(!filterDept||filterDept==='all')?MENTORS:MENTORS.filter(m=>m.depts.some(d=>d===filterDept));
+  const list = getFilteredMentors(filterDept);
   document.getElementById('insightChartBadge').textContent=list.length>0?`${list.length} mentors`:'No data';
 
   if(currentInsightChart==='scatter') renderScatterChart(list);
@@ -1183,14 +1201,13 @@ function renderHorizChart(list){
   if(!document.getElementById('insightHorizChart'))
     document.getElementById('insightHorizWrap').innerHTML='<canvas id="insightHorizChart"></canvas>';
 
-  const sorted=[...list].sort((a,b)=>b.bayesianRating-a.bayesianRating);
-  const top5=sorted.slice(0,5);
-  const bottom5=sorted.slice(-5).reverse();
+  const top5=list.slice(0,Math.min(5, list.length));
+  const bottom5=list.slice(-Math.min(5, list.length)).reverse();
   const combined=[...top5,...bottom5];
-  const labels=combined.map((m,i)=>(i<5?'▲ ':'▼ ')+m.name);
+  const labels=combined.map((m,i)=>(i<top5.length?'▲ ':'▼ ')+m.name);
   const data=combined.map(m=>m.bayesianRating);
-  const colors=combined.map((m,i)=>i<5?'rgba(16,185,129,0.80)':'rgba(239,68,68,0.75)');
-  const borders=combined.map((m,i)=>i<5?'#059669':'#dc2626');
+  const colors=combined.map((m,i)=>i<top5.length?'rgba(16,185,129,0.80)':'rgba(239,68,68,0.75)');
+  const borders=combined.map((m,i)=>i<top5.length?'#059669':'#dc2626');
 
   document.getElementById('insightHorizWrap').style.height=Math.max(340,combined.length*38+80)+'px';
 
@@ -1307,7 +1324,7 @@ function renderResponseChart(list){
 
 /* ── MENTOR TABLE ── */
 function renderMentorTable(){
-  const list=currentDeptFilter==='all'?MENTORS:MENTORS.filter(m=>m.depts.some(d=>d===currentDeptFilter));
+  const list = getFilteredMentors(currentDeptFilter);
   const sumResponses=list.reduce((s,m)=>s+m.responses,0);
   const sumAvgXResp=list.reduce((s,m)=>s+m.avgXResponses,0);
   const gm=sumResponses>0?(sumAvgXResp/sumResponses):0;
@@ -1316,14 +1333,17 @@ function renderMentorTable(){
   document.getElementById('mtSumAvgXResp').textContent=sumAvgXResp>0?sumAvgXResp.toFixed(2):'—';
   document.getElementById('mentorTableCountBadge').textContent=list.length>0?`${list.length} mentors`:'No data';
   if(!list.length){document.getElementById('mentorTableBody').innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--ink3)">No mentors found for this department</td></tr>';return;}
+  
   const rankColors={1:'#f5c842',2:'#e0e0e0',3:'#f0c498'};
   document.getElementById('mentorTableBody').innerHTML=list.map(m=>{
-    const rankBg=rankColors[m.rank]||'transparent';
-    const rankColor=m.rank<=3?'#3d2200':'var(--ink3)';
-    const rankBorder=m.rank<=3?'none':'1px solid var(--border2)';
+    // Use filteredRank instead of rank
+    const displayRank = m.filteredRank;
+    const rankBg=rankColors[displayRank]||'transparent';
+    const rankColor=displayRank<=3?'#3d2200':'var(--ink3)';
+    const rankBorder=displayRank<=3?'none':'1px solid var(--border2)';
     const s=deptStyle(m.depts[0]||'');
     return`<tr>
-      <td style="text-align:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:${rankBg};border:${rankBorder};font-size:11px;font-weight:700;color:${rankColor};">${m.rank}</span></td>
+      <td style="text-align:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:${rankBg};border:${rankBorder};font-size:11px;font-weight:700;color:${rankColor};">${displayRank}</span></td>
       <td style="font-weight:600;font-size:13.5px;color:var(--ink);">${m.name}</td>
       <td><span class="badge" style="color:${s.color};background:${s.bg};border:1px solid ${s.border}">${m.depts.join(', ')}</span></td>
       <td style="text-align:center;"><span style="font-family:var(--font-display);font-size:18px;color:var(--gold-dark);">${m.rating.toFixed(2)}</span><span style="font-size:11px;color:var(--ink4);">/5</span></td>
