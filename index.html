@@ -284,42 +284,6 @@ body {
   background: #5c3600; border: 2px solid #fff;
 }
 
-/* MENTOR CARDS */
-.mentor-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
-.mentor-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--gold-mid);
-  border-radius: var(--radius);
-  padding: 18px 18px;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s, transform 0.2s;
-  position: relative; min-width: 0;
-}
-.mentor-card.top-performer { border-top-color: #f5c842; }
-.mentor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-.mentor-rank-badge { position: absolute; top: 14px; right: 16px; font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
-.rank-gold   { background: #f5c842; color: #3d2200; }
-.rank-silver { background: #e8e8e8; color: #3a3a3a; }
-.rank-bronze { background: #f0c498; color: #5c2e00; }
-.rank-other  { background: var(--surface2); color: var(--ink3); border: 1px solid var(--border2); }
-.mentor-name { font-family: var(--font-display); font-size: 15px; font-weight: 400; color: var(--ink); line-height: 1.3; margin-bottom: 4px; padding-right: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mentor-dept-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
-.dept-tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
-.mentor-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.mentor-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; text-align: center; }
-.mentor-stat-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink3); margin-bottom: 3px; }
-.mentor-stat-val { font-family: var(--font-display); font-size: 24px; font-weight: 400; line-height: 1.1; color: var(--gold-dark); }
-.mentor-stat-val .unit { font-size: 11px; color: var(--ink3); font-family: var(--font-body); }
-.mentor-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
-.mentor-status-row { display: flex; justify-content: space-between; align-items: center; }
-.mentor-status-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3); }
-.mentor-perf-pill { font-size: 11px; font-weight: 500; padding: 3px 11px; border-radius: 20px; }
-.perf-excellent { background: var(--gold-light); color: var(--gold-dark); border: 1px solid #e6b84a; }
-.perf-good      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
-.perf-average   { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
-.perf-needs     { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
-
 /* NPS CARD */
 .nps-overview-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; box-shadow: var(--shadow-sm); }
 .nps-gauge-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0 18px; }
@@ -382,7 +346,6 @@ tbody tr { transition: background 0.12s; }
   .main { padding: 20px; }
   .metrics-row { grid-template-columns: 1fr 1fr; }
   .charts-grid { grid-template-columns: 1fr; }
-  .mentor-cards { grid-template-columns: 1fr; }
   .logo-name { font-size: 18px; }
 }
 </style>
@@ -417,7 +380,7 @@ tbody tr { transition: background 0.12s; }
       </button>
       <div class="college-dropdown" id="collegeDropdown"></div>
     </div>
-    <img src="image.webp" alt="FacePrep Campus" class="faceprep-logo">
+    <img src="image.webp" alt="FacePrep Campus" class="faceprep-logo" onerror="this.style.display='none'">
     <button class="download-btn" id="downloadBtn" onclick="downloadAllPages()">
       ↓ Download Report
     </button>
@@ -466,7 +429,7 @@ tbody tr { transition: background 0.12s; }
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════ SUMMARY PANEL -->
+  <!-- SUMMARY PANEL -->
   <div class="panel active" id="panel-summary">
     <div class="metrics-row">
       <div class="metric-card">
@@ -543,10 +506,8 @@ tbody tr { transition: background 0.12s; }
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════ MENTOR PERFORMANCE PANEL -->
+  <!-- MENTOR PERFORMANCE PANEL -->
   <div class="panel" id="panel-mentors">
-
-    <!-- Combo Chart Card -->
     <div class="card" id="mentorChartCard">
       <div class="card-header">
         <div class="card-title">Mentor Performance — Avg Rating &amp; Bayesian Score</div>
@@ -569,9 +530,8 @@ tbody tr { transition: background 0.12s; }
       </div>
     </div>
 
-    <!-- Bayesian Ranking Table (matching Image 2) -->
+    <!-- Bayesian Ranking Table -->
     <div class="card" style="padding:0;overflow:hidden">
-      <!-- Summary totals row -->
       <div id="mentorTableSummaryBar" style="display:flex;align-items:center;gap:24px;padding:14px 22px;background:linear-gradient(135deg,#4a2800,#7a4f00);flex-wrap:wrap;">
         <div style="color:#fde9a0;font-size:12px;">
           <span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Global Mean</span>
@@ -612,10 +572,9 @@ tbody tr { transition: background 0.12s; }
         * Bayesian Method = (Global Mean × Σ Total Responses + Avg Rating × Mentor Responses) / (Σ Total Responses + Mentor Responses)
       </div>
     </div>
-
   </div>
 
-  <!-- ═══════════════════════════════════════════ FEEDBACK TABLE PANEL -->
+  <!-- FEEDBACK TABLE PANEL -->
   <div class="panel" id="panel-feedback">
     <div class="card" style="padding:0;overflow:hidden">
       <div class="table-wrap">
@@ -633,7 +592,6 @@ tbody tr { transition: background 0.12s; }
       </div>
     </div>
 
-    <!-- NPS Section below feedback table -->
     <div class="card nps-table-section" id="npsTableSection">
       <div class="card-header">
         <div class="card-title">NPS Score Distribution</div>
@@ -823,14 +781,12 @@ function processSheetData(rows) {
 
   const allRatings = TABLE_DATA.map(r => r.rating);
   const globalMean = allRatings.length > 0 ? allRatings.reduce((a,b) => a+b,0) / allRatings.length : 0;
-  // C = total number of all responses across all mentors (matching Image 2 formula)
   const totalAllResponses = allRatings.length;
 
   MENTORS = Object.values(mentorStats).map(m => {
     const avg = m.ratings.reduce((a,b) => a+b,0) / m.ratings.length;
     const totalResponses = m.ratings.length;
     const avgXResponses = avg * totalResponses;
-    // Bayesian: (GlobalMean * C + AvgRating * TotalResponses) / (C + TotalResponses)
     const bayesianScore = ((globalMean * totalAllResponses) + (avg * totalResponses)) / (totalAllResponses + totalResponses);
     return {
       name: m.name,
@@ -855,6 +811,10 @@ function processSheetData(rows) {
   const avgR = tot > 0 ? TABLE_DATA.reduce((s,r) => s+r.rating, 0) / tot : 0;
   document.getElementById('avgRating').textContent = avgR > 0 ? `${avgR.toFixed(1)} / 5` : '—';
   document.getElementById('totalResponses').textContent = rows.length;
+
+  // FIX: populate responseSub
+  document.getElementById('responseSub').textContent = `${tot} rated entries across ${DEPT_LIST.length} dept${DEPT_LIST.length !== 1 ? 's' : ''}`;
+
   document.getElementById('mentorCount').textContent = MENTORS.length;
   document.getElementById('mentorSub').textContent = `Across ${DEPT_LIST.length} departments`;
 
@@ -883,7 +843,8 @@ function updateDeptFilters() {
 
 /* ─── RENDER ALL ─── */
 function renderAllData() {
-  renderMentorCards();
+  // FIX: call renderMentorTable() instead of the non-existent renderMentorCards()
+  renderMentorTable();
   renderMentorComboChart(currentDeptFilter);
   renderTable();
   renderNPS();
@@ -909,7 +870,7 @@ function getNpsLabel(index) {
   return 'Critical';
 }
 
-/* ─── NPS NEEDLE ANIMATION (SVG transform only) ─── */
+/* ─── NPS NEEDLE ANIMATION ─── */
 function animateNPSNeedle(targetDeg, duration) {
   duration = duration || 1500;
   const group = document.getElementById('npsNeedleGroup');
@@ -1063,23 +1024,10 @@ function statusBadge(r) {
 }
 
 function deptStyle(d) {
+  if (!d) return { color:'#4a2e00', bg:'#fff3cc', border:'#e6b84a' };
   if (d.includes('BCA')) return { color:'#5c3600', bg:'#fde9a0', border:'#e6b84a' };
   if (d.includes('BBA')) return { color:'#3d2200', bg:'#f5c842', border:'#c48a00' };
   return { color:'#4a2e00', bg:'#fff3cc', border:'#e6b84a' };
-}
-
-function getPerfPill(r) {
-  if (r >= 4.3) return ['Excellent', 'perf-excellent'];
-  if (r >= 4.0) return ['Good',      'perf-good'];
-  if (r >= 3.5) return ['Average',   'perf-average'];
-  return ['Needs work', 'perf-needs'];
-}
-
-function getRankClass(idx) {
-  if (idx === 0) return 'rank-gold';
-  if (idx === 1) return 'rank-silver';
-  if (idx === 2) return 'rank-bronze';
-  return 'rank-other';
 }
 
 /* ─── PANEL NAVIGATION ─── */
@@ -1092,9 +1040,12 @@ function showPanel(id, el) {
   const meta = { summary:['Performance Analytics','Overview'], mentors:['Mentor Analytics','Performance'], feedback:['Student Feedback','Feedback Table'] };
   document.getElementById('pageEyebrow').textContent = meta[id][0];
   document.getElementById('pageTitle').textContent = meta[id][1];
-  document.getElementById('deptFilterRow').style.visibility = (id==='mentors'||id==='feedback') ? 'visible' : 'hidden';
+
+  // FIX: show filter chips only for mentors/feedback panels, hide for summary
+  document.getElementById('deptFilterRow').style.visibility = (id === 'mentors' || id === 'feedback') ? 'visible' : 'hidden';
+
   if (id === 'mentors') {
-    renderMentorCards();
+    renderMentorTable();
     renderMentorComboChart(currentDeptFilter);
   }
   if (id === 'feedback') renderTable();
@@ -1106,7 +1057,7 @@ function setDeptFilter(val, btn) {
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   if (btn) btn.classList.add('active');
   if (currentPanel === 'mentors') {
-    renderMentorCards();
+    renderMentorTable();
     renderMentorComboChart(val);
   }
   if (currentPanel === 'feedback') renderTable();
@@ -1131,7 +1082,6 @@ function renderMentorComboChart(filterDept) {
     return;
   }
 
-  // Recreate canvas if it was replaced
   if (!document.getElementById('mentorComboChart')) {
     wrap.innerHTML = '<canvas id="mentorComboChart" role="img" aria-label="Mentor performance bar and line chart">Mentor data.</canvas>';
   }
@@ -1140,11 +1090,9 @@ function renderMentorComboChart(filterDept) {
   const dynamicH = Math.max(320, top.length * 28 + 100);
   wrap.style.height = dynamicH + 'px';
 
-  // Gradient bar colors: top = darkest, bottom = brightest gold
   const bgColors = top.map((m, i) => {
     if (i === 0) return '#5c3600';
     const ratio = top.length > 1 ? i / (top.length - 1) : 0;
-    // interpolate from #c48a00 to #f5c842
     const r = Math.round(196 + (245 - 196) * ratio);
     const g = Math.round(138 + (200 - 138) * ratio);
     const b = Math.round(0   + (66  - 0)   * ratio);
@@ -1228,38 +1176,18 @@ function renderMentorComboChart(filterDept) {
         y: {
           position: 'left',
           min: 0, max: 5,
-          ticks: {
-            stepSize: 1,
-            font: { size: 10 },
-            color: '#c48a00',
-            callback: v => v.toFixed(1)
-          },
+          ticks: { stepSize: 1, font: { size: 10 }, color: '#c48a00', callback: v => v.toFixed(1) },
           grid: { color: 'rgba(120,80,10,0.07)' },
           border: { display: false },
-          title: {
-            display: true,
-            text: 'Avg rating / 5',
-            font: { size: 11 },
-            color: '#c48a00'
-          }
+          title: { display: true, text: 'Avg rating / 5', font: { size: 11 }, color: '#c48a00' }
         },
         y2: {
           position: 'right',
           min: 0, max: 5,
-          ticks: {
-            stepSize: 1,
-            font: { size: 10 },
-            color: '#5c3600',
-            callback: v => v.toFixed(1)
-          },
+          ticks: { stepSize: 1, font: { size: 10 }, color: '#5c3600', callback: v => v.toFixed(1) },
           grid: { display: false },
           border: { display: false },
-          title: {
-            display: true,
-            text: 'Bayesian score',
-            font: { size: 11 },
-            color: '#5c3600'
-          }
+          title: { display: true, text: 'Bayesian score', font: { size: 11 }, color: '#5c3600' }
         }
       },
       layout: { padding: { top: 12, right: 10 } }
@@ -1267,14 +1195,13 @@ function renderMentorComboChart(filterDept) {
   });
 }
 
-/* ─── MENTOR TABLE (replaces cards) ─── */
+/* ─── MENTOR TABLE ─── */
+// FIX: renamed from renderMentorCards() — this is the only definition, no more undefined reference
 function renderMentorTable() {
   const list = currentDeptFilter === 'all'
     ? MENTORS
     : MENTORS.filter(m => m.depts.some(d => d === currentDeptFilter));
 
-  // Compute summary bar values from the filtered list
-  const filteredRatings = list.flatMap(m => Array(m.responses).fill(m.rating));
   const sumResponses = list.reduce((s, m) => s + m.responses, 0);
   const sumAvgXResp  = list.reduce((s, m) => s + m.avgXResponses, 0);
   const globalMeanFiltered = sumResponses > 0 ? (sumAvgXResp / sumResponses) : 0;
@@ -1292,8 +1219,8 @@ function renderMentorTable() {
 
   const rankColors = { 1:'#f5c842', 2:'#e0e0e0', 3:'#f0c498' };
 
-  document.getElementById('mentorTableBody').innerHTML = list.map((m, idx) => {
-    const globalRank = MENTORS.indexOf(m) + 1;
+  document.getElementById('mentorTableBody').innerHTML = list.map((m) => {
+    const globalRank = m.rank;
     const rankBg    = rankColors[globalRank] || 'transparent';
     const rankColor = globalRank <= 3 ? '#3d2200' : 'var(--ink3)';
     const rankBorder = globalRank <= 3 ? 'none' : '1px solid var(--border2)';
@@ -1344,6 +1271,12 @@ function initSummaryCharts() {
   const chartH = Math.max(200, top.length * 38);
   const wrap = document.getElementById('topMentorsWrap');
   wrap.style.height = chartH + 'px';
+
+  // FIX: destroy existing chart instance before creating new one
+  if (chartInstances.topMentors) {
+    chartInstances.topMentors.destroy();
+    chartInstances.topMentors = null;
+  }
 
   chartInstances.topMentors = new Chart(document.getElementById('topMentorsChart'), {
     type: 'bar',
@@ -1494,7 +1427,7 @@ table{width:100%;border-collapse:collapse;font-size:13px;}
 <div style="${sectionStyle}"><div style="${sectionTitleStyle}">Summary Overview</div>${metricsHTML}${npsHTML}</div>
 <div style="${sectionStyle}" class="page-break"><div style="${sectionTitleStyle}">Mentor Performance (Bayesian Ranking)</div>
 <table>${tableHead(['Rank','Mentor Name','Department(s)','Bayesian Score','Avg Rating','Subjects','Responses','Status'])}<tbody>${mentorRowsHTML}</tbody></table>
-<div style="font-size:11px;color:#c09840;margin-top:10px">* Rankings use Bayesian Method: (Global Mean × 50 + Avg Rating × Total Responses) / (50 + Total Responses)</div></div>
+<div style="font-size:11px;color:#c09840;margin-top:10px">* Rankings use Bayesian Method: (Global Mean × Σ Total Responses + Avg Rating × Mentor Responses) / (Σ Total Responses + Mentor Responses)</div></div>
 <div style="${sectionStyle}" class="page-break"><div style="${sectionTitleStyle}">Feedback Table</div>
 <table>${tableHead(['Department','Mentor','Subject','Rating','Status'])}<tbody>${feedbackRowsHTML}</tbody></table>
 <div style="font-size:11px;color:#c09840;margin-top:10px">* Data sourced live from Google Sheets</div></div>
