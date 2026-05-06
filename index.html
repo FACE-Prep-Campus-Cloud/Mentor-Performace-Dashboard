@@ -569,10 +569,50 @@ tbody tr { transition: background 0.12s; }
       </div>
     </div>
 
-    <!-- Mentor Cards Grid -->
-    <div class="mentor-cards" id="mentorGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">Select a college to view mentor performance</div>
+    <!-- Bayesian Ranking Table (matching Image 2) -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <!-- Summary totals row -->
+      <div id="mentorTableSummaryBar" style="display:flex;align-items:center;gap:24px;padding:14px 22px;background:linear-gradient(135deg,#4a2800,#7a4f00);flex-wrap:wrap;">
+        <div style="color:#fde9a0;font-size:12px;">
+          <span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Global Mean</span>
+          <span id="mtSumGlobalMean" style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;">—</span>
+        </div>
+        <div style="color:#fde9a0;font-size:12px;">
+          <span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Σ Total Responses</span>
+          <span id="mtSumTotalResp" style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;">—</span>
+        </div>
+        <div style="color:#fde9a0;font-size:12px;">
+          <span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Σ Avg Rating × Responses</span>
+          <span id="mtSumAvgXResp" style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;">—</span>
+        </div>
+        <div style="margin-left:auto;">
+          <span class="badge badge-gold" id="mentorTableCountBadge">—</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="mentorBayesianTable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Mentor Name</th>
+              <th>Department</th>
+              <th>Average Rating</th>
+              <th>Total No. of Responses</th>
+              <th>Avg Rating × Total Responses</th>
+              <th>Bayesian Method Value</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="mentorTableBody">
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--ink3)">Select a college to view mentor data</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:12px 22px;font-size:11px;color:var(--ink4);border-top:1px solid var(--border);">
+        * Bayesian Method = (Global Mean × Σ Total Responses + Avg Rating × Mentor Responses) / (Σ Total Responses + Mentor Responses)
+      </div>
     </div>
+
   </div>
 
   <!-- ═══════════════════════════════════════════ FEEDBACK TABLE PANEL -->
@@ -637,7 +677,7 @@ tbody tr { transition: background 0.12s; }
       </div>
     </div>
 
-    <div style="font-size:11px;color:var(--ink4);padding:0 4px">* Live data from Google Sheets. Rankings use Bayesian Method: (Global Mean × 50 + Avg Rating × Total Responses) / (50 + Total Responses)</div>
+    <div style="font-size:11px;color:var(--ink4);padding:0 4px">* Live data from Google Sheets. Rankings use Bayesian Method: (Global Mean × Σ Total Responses + Avg Rating × Mentor Responses) / (Σ Total Responses + Mentor Responses)</div>
   </div>
 </main>
 </div>
@@ -783,19 +823,23 @@ function processSheetData(rows) {
 
   const allRatings = TABLE_DATA.map(r => r.rating);
   const globalMean = allRatings.length > 0 ? allRatings.reduce((a,b) => a+b,0) / allRatings.length : 0;
-  const C = 50;
+  // C = total number of all responses across all mentors (matching Image 2 formula)
+  const totalAllResponses = allRatings.length;
 
   MENTORS = Object.values(mentorStats).map(m => {
     const avg = m.ratings.reduce((a,b) => a+b,0) / m.ratings.length;
     const totalResponses = m.ratings.length;
-    const bayesianScore = ((globalMean * C) + (avg * totalResponses)) / (C + totalResponses);
+    const avgXResponses = avg * totalResponses;
+    // Bayesian: (GlobalMean * C + AvgRating * TotalResponses) / (C + TotalResponses)
+    const bayesianScore = ((globalMean * totalAllResponses) + (avg * totalResponses)) / (totalAllResponses + totalResponses);
     return {
       name: m.name,
       depts: Array.from(m.depts),
       rating: parseFloat(avg.toFixed(2)),
-      bayesianRating: parseFloat(bayesianScore.toFixed(6)),
+      avgXResponses: parseFloat(avgXResponses.toFixed(2)),
+      bayesianRating: parseFloat(bayesianScore.toFixed(7)),
       subjects: m.subjects.size,
-      responses: m.ratings.length,
+      responses: totalResponses,
     };
   }).sort((a,b) => b.bayesianRating - a.bayesianRating);
 
@@ -1223,49 +1267,56 @@ function renderMentorComboChart(filterDept) {
   });
 }
 
-/* ─── MENTOR CARDS ─── */
-function renderMentorCards() {
+/* ─── MENTOR TABLE (replaces cards) ─── */
+function renderMentorTable() {
   const list = currentDeptFilter === 'all'
     ? MENTORS
     : MENTORS.filter(m => m.depts.some(d => d === currentDeptFilter));
 
+  // Compute summary bar values from the filtered list
+  const filteredRatings = list.flatMap(m => Array(m.responses).fill(m.rating));
+  const sumResponses = list.reduce((s, m) => s + m.responses, 0);
+  const sumAvgXResp  = list.reduce((s, m) => s + m.avgXResponses, 0);
+  const globalMeanFiltered = sumResponses > 0 ? (sumAvgXResp / sumResponses) : 0;
+
+  document.getElementById('mtSumGlobalMean').textContent   = globalMeanFiltered > 0 ? globalMeanFiltered.toFixed(7) : '—';
+  document.getElementById('mtSumTotalResp').textContent    = sumResponses || '—';
+  document.getElementById('mtSumAvgXResp').textContent     = sumAvgXResp > 0 ? sumAvgXResp.toFixed(2) : '—';
+  document.getElementById('mentorTableCountBadge').textContent = list.length > 0 ? `${list.length} mentors` : 'No data';
+
   if (!list.length) {
-    document.getElementById('mentorGrid').innerHTML =
-      '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">No mentors found</div>';
+    document.getElementById('mentorTableBody').innerHTML =
+      '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--ink3)">No mentors found for this department</td></tr>';
     return;
   }
 
-  document.getElementById('mentorGrid').innerHTML = list.map((m) => {
-    const globalIdx = MENTORS.indexOf(m);
-    const rankClass = getRankClass(globalIdx);
-    const rankLabel = globalIdx === 0 ? '# 1' : globalIdx === 1 ? '# 2' : globalIdx === 2 ? '# 3' : `# ${globalIdx+1}`;
-    const [perfLabel, perfClass] = getPerfPill(m.rating);
-    const tags = m.depts.map(d => {
-      const s = deptStyle(d);
-      return `<span class="dept-tag" style="color:${s.color};background:${s.bg};border-color:${s.border}">${d}</span>`;
-    }).join('');
+  const rankColors = { 1:'#f5c842', 2:'#e0e0e0', 3:'#f0c498' };
 
-    return `<div class="mentor-card ${globalIdx===0?'top-performer':''}">
-      <div class="mentor-rank-badge ${rankClass}">${rankLabel}</div>
-      <div class="mentor-name">${m.name}</div>
-      <div class="mentor-dept-tags">${tags}</div>
-      <div class="mentor-stats-row">
-        <div class="mentor-stat">
-          <div class="mentor-stat-lbl">Bayesian Score</div>
-          <div class="mentor-stat-val">${m.bayesianRating.toFixed(2)}</div>
-        </div>
-        <div class="mentor-stat">
-          <div class="mentor-stat-lbl">Avg Rating</div>
-          <div class="mentor-stat-val">${m.rating.toFixed(1)}<span class="unit">/5</span></div>
-        </div>
-      </div>
-      <div style="font-size:10px;color:var(--ink3);text-align:center;margin:8px 0 12px;">${m.subjects} subjects · ${m.responses} responses</div>
-      <hr class="mentor-divider">
-      <div class="mentor-status-row">
-        <span class="mentor-status-lbl">Overall Status</span>
-        <span class="mentor-perf-pill ${perfClass}">${perfLabel}</span>
-      </div>
-    </div>`;
+  document.getElementById('mentorTableBody').innerHTML = list.map((m, idx) => {
+    const globalRank = MENTORS.indexOf(m) + 1;
+    const rankBg    = rankColors[globalRank] || 'transparent';
+    const rankColor = globalRank <= 3 ? '#3d2200' : 'var(--ink3)';
+    const rankBorder = globalRank <= 3 ? 'none' : '1px solid var(--border2)';
+    const deptLabel = m.depts.join(', ');
+    const s = deptStyle(m.depts[0] || '');
+
+    return `<tr>
+      <td style="text-align:center;">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:${rankBg};border:${rankBorder};font-size:11px;font-weight:700;color:${rankColor};">${globalRank}</span>
+      </td>
+      <td style="font-weight:600;font-size:13.5px;color:var(--ink);">${m.name}</td>
+      <td><span class="badge" style="color:${s.color};background:${s.bg};border:1px solid ${s.border}">${deptLabel}</span></td>
+      <td style="text-align:center;">
+        <span style="font-family:var(--font-display);font-size:18px;color:var(--gold-dark);">${m.rating.toFixed(2)}</span>
+        <span style="font-size:11px;color:var(--ink4);">/5</span>
+      </td>
+      <td style="text-align:center;font-family:var(--font-display);font-size:16px;color:var(--ink2);">${m.responses}</td>
+      <td style="text-align:center;font-family:var(--font-display);font-size:16px;color:var(--gold-dark);">${m.avgXResponses.toFixed(2)}</td>
+      <td style="text-align:center;">
+        <span style="font-family:var(--font-display);font-size:16px;color:var(--gold-dark);font-weight:400;">${m.bayesianRating.toFixed(7)}</span>
+      </td>
+      <td>${statusBadge(m.rating)}</td>
+    </tr>`;
   }).join('');
 }
 
