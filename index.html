@@ -70,76 +70,10 @@ body {
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-@keyframes pulseGlow {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(196,138,0,0.6)); }
-  50% { filter: drop-shadow(0 0 16px rgba(196,138,0,0.9)); }
-}
-
-@keyframes scaleIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes arcFill {
-  from { stroke-dashoffset: 251.2; }
-}
-
-@keyframes floatBounce {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes gaugeGlow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 12px rgba(196,138,0,0.6)) drop-shadow(0 0 24px rgba(196,138,0,0.3));
-  }
-  50% { 
-    filter: drop-shadow(0 0 20px rgba(196,138,0,0.9)) drop-shadow(0 0 36px rgba(196,138,0,0.5));
-  }
-}
-
-@keyframes scorePopIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes segmentPulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(196,138,0,0); }
-  50% { transform: scale(1.02); box-shadow: 0 4px 20px rgba(196,138,0,0.3); }
-}
-
-@keyframes ringPulse {
-  0%, 100% { 
-    r: 6;
-    opacity: 1;
-  }
-  50% { 
-    r: 10;
-    opacity: 0.3;
-  }
-}
-
-@keyframes labelBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-}
+@keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes ringPulse { 0%, 100% { r: 6; opacity: 1; } 50% { r: 10; opacity: 0.3; } }
 
 .loading-text { font-size: 13px; color: var(--ink3); font-weight: 500; }
 .error-message {
@@ -168,7 +102,6 @@ body {
   box-shadow: 0 2px 16px rgba(90,50,0,0.30);
   position: sticky; top: 0; z-index: 100;
 }
-
 .logo { display: flex; align-items: center; flex: 1; min-width: 0; overflow: hidden; }
 .logo-name {
   font-family: var(--font-display);
@@ -181,9 +114,7 @@ body {
   text-overflow: ellipsis;
   max-width: 100%;
 }
-
 .topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 0; }
-
 .college-dropdown-wrap { position: relative; }
 .college-select-btn {
   display: flex; align-items: center; gap: 8px;
@@ -199,7 +130,6 @@ body {
 .college-select-btn .btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
 .college-select-btn .caret { flex-shrink: 0; font-size: 9px; transition: transform 0.2s; }
 .college-select-btn.open .caret { transform: rotate(180deg); }
-
 .college-dropdown {
   position: absolute; top: calc(100% + 6px); right: 0;
   background: var(--surface);
@@ -212,7 +142,6 @@ body {
 }
 .college-dropdown.open { display: block; animation: dropDown 0.18s cubic-bezier(.22,1,.36,1); }
 @keyframes dropDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
-
 .college-dropdown-item {
   padding: 10px 16px;
   font-size: 12.5px; color: var(--ink2);
@@ -223,12 +152,8 @@ body {
 .college-dropdown-item:last-child { border-bottom: none; }
 .college-dropdown-item:hover { background: var(--gold-light); color: var(--gold-dark); }
 .college-dropdown-item.active { background: var(--gold-light); color: var(--gold-dark); font-weight: 500; }
-.college-dropdown-item .item-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--border2); flex-shrink: 0; margin-top: 2px;
-}
+.college-dropdown-item .item-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; margin-top: 2px; }
 .college-dropdown-item.active .item-dot { background: var(--gold-mid); }
-
 .download-btn {
   display: flex; align-items: center; gap: 6px;
   padding: 8px 16px;
@@ -242,11 +167,7 @@ body {
 }
 .download-btn:hover { background: #f0be30; transform: translateY(-1px); }
 .download-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-.faceprep-logo {
-  height: 42px; width: auto; object-fit: contain; display: block;
-  filter: brightness(1) invert(0) opacity(1);
-}
+.faceprep-logo { height: 42px; width: auto; object-fit: contain; display: block; }
 
 /* SIDEBAR */
 .sidebar {
@@ -256,14 +177,7 @@ body {
   display: flex; flex-direction: column; gap: 2px;
   box-shadow: 2px 0 16px rgba(90,50,0,0.22);
 }
-
-.nav-group-label {
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgba(253,233,160,0.40);
-  padding: 12px 22px 5px;
-}
-
+.nav-group-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(253,233,160,0.40); padding: 12px 22px 5px; }
 .nav-item {
   display: flex; align-items: center; gap: 11px;
   padding: 10px 22px;
@@ -274,31 +188,13 @@ body {
   transition: all 0.15s;
 }
 .nav-item:hover { color: #fde9a0; background: rgba(253,233,160,0.07); }
-.nav-item.active {
-  color: #fde9a0;
-  background: rgba(253,233,160,0.13);
-  border-left-color: var(--gold-bright);
-  font-weight: 500;
-}
-.nav-icon {
-  width: 28px; height: 28px; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; background: transparent; transition: background 0.15s;
-}
+.nav-item.active { color: #fde9a0; background: rgba(253,233,160,0.13); border-left-color: var(--gold-bright); font-weight: 500; }
+.nav-icon { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; background: transparent; transition: background 0.15s; }
 .nav-item.active .nav-icon { background: rgba(253,233,160,0.13); }
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: 16px 22px 0;
-  border-top: 1px solid rgba(253,233,160,0.12);
-}
+.sidebar-footer { margin-top: auto; padding: 16px 22px 0; border-top: 1px solid rgba(253,233,160,0.12); }
 .sidebar-footer-label { font-size: 11px; color: rgba(253,233,160,0.35); }
 .sidebar-footer-val { font-size: 13px; font-weight: 500; color: rgba(253,233,160,0.70); margin-top: 1px; }
-
-.refresh-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 10px;
-}
+.refresh-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
 .refresh-btn {
   display: flex; align-items: center; gap: 5px;
   padding: 5px 10px;
@@ -314,29 +210,11 @@ body {
 .refresh-btn.spinning svg { transform: rotate(360deg); }
 
 /* MAIN */
-.main {
-  overflow-y: auto;
-  padding: 32px 36px;
-  display: flex; flex-direction: column; gap: 26px;
-  background: var(--bg);
-}
-
-.page-header {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
-}
-.page-eyebrow {
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.12em;
-  color: var(--gold-mid); margin-bottom: 4px;
-}
-.page-title {
-  font-family: var(--font-display);
-  font-size: 28px; font-weight: 400;
-  color: var(--ink); letter-spacing: -0.01em; line-height: 1.1;
-}
+.main { overflow-y: auto; padding: 32px 36px; display: flex; flex-direction: column; gap: 26px; background: var(--bg); }
+.page-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.page-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold-mid); margin-bottom: 4px; }
+.page-title { font-family: var(--font-display); font-size: 28px; font-weight: 400; color: var(--ink); letter-spacing: -0.01em; line-height: 1.1; }
 .page-sub { font-size: 13px; color: var(--ink3); margin-top: 5px; }
-
 .filter-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
 .filter-chip {
   padding: 7px 16px; border-radius: 20px;
@@ -347,19 +225,11 @@ body {
   transition: all 0.15s; box-shadow: var(--shadow-sm);
 }
 .filter-chip:hover { color: var(--gold-dark); border-color: var(--gold-mid); }
-.filter-chip.active {
-  background: var(--gold-dark); color: #fde9a0;
-  border-color: var(--gold-dark);
-  box-shadow: 0 2px 8px rgba(120,80,0,0.25);
-}
+.filter-chip.active { background: var(--gold-dark); color: #fde9a0; border-color: var(--gold-dark); box-shadow: 0 2px 8px rgba(120,80,0,0.25); }
 
 .panel { display: none; flex-direction: column; gap: 22px; }
 .panel.active { display: flex; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 .panel.active > * { animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both; }
 .panel.active > *:nth-child(1) { animation-delay: 0.03s; }
 .panel.active > *:nth-child(2) { animation-delay: 0.08s; }
@@ -368,7 +238,6 @@ body {
 
 /* METRIC CARDS */
 .metrics-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
-
 .metric-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -380,45 +249,17 @@ body {
   transition: box-shadow 0.2s, transform 0.2s;
 }
 .metric-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.metric-card::after {
-  content: ''; position: absolute;
-  bottom: -18px; right: -18px;
-  width: 72px; height: 72px; border-radius: 50%;
-  background: var(--gold-light); opacity: 0.55;
-}
+.metric-card::after { content: ''; position: absolute; bottom: -18px; right: -18px; width: 72px; height: 72px; border-radius: 50%; background: var(--gold-light); opacity: 0.55; }
 .metric-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3); }
-.metric-value {
-  font-family: var(--font-display);
-  font-size: 34px; font-weight: 400;
-  line-height: 1.05; letter-spacing: -0.02em; margin-top: 3px;
-  color: var(--gold-dark);
-}
+.metric-value { font-family: var(--font-display); font-size: 34px; font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; margin-top: 3px; color: var(--gold-dark); }
 .metric-sub { font-size: 12px; color: var(--ink3); margin-top: 5px; display: flex; align-items: center; gap: 6px; }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px 26px;
-  box-shadow: var(--shadow-sm);
-}
-.card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px;
-}
-.card-title {
-  font-family: var(--font-display);
-  font-size: 16px; font-weight: 400; color: var(--ink);
-}
-
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; box-shadow: var(--shadow-sm); }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.card-title { font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--ink); }
 .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
-.chart-mentors-wrap { position: relative; }
 
-.badge {
-  display: inline-flex; align-items: center;
-  font-size: 11px; font-weight: 500;
-  padding: 3px 10px; border-radius: 20px;
-}
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
 .badge-primary { background: var(--gold-light); color: var(--gold-dark); border: 1px solid var(--accent-md); }
 .badge-gold    { background: var(--gold-light); color: var(--gold-dark); border: 1px solid var(--accent-md); }
 .badge-green   { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
@@ -426,9 +267,25 @@ body {
 .badge-amber   { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
 .badge-rose    { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
 
+/* MENTOR COMBO CHART */
+.mentor-chart-legend {
+  display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink3); }
+.legend-bar { width: 14px; height: 14px; border-radius: 3px; }
+.legend-line-dot {
+  position: relative; width: 28px; height: 3px;
+  background: #5c3600; border-radius: 2px;
+}
+.legend-line-dot::after {
+  content: ''; position: absolute;
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #5c3600; border: 2px solid #fff;
+}
+
 /* MENTOR CARDS */
 .mentor-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
-
 .mentor-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -437,113 +294,41 @@ body {
   padding: 18px 18px;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s, transform 0.2s;
-  position: relative;
-  min-width: 0;
+  position: relative; min-width: 0;
 }
 .mentor-card.top-performer { border-top-color: #f5c842; }
 .mentor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-
-.mentor-rank-badge {
-  position: absolute; top: 14px; right: 16px;
-  font-size: 10px; font-weight: 600;
-  padding: 2px 9px; border-radius: 20px;
-}
+.mentor-rank-badge { position: absolute; top: 14px; right: 16px; font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
 .rank-gold   { background: #f5c842; color: #3d2200; }
 .rank-silver { background: #e8e8e8; color: #3a3a3a; }
 .rank-bronze { background: #f0c498; color: #5c2e00; }
 .rank-other  { background: var(--surface2); color: var(--ink3); border: 1px solid var(--border2); }
-
-.mentor-name {
-  font-family: var(--font-display);
-  font-size: 15px; font-weight: 400;
-  color: var(--ink); line-height: 1.3;
-  margin-bottom: 4px;
-  padding-right: 52px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+.mentor-name { font-family: var(--font-display); font-size: 15px; font-weight: 400; color: var(--ink); line-height: 1.3; margin-bottom: 4px; padding-right: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mentor-dept-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
 .dept-tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
-
 .mentor-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.mentor-stat {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  text-align: center;
-}
-.mentor-stat-lbl {
-  font-size: 9px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.09em;
-  color: var(--ink3); margin-bottom: 3px;
-}
-.mentor-stat-val {
-  font-family: var(--font-display);
-  font-size: 24px; font-weight: 400;
-  line-height: 1.1; color: var(--gold-dark);
-}
+.mentor-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; text-align: center; }
+.mentor-stat-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink3); margin-bottom: 3px; }
+.mentor-stat-val { font-family: var(--font-display); font-size: 24px; font-weight: 400; line-height: 1.1; color: var(--gold-dark); }
 .mentor-stat-val .unit { font-size: 11px; color: var(--ink3); font-family: var(--font-body); }
-
 .mentor-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
-
-.mentor-status-row {
-  display: flex; justify-content: space-between; align-items: center;
-}
-.mentor-status-lbl {
-  font-size: 9px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3);
-}
-.mentor-perf-pill {
-  font-size: 11px; font-weight: 500;
-  padding: 3px 11px; border-radius: 20px;
-}
+.mentor-status-row { display: flex; justify-content: space-between; align-items: center; }
+.mentor-status-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink3); }
+.mentor-perf-pill { font-size: 11px; font-weight: 500; padding: 3px 11px; border-radius: 20px; }
 .perf-excellent { background: var(--gold-light); color: var(--gold-dark); border: 1px solid #e6b84a; }
 .perf-good      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
 .perf-average   { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
 .perf-needs     { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
 
 /* NPS CARD */
-.nps-overview-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px 26px;
-  box-shadow: var(--shadow-sm);
-}
-.nps-gauge-wrap {
-  display: flex; flex-direction: column; align-items: center;
-  margin: 10px 0 18px;
-}
-.nps-gauge-svg { 
-  width: 200px; 
-  height: 115px; 
-  overflow: visible;
-}
-.nps-score-big {
-  font-family: var(--font-display);
-  font-size: 42px; font-weight: 400;
-  color: var(--gold-dark);
-  line-height: 1; margin-top: -8px;
-}
-.nps-score-label { 
-  font-size: 11px; 
-  color: var(--ink3); 
-  margin-top: 4px; 
-  font-weight: 500;
-}
-.nps-segment-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px; margin-top: 12px;
-}
-.nps-seg {
-  text-align: center; padding: 10px 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-}
-.nps-seg-val {
-  font-family: var(--font-display);
-  font-size: 22px; color: var(--gold-dark);
-}
+.nps-overview-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; box-shadow: var(--shadow-sm); }
+.nps-gauge-wrap { display: flex; flex-direction: column; align-items: center; margin: 10px 0 18px; }
+.nps-gauge-svg { width: 200px; height: 115px; overflow: visible; }
+.nps-score-big { font-family: var(--font-display); font-size: 42px; font-weight: 400; color: var(--gold-dark); line-height: 1; margin-top: -8px; }
+.nps-score-label { font-size: 11px; color: var(--ink3); margin-top: 4px; font-weight: 500; }
+.nps-segment-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+.nps-seg { text-align: center; padding: 10px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.nps-seg-val { font-family: var(--font-display); font-size: 22px; color: var(--gold-dark); }
 .nps-seg-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); margin-top: 2px; }
 .nps-seg-pct { font-size: 11px; color: var(--ink3); margin-top: 1px; }
 .nps-seg.promoters   { background: #d1fae5; border-color: #6ee7b7; }
@@ -555,66 +340,21 @@ body {
 .nps-seg.detractors  { background: #fee2e2; border-color: #fca5a5; }
 .nps-seg.detractors .nps-seg-val { color: #7f1d1d; }
 .nps-seg.detractors .nps-seg-lbl { color: #7f1d1d; }
-.nps-formula-note { font-size: 10px; color: var(--ink4); margin-top: 10px; text-align: center; }
 
 /* NPS TABLE SECTION */
 .nps-table-section { margin-top: 6px; }
 .nps-bars-wrap { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
-.nps-bar-row { 
-  display: grid; 
-  grid-template-columns: 28px 1fr 48px; 
-  gap: 10px; 
-  align-items: center;
-  animation: slideUp 0.3s cubic-bezier(.22,1,.36,1) both;
-}
-.nps-bar-row:nth-child(1) { animation-delay: 0.05s; }
-.nps-bar-row:nth-child(2) { animation-delay: 0.1s; }
-.nps-bar-row:nth-child(3) { animation-delay: 0.15s; }
-.nps-bar-row:nth-child(4) { animation-delay: 0.2s; }
-.nps-bar-row:nth-child(5) { animation-delay: 0.25s; }
-.nps-bar-row:nth-child(6) { animation-delay: 0.3s; }
-.nps-bar-row:nth-child(7) { animation-delay: 0.35s; }
-.nps-bar-row:nth-child(8) { animation-delay: 0.4s; }
-.nps-bar-row:nth-child(9) { animation-delay: 0.45s; }
-.nps-bar-row:nth-child(10) { animation-delay: 0.5s; }
+.nps-bar-row { display: grid; grid-template-columns: 28px 1fr 48px; gap: 10px; align-items: center; animation: slideUp 0.3s cubic-bezier(.22,1,.36,1) both; }
 .nps-bar-num { font-size: 11px; font-weight: 600; color: var(--ink3); text-align: center; }
 .nps-bar-track { background: var(--bg2); border-radius: 4px; height: 18px; overflow: hidden; }
-.nps-bar-fill  { 
-  height: 100%; 
-  border-radius: 4px; 
-  transition: width 0.8s cubic-bezier(.22,1,.36,1);
-  position: relative;
-  overflow: hidden;
-}
-.nps-bar-fill::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.3) 50%,
-    rgba(255,255,255,0) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
+.nps-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(.22,1,.36,1); position: relative; overflow: hidden; }
+.nps-bar-fill::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%); background-size: 200% 100%; animation: shimmer 2s infinite; }
 .nps-bar-count { font-size: 11px; color: var(--ink3); text-align: right; }
 
 /* TABLE */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead th {
-  text-align: left; padding: 12px 16px;
-  font-size: 10.5px; font-weight: 600; color: #fde9a0;
-  text-transform: uppercase; letter-spacing: 0.09em;
-  border-bottom: 1.5px solid rgba(253,233,160,0.15);
-  background: linear-gradient(135deg, #4a2800 0%, #7a4f00 100%);
-  white-space: nowrap;
-}
+thead th { text-align: left; padding: 12px 16px; font-size: 10.5px; font-weight: 600; color: #fde9a0; text-transform: uppercase; letter-spacing: 0.09em; border-bottom: 1.5px solid rgba(253,233,160,0.15); background: linear-gradient(135deg, #4a2800 0%, #7a4f00 100%); white-space: nowrap; }
 thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
 thead th:last-child  { border-radius: 0 var(--radius-sm) 0 0; }
 tbody td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--ink); vertical-align: middle; }
@@ -636,7 +376,6 @@ tbody tr { transition: background 0.12s; }
   .panel:last-child { page-break-after: avoid; }
   body { background: white !important; }
 }
-
 @media (max-width: 960px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar { display: none; }
@@ -727,7 +466,7 @@ tbody tr { transition: background 0.12s; }
     </div>
   </div>
 
-  <!-- SUMMARY PANEL -->
+  <!-- ═══════════════════════════════════════════ SUMMARY PANEL -->
   <div class="panel active" id="panel-summary">
     <div class="metrics-row">
       <div class="metric-card">
@@ -752,39 +491,30 @@ tbody tr { transition: background 0.12s; }
     </div>
 
     <div class="charts-grid">
-      <!-- Mentor Ratings Chart -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">Mentor Rankings (Bayesian)</div>
           <span class="badge badge-gold" id="topMentorsBadge">—</span>
         </div>
-        <div class="chart-mentors-wrap" id="topMentorsWrap">
+        <div id="topMentorsWrap" style="position:relative;">
           <canvas id="topMentorsChart"></canvas>
         </div>
       </div>
 
-      <!-- NPS Overview Card -->
       <div class="nps-overview-card">
         <div class="card-header" style="margin-bottom:8px;">
           <div class="card-title">Net Promoter Score (NPS)</div>
           <span class="badge badge-primary" id="npsBadge">—</span>
         </div>
-
         <div class="nps-gauge-wrap">
-          <!-- FIX: needle is a <g> element rotated via SVG transform only; no CSS transform conflicts -->
           <svg class="nps-gauge-svg" viewBox="0 0 200 115" id="npsGaugeSvg">
-            <!-- Background arc -->
             <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#f5e9c8" stroke-width="18" stroke-linecap="round"/>
-            <!-- Colored arc filled by JS -->
             <path id="npsArcFill" d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#c48a00" stroke-width="18" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
-            <!-- Pulsing ring effect -->
             <circle id="npsPulseRing" cx="100" cy="100" r="6" fill="none" stroke="#c48a00" stroke-width="2" opacity="0"/>
-            <!-- Needle group: rotate this g element only, keeps needle+base together -->
             <g id="npsNeedleGroup" transform="rotate(-90,100,100)">
               <line x1="100" y1="100" x2="100" y2="28" stroke="#5c3600" stroke-width="2.5" stroke-linecap="round"/>
               <circle cx="100" cy="100" r="6" fill="#5c3600"/>
             </g>
-            <!-- Scale labels — pushed outside the arc -->
             <text x="-8" y="108" font-size="11" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">-100</text>
             <text x="100" y="-4" font-size="11" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">0</text>
             <text x="208" y="108" font-size="11" fill="#c48a00" font-weight="700" text-anchor="middle" font-family="Inter,sans-serif">+100</text>
@@ -792,7 +522,6 @@ tbody tr { transition: background 0.12s; }
           <div class="nps-score-big" id="npsScoreBig">—</div>
           <div class="nps-score-label" id="npsScoreLabel">No data loaded</div>
         </div>
-
         <div class="nps-segment-row">
           <div class="nps-seg promoters">
             <div class="nps-seg-val" id="npsPromotersCount">—</div>
@@ -814,14 +543,39 @@ tbody tr { transition: background 0.12s; }
     </div>
   </div>
 
-  <!-- MENTOR PERFORMANCE PANEL -->
+  <!-- ═══════════════════════════════════════════ MENTOR PERFORMANCE PANEL -->
   <div class="panel" id="panel-mentors">
+
+    <!-- Combo Chart Card -->
+    <div class="card" id="mentorChartCard">
+      <div class="card-header">
+        <div class="card-title">Mentor Performance — Avg Rating &amp; Bayesian Score</div>
+        <div class="mentor-chart-legend">
+          <div class="legend-item">
+            <span class="legend-bar" style="background:#c48a00"></span>
+            Avg rating (bars)
+          </div>
+          <div class="legend-item">
+            <span class="legend-line-dot"></span>
+            Bayesian score (line)
+          </div>
+        </div>
+      </div>
+      <div id="mentorComboWrap" style="position:relative;width:100%;height:380px;">
+        <canvas id="mentorComboChart" role="img" aria-label="Combo bar and line chart showing mentor average ratings and Bayesian scores">Mentor performance data.</canvas>
+      </div>
+      <div style="font-size:11px;color:var(--ink4);margin-top:10px;">
+        * Bars = avg rating /5 (left axis). Line = Bayesian score (right axis). Darker bar = top ranked. Use department chips above to filter.
+      </div>
+    </div>
+
+    <!-- Mentor Cards Grid -->
     <div class="mentor-cards" id="mentorGrid">
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">Select a college to view mentor performance</div>
     </div>
   </div>
 
-  <!-- FEEDBACK TABLE PANEL -->
+  <!-- ═══════════════════════════════════════════ FEEDBACK TABLE PANEL -->
   <div class="panel" id="panel-feedback">
     <div class="card" style="padding:0;overflow:hidden">
       <div class="table-wrap">
@@ -920,12 +674,10 @@ let NPS_DATA = { scores: [], promoters: 0, passives: 0, detractors: 0, npsIndex:
 let currentPanel = 'summary', currentDeptFilter = 'all';
 const chartsInit = { summary: false };
 let chartInstances = {};
-
-// Track active needle animation frame so we can cancel on refresh
+let mentorComboChartInst = null;
 let needleAnimRAF = null;
 
-function topMentorsChartHeight(count) { return Math.max(200, count * 38); }
-
+/* ─── DROPDOWN ─── */
 function buildDropdown() {
   document.getElementById('collegeDropdown').innerHTML = COLLEGES.map((c,i) =>
     `<div class="college-dropdown-item" id="dditem-${i}" onclick="selectCollege(${i})"><span class="item-dot"></span>${c.name}</div>`
@@ -965,6 +717,7 @@ function refreshData() {
   });
 }
 
+/* ─── DATA LOAD ─── */
 async function loadSheetData() {
   if (!currentCollege) { alert('Please select a college first.'); return; }
   const overlay = document.getElementById('loadingOverlay'), errEl = document.getElementById('errorMessage');
@@ -977,7 +730,8 @@ async function loadSheetData() {
         Papa.parse(text, {
           header: true, skipEmptyLines: true,
           complete(res) {
-            processSheetData(res.data); renderAllData();
+            processSheetData(res.data);
+            renderAllData();
             document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
             setTimeout(() => overlay.classList.add('hidden'), 500);
             resolve();
@@ -989,20 +743,19 @@ async function loadSheetData() {
   });
 }
 
+/* ─── DATA PROCESSING ─── */
 function processSheetData(rows) {
   TABLE_DATA = [];
   const mentorStats = {}, deptSet = new Set(), subjectSet = new Set();
-
   const npsScores = [];
+
   rows.forEach(row => {
     const dept = row.department || 'Unknown';
     if (dept !== 'Unknown') deptSet.add(dept);
 
     const npsRaw = row['nps_score'] || row['NPS Score'] || row['nps score'] || row['NPSScore'] || '';
     const npsVal = parseInt(npsRaw, 10);
-    if (!isNaN(npsVal) && npsVal >= 1 && npsVal <= 10) {
-      npsScores.push(npsVal);
-    }
+    if (!isNaN(npsVal) && npsVal >= 1 && npsVal <= 10) npsScores.push(npsVal);
 
     for (let i = 1; i <= 7; i++) {
       const sn = row[`subject${i}_Name`], mn = row[`subject${i}_Mentor`], rt = parseFloat(row[`subject${i}_Rating`]);
@@ -1022,16 +775,14 @@ function processSheetData(rows) {
   const passives   = npsScores.filter(s => s >= 7 && s <= 8).length;
   const detractors = npsScores.filter(s => s <= 6).length;
   const npsIndex   = total > 0 ? Math.round((promoters / total - detractors / total) * 100) : null;
-  const avg        = total > 0 ? (npsScores.reduce((a,b)=>a+b,0)/total) : 0;
-
-  const scoreFreq = {};
+  const avg        = total > 0 ? (npsScores.reduce((a,b) => a+b,0) / total) : 0;
+  const scoreFreq  = {};
   for (let i = 1; i <= 10; i++) scoreFreq[i] = 0;
   npsScores.forEach(s => { if (scoreFreq[s] !== undefined) scoreFreq[s]++; });
-
   NPS_DATA = { scores: npsScores, promoters, passives, detractors, npsIndex, avg, total, scoreFreq };
 
   const allRatings = TABLE_DATA.map(r => r.rating);
-  const globalMean = allRatings.length > 0 ? allRatings.reduce((a,b) => a+b, 0) / allRatings.length : 0;
+  const globalMean = allRatings.length > 0 ? allRatings.reduce((a,b) => a+b,0) / allRatings.length : 0;
   const C = 50;
 
   MENTORS = Object.values(mentorStats).map(m => {
@@ -1074,6 +825,7 @@ function processSheetData(rows) {
   document.getElementById('pageSub').textContent = `${DEPT_LIST.length} departments · ${MENTORS.length} mentors · ${subjectSet.size} subjects`;
 }
 
+/* ─── DEPT FILTER CHIPS ─── */
 function updateDeptFilters() {
   const fr = document.getElementById('deptFilterRow');
   fr.innerHTML = '<button class="filter-chip active" onclick="setDeptFilter(\'all\',this)">All</button>';
@@ -1085,11 +837,17 @@ function updateDeptFilters() {
   });
 }
 
+/* ─── RENDER ALL ─── */
 function renderAllData() {
-  renderMentorCards(); renderTable(); renderNPS();
-  if (!chartsInit.summary) { initSummaryCharts(); chartsInit.summary = true; } else { updateSummaryCharts(); }
+  renderMentorCards();
+  renderMentorComboChart(currentDeptFilter);
+  renderTable();
+  renderNPS();
+  if (!chartsInit.summary) { initSummaryCharts(); chartsInit.summary = true; }
+  else { updateSummaryCharts(); }
 }
 
+/* ─── NPS HELPERS ─── */
 function getNpsColor(index) {
   if (index === null) return '#c48a00';
   if (index >= 50) return '#065f46';
@@ -1107,38 +865,23 @@ function getNpsLabel(index) {
   return 'Critical';
 }
 
-/**
- * FIX: Animate the needle group using only SVG transform attribute.
- * No CSS transform / style.animation on the needle — that caused the
- * needle to detach from its base circle on repeated calls.
- */
+/* ─── NPS NEEDLE ANIMATION (SVG transform only) ─── */
 function animateNPSNeedle(targetDeg, duration) {
   duration = duration || 1500;
   const group = document.getElementById('npsNeedleGroup');
-
-  // Cancel any in-flight animation
-  if (needleAnimRAF) {
-    cancelAnimationFrame(needleAnimRAF);
-    needleAnimRAF = null;
-  }
-
-  // Always start from the hard-left position (-90 deg)
+  if (needleAnimRAF) { cancelAnimationFrame(needleAnimRAF); needleAnimRAF = null; }
   const startDeg = -90;
   const startTime = performance.now();
-
   function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
   function step(now) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const current = startDeg + (targetDeg - startDeg) * easeOutCubic(progress);
-    // Only use SVG transform attribute — never style.transform on this element
     group.setAttribute('transform', `rotate(${current},100,100)`);
     if (progress < 1) {
       needleAnimRAF = requestAnimationFrame(step);
     } else {
       needleAnimRAF = null;
-      // Subtle settle wobble using SVG SMIL (no CSS transform clash)
       const wobbleAmt = 2;
       let wobbleStart = null;
       const wobbleDur = 600;
@@ -1149,27 +892,20 @@ function animateNPSNeedle(targetDeg, duration) {
         const offset = Math.sin(t * Math.PI * 4) * wobbleAmt * decay;
         group.setAttribute('transform', `rotate(${targetDeg + offset},100,100)`);
         if (t < 1) needleAnimRAF = requestAnimationFrame(wobble);
-        else {
-          group.setAttribute('transform', `rotate(${targetDeg},100,100)`);
-          needleAnimRAF = null;
-        }
+        else { group.setAttribute('transform', `rotate(${targetDeg},100,100)`); needleAnimRAF = null; }
       }
       needleAnimRAF = requestAnimationFrame(wobble);
     }
   }
-
   needleAnimRAF = requestAnimationFrame(step);
 }
 
 function animateCounter(element, target, duration, suffix) {
-  duration = duration || 1000;
-  suffix = suffix || '';
+  duration = duration || 1000; suffix = suffix || '';
   const startTime = performance.now();
   const isNegative = target < 0;
   const absTarget = Math.abs(target);
-
   function easeOutQuad(t) { return t * (2 - t); }
-
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
@@ -1177,24 +913,18 @@ function animateCounter(element, target, duration, suffix) {
     const displayValue = isNegative ? -current : current;
     element.textContent = (displayValue > 0 ? '+' : '') + displayValue + suffix;
     if (progress < 1) requestAnimationFrame(animate);
-    else element.style.animation = 'scorePopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
   }
   requestAnimationFrame(animate);
 }
 
+/* ─── NPS RENDER ─── */
 function renderNPS() {
   const { promoters, passives, detractors, npsIndex, avg, total, scoreFreq } = NPS_DATA;
-
   const scoreBigEl = document.getElementById('npsScoreBig');
   scoreBigEl.style.color = getNpsColor(npsIndex);
-  // Clear any leftover CSS animation from previous run
   scoreBigEl.style.animation = '';
-
-  if (npsIndex !== null) {
-    animateCounter(scoreBigEl, npsIndex, 1200, '');
-  } else {
-    scoreBigEl.textContent = '—';
-  }
+  if (npsIndex !== null) { animateCounter(scoreBigEl, npsIndex, 1200, ''); }
+  else { scoreBigEl.textContent = '—'; }
 
   document.getElementById('npsScoreLabel').textContent = total > 0 ? getNpsLabel(npsIndex) : 'No NPS data in sheet';
   document.getElementById('npsBadge').textContent = total > 0 ? `${total} responses` : 'No data';
@@ -1203,35 +933,29 @@ function renderNPS() {
   const passPct  = total > 0 ? Math.round(passives  / total * 100) : 0;
   const detrPct  = total > 0 ? Math.round(detractors/ total * 100) : 0;
 
-  document.getElementById('npsPromotersCount').textContent = total > 0 ? promoters : '—';
-  document.getElementById('npsPassivesCount').textContent  = total > 0 ? passives  : '—';
-  document.getElementById('npsDetractorsCount').textContent= total > 0 ? detractors: '—';
-  document.getElementById('npsPromotersPct').textContent   = total > 0 ? `${promoPct}% · score 9–10` : 'score 9–10';
-  document.getElementById('npsPassivesPct').textContent    = total > 0 ? `${passPct}% · score 7–8`  : 'score 7–8';
-  document.getElementById('npsDetractorsPct').textContent  = total > 0 ? `${detrPct}% · score 1–6`  : 'score 1–6';
+  document.getElementById('npsPromotersCount').textContent  = total > 0 ? promoters  : '—';
+  document.getElementById('npsPassivesCount').textContent   = total > 0 ? passives   : '—';
+  document.getElementById('npsDetractorsCount').textContent = total > 0 ? detractors : '—';
+  document.getElementById('npsPromotersPct').textContent    = total > 0 ? `${promoPct}% · score 9–10` : 'score 9–10';
+  document.getElementById('npsPassivesPct').textContent     = total > 0 ? `${passPct}% · score 7–8`  : 'score 7–8';
+  document.getElementById('npsDetractorsPct').textContent   = total > 0 ? `${detrPct}% · score 1–6`  : 'score 1–6';
 
   if (npsIndex !== null) {
-    // degree mapping: -100 → -90deg, +100 → +90deg
     const targetDeg = ((npsIndex + 100) / 200) * 180 - 90;
     animateNPSNeedle(targetDeg, 1500);
 
-    // Arc fill animation
     const arcLen = 251.2;
     const filled = ((npsIndex + 100) / 200) * arcLen;
     const arc = document.getElementById('npsArcFill');
     const arcColor = getNpsColor(npsIndex);
     arc.setAttribute('stroke', arcColor);
-    // Reset transition so it re-fires on refresh
     arc.style.transition = 'none';
     arc.style.strokeDashoffset = arcLen;
     arc.style.filter = 'none';
-    // Force reflow then animate
     arc.getBoundingClientRect();
-    arc.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1), filter 1.5s ease-in-out';
+    arc.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
     arc.style.strokeDashoffset = (arcLen - filled).toFixed(1);
-    arc.style.filter = `drop-shadow(0 0 12px ${arcColor}90) drop-shadow(0 0 24px ${arcColor}60)`;
 
-    // Pulsing ring
     const pulseRing = document.getElementById('npsPulseRing');
     pulseRing.setAttribute('stroke', arcColor);
     pulseRing.style.animation = 'none';
@@ -1239,7 +963,6 @@ function renderNPS() {
     pulseRing.style.animation = 'ringPulse 2s ease-in-out infinite';
     pulseRing.style.animationDelay = '1.5s';
 
-    // Segment entrance
     document.querySelectorAll('.nps-seg').forEach((seg, idx) => {
       seg.style.animation = 'none';
       seg.getBoundingClientRect();
@@ -1247,13 +970,12 @@ function renderNPS() {
       seg.style.animationDelay = `${1.1 + idx * 0.1}s`;
     });
   } else {
-    // Reset needle to left position when no data
     const group = document.getElementById('npsNeedleGroup');
     if (needleAnimRAF) { cancelAnimationFrame(needleAnimRAF); needleAnimRAF = null; }
     group.setAttribute('transform', 'rotate(-90,100,100)');
   }
 
-  document.getElementById('npsTableBadge').textContent = total > 0 ? `${total} responses` : 'No data';
+  document.getElementById('npsTableBadge').textContent     = total > 0 ? `${total} responses` : 'No data';
   document.getElementById('npsT_promoters').textContent    = total > 0 ? promoters  : '—';
   document.getElementById('npsT_passives').textContent     = total > 0 ? passives   : '—';
   document.getElementById('npsT_detractors').textContent   = total > 0 ? detractors : '—';
@@ -1268,11 +990,7 @@ function renderNPS() {
 
   if (total > 0 && scoreFreq) {
     const maxCount = Math.max(...Object.values(scoreFreq), 1);
-    const barColors = {
-      1:'#e24b4a',2:'#e24b4a',3:'#e24b4a',4:'#e24b4a',5:'#e24b4a',6:'#e24b4a',
-      7:'#c48a00',8:'#c48a00',
-      9:'#065f46',10:'#065f46'
-    };
+    const barColors = { 1:'#e24b4a',2:'#e24b4a',3:'#e24b4a',4:'#e24b4a',5:'#e24b4a',6:'#e24b4a', 7:'#c48a00',8:'#c48a00', 9:'#065f46',10:'#065f46' };
     document.getElementById('npsBarList').innerHTML = Object.entries(scoreFreq).map(([score, count]) => `
       <div class="nps-bar-row">
         <div class="nps-bar-num">${score}</div>
@@ -1288,10 +1006,11 @@ function renderNPS() {
       });
     }, 200);
   } else {
-    document.getElementById('npsBarList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink3)">No NPS data found in sheet. Ensure column is named <code>nps_score</code>.</div>';
+    document.getElementById('npsBarList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink3)">No NPS data found. Ensure column is named <code>nps_score</code>.</div>';
   }
 }
 
+/* ─── HELPERS ─── */
 function statusBadge(r) {
   if (r >= 4.3) return '<span class="badge badge-gold">Excellent</span>';
   if (r >= 4.0) return '<span class="badge badge-green">Good</span>';
@@ -1319,6 +1038,7 @@ function getRankClass(idx) {
   return 'rank-other';
 }
 
+/* ─── PANEL NAVIGATION ─── */
 function showPanel(id, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
@@ -1329,22 +1049,185 @@ function showPanel(id, el) {
   document.getElementById('pageEyebrow').textContent = meta[id][0];
   document.getElementById('pageTitle').textContent = meta[id][1];
   document.getElementById('deptFilterRow').style.visibility = (id==='mentors'||id==='feedback') ? 'visible' : 'hidden';
-  if (id==='mentors') renderMentorCards();
-  if (id==='feedback') renderTable();
+  if (id === 'mentors') {
+    renderMentorCards();
+    renderMentorComboChart(currentDeptFilter);
+  }
+  if (id === 'feedback') renderTable();
 }
 
+/* ─── DEPT FILTER ─── */
 function setDeptFilter(val, btn) {
   currentDeptFilter = val;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  if (currentPanel==='mentors') renderMentorCards();
-  if (currentPanel==='feedback') renderTable();
+  if (currentPanel === 'mentors') {
+    renderMentorCards();
+    renderMentorComboChart(val);
+  }
+  if (currentPanel === 'feedback') renderTable();
 }
 
-function renderMentorCards() {
-  const list = currentDeptFilter==='all'
+/* ─── MENTOR COMBO CHART (Bar + Line) ─── */
+function renderMentorComboChart(filterDept) {
+  const list = (!filterDept || filterDept === 'all')
     ? MENTORS
-    : MENTORS.filter(m => m.depts.some(d => d===currentDeptFilter));
+    : MENTORS.filter(m => m.depts.some(d => d === filterDept));
+
+  if (mentorComboChartInst) {
+    mentorComboChartInst.destroy();
+    mentorComboChartInst = null;
+  }
+
+  const wrap = document.getElementById('mentorComboWrap');
+
+  if (!list.length) {
+    wrap.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--ink3);font-size:13px;">No mentors found for this department</div>';
+    wrap.style.height = '200px';
+    return;
+  }
+
+  // Recreate canvas if it was replaced
+  if (!document.getElementById('mentorComboChart')) {
+    wrap.innerHTML = '<canvas id="mentorComboChart" role="img" aria-label="Mentor performance bar and line chart">Mentor data.</canvas>';
+  }
+
+  const top = list.slice(0, 20);
+  const dynamicH = Math.max(320, top.length * 28 + 100);
+  wrap.style.height = dynamicH + 'px';
+
+  // Gradient bar colors: top = darkest, bottom = brightest gold
+  const bgColors = top.map((m, i) => {
+    if (i === 0) return '#5c3600';
+    const ratio = top.length > 1 ? i / (top.length - 1) : 0;
+    // interpolate from #c48a00 to #f5c842
+    const r = Math.round(196 + (245 - 196) * ratio);
+    const g = Math.round(138 + (200 - 138) * ratio);
+    const b = Math.round(0   + (66  - 0)   * ratio);
+    return `rgb(${r},${g},${b})`;
+  });
+
+  mentorComboChartInst = new Chart(document.getElementById('mentorComboChart'), {
+    data: {
+      labels: top.map(m => m.name),
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Avg Rating',
+          data: top.map(m => m.rating),
+          backgroundColor: bgColors,
+          borderRadius: 5,
+          borderSkipped: false,
+          barThickness: 24,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          type: 'line',
+          label: 'Bayesian Score',
+          data: top.map(m => m.bayesianRating),
+          borderColor: '#5c3600',
+          backgroundColor: 'rgba(92,54,0,0.08)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#5c3600',
+          pointBorderColor: '#fdf8ed',
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 9,
+          pointHoverBorderWidth: 3,
+          fill: false,
+          tension: 0.38,
+          yAxisID: 'y2',
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 700, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(42,24,0,0.92)',
+          titleColor: '#fde9a0',
+          bodyColor: '#f5e9c8',
+          borderColor: '#c48a00',
+          borderWidth: 1,
+          padding: 10,
+          callbacks: {
+            title: ctx => ctx[0].label,
+            label: ctx => {
+              const m = top[ctx.dataIndex];
+              if (ctx.dataset.type === 'bar')
+                return ` Avg rating: ${m.rating.toFixed(2)}/5  ·  ${m.subjects} subjects  ·  ${m.responses} responses`;
+              return ` Bayesian score: ${m.bayesianRating.toFixed(4)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            font: { size: 11 },
+            color: '#8a6020',
+            autoSkip: false,
+            maxRotation: 35,
+            callback: function(val, idx) {
+              const name = top[idx] ? top[idx].name : '';
+              return name.length > 16 ? name.slice(0, 15) + '…' : name;
+            }
+          },
+          grid: { display: false },
+          border: { display: false }
+        },
+        y: {
+          position: 'left',
+          min: 0, max: 5,
+          ticks: {
+            stepSize: 1,
+            font: { size: 10 },
+            color: '#c48a00',
+            callback: v => v.toFixed(1)
+          },
+          grid: { color: 'rgba(120,80,10,0.07)' },
+          border: { display: false },
+          title: {
+            display: true,
+            text: 'Avg rating / 5',
+            font: { size: 11 },
+            color: '#c48a00'
+          }
+        },
+        y2: {
+          position: 'right',
+          min: 0, max: 5,
+          ticks: {
+            stepSize: 1,
+            font: { size: 10 },
+            color: '#5c3600',
+            callback: v => v.toFixed(1)
+          },
+          grid: { display: false },
+          border: { display: false },
+          title: {
+            display: true,
+            text: 'Bayesian score',
+            font: { size: 11 },
+            color: '#5c3600'
+          }
+        }
+      },
+      layout: { padding: { top: 12, right: 10 } }
+    }
+  });
+}
+
+/* ─── MENTOR CARDS ─── */
+function renderMentorCards() {
+  const list = currentDeptFilter === 'all'
+    ? MENTORS
+    : MENTORS.filter(m => m.depts.some(d => d === currentDeptFilter));
 
   if (!list.length) {
     document.getElementById('mentorGrid').innerHTML =
@@ -1352,7 +1235,7 @@ function renderMentorCards() {
     return;
   }
 
-  document.getElementById('mentorGrid').innerHTML = list.map((m, idx) => {
+  document.getElementById('mentorGrid').innerHTML = list.map((m) => {
     const globalIdx = MENTORS.indexOf(m);
     const rankClass = getRankClass(globalIdx);
     const rankLabel = globalIdx === 0 ? '# 1' : globalIdx === 1 ? '# 2' : globalIdx === 2 ? '# 3' : `# ${globalIdx+1}`;
@@ -1386,8 +1269,9 @@ function renderMentorCards() {
   }).join('');
 }
 
+/* ─── FEEDBACK TABLE ─── */
 function renderTable() {
-  const data = currentDeptFilter==='all' ? TABLE_DATA : TABLE_DATA.filter(r => r.dept===currentDeptFilter);
+  const data = currentDeptFilter === 'all' ? TABLE_DATA : TABLE_DATA.filter(r => r.dept === currentDeptFilter);
   document.getElementById('feedbackBody').innerHTML = data.length > 0 ? data.map(r => {
     const s = deptStyle(r.dept);
     return `<tr>
@@ -1400,12 +1284,13 @@ function renderTable() {
   }).join('') : '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--ink3)">No feedback data found</td></tr>';
 }
 
+/* ─── SUMMARY CHARTS ─── */
 Chart.defaults.font.family = 'Inter';
 Chart.defaults.color = '#8a6020';
 
 function initSummaryCharts() {
   const top = MENTORS.slice(0, Math.min(15, MENTORS.length));
-  const chartH = topMentorsChartHeight(top.length);
+  const chartH = Math.max(200, top.length * 38);
   const wrap = document.getElementById('topMentorsWrap');
   wrap.style.height = chartH + 'px';
 
@@ -1441,12 +1326,14 @@ function initSummaryCharts() {
     },
     plugins: [ChartDataLabels]
   });
+
+  document.getElementById('topMentorsBadge').textContent = top.length > 0 ? `Top ${top.length}` : 'No data';
 }
 
 function updateSummaryCharts() {
   if (chartInstances.topMentors) {
     const top = MENTORS.slice(0, Math.min(15, MENTORS.length));
-    const chartH = topMentorsChartHeight(top.length);
+    const chartH = Math.max(200, top.length * 38);
     document.getElementById('topMentorsWrap').style.height = chartH + 'px';
     chartInstances.topMentors.data.labels = top.map(m => m.name);
     chartInstances.topMentors.data.datasets[0].data = top.map(m => m.bayesianRating);
@@ -1454,6 +1341,14 @@ function updateSummaryCharts() {
     chartInstances.topMentors.update();
     document.getElementById('topMentorsBadge').textContent = top.length > 0 ? `Top ${top.length}` : 'No data';
   }
+}
+
+/* ─── DOWNLOAD REPORT ─── */
+function statusBadgeInline(r) {
+  if (r >= 4.3) return '<span style="background:#fde9a0;color:#5c3600;border:1px solid #e6b84a;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Excellent</span>';
+  if (r >= 4.0) return '<span style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Good</span>';
+  if (r >= 3.5) return '<span style="background:#fef3c7;color:#78350f;border:1px solid #fcd34d;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Average</span>';
+  return '<span style="background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Needs work</span>';
 }
 
 function downloadAllPages() {
@@ -1562,13 +1457,7 @@ table{width:100%;border-collapse:collapse;font-size:13px;}
   URL.revokeObjectURL(a.href);
 }
 
-function statusBadgeInline(r) {
-  if (r >= 4.3) return '<span style="background:#fde9a0;color:#5c3600;border:1px solid #e6b84a;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Excellent</span>';
-  if (r >= 4.0) return '<span style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Good</span>';
-  if (r >= 3.5) return '<span style="background:#fef3c7;color:#78350f;border:1px solid #fcd34d;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Average</span>';
-  return '<span style="background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Needs work</span>';
-}
-
+/* ─── INIT ─── */
 document.addEventListener('DOMContentLoaded', () => {
   buildDropdown();
   document.getElementById('loadingOverlay').classList.add('hidden');
