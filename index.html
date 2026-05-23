@@ -212,15 +212,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-siz
 .nps-stat-val{font-family:var(--font-display);font-size:28px;color:#fde9a0;line-height:1;}
 .nps-stat-lbl{font-size:11px;color:rgba(253,233,160,0.55);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
 .nps-formula{font-size:11px;color:rgba(253,233,160,0.45);margin-top:4px;}
-.nps-charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.nps-chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow-sm);}
-.nps-bar-enhanced{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
-.nps-bar-item{display:grid;grid-template-columns:20px 1fr 36px;gap:10px;align-items:center;}
-.nps-bar-score-num{font-size:11px;font-weight:700;color:var(--ink3);text-align:center;}
-.nps-bar-outer{background:var(--bg2);border-radius:6px;height:22px;overflow:hidden;position:relative;}
-.nps-bar-inner{height:100%;border-radius:6px;transition:width 1s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden;display:flex;align-items:center;padding-left:8px;}
-.nps-bar-inner::after{content:'';position:absolute;top:0;left:0;bottom:0;right:0;background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.25) 50%,rgba(255,255,255,0) 100%);background-size:200% 100%;animation:shimmer 2.5s infinite;}
-.nps-bar-count{font-size:11px;font-weight:600;color:var(--ink3);text-align:right;}
 
 .table-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -297,7 +288,6 @@ tbody tr{transition:background 0.12s;}
 .mm-kpi-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;margin-top:6px;}
 .mm-kpi-bar{height:3px;border-radius:2px;background:var(--bg2);margin-top:8px;overflow:hidden;}
 .mm-kpi-bar-fill{height:100%;border-radius:2px;transition:width 0.9s cubic-bezier(.22,1,.36,1);}
-.mm-formula-note{font-size:10.5px;color:var(--ink4);background:var(--bg2);border-radius:6px;padding:8px 12px;margin-top:10px;line-height:1.6;}
 .mm-verdict{border-radius:10px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;font-size:12.5px;line-height:1.65;border:1px solid;}
 .mm-q-grid{display:flex;flex-direction:column;gap:8px;}
 .mm-q-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:1fr 190px;gap:12px;align-items:start;}
@@ -321,7 +311,6 @@ tbody tr{transition:background 0.12s;}
 .mm-rec-box{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
 .mm-rec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:6px;}
 .mm-rec-text{font-size:12.5px;color:var(--ink2);line-height:1.65;}
-.mm-low-resp{font-size:11px;color:#78350f;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;padding:8px 12px;margin-top:10px;display:flex;align-items:center;gap:6px;}
 
 .mentor-name-btn{background:none;border:none;color:#7a4f00;font-size:13.5px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-family:var(--font-body);padding:0;text-align:left;}
 .mentor-name-btn:hover{color:#5c3600;}
@@ -336,7 +325,7 @@ tbody tr{transition:background 0.12s;}
   .shell{grid-template-columns:1fr;}
   .main{padding:20px;}
   .metrics-row,.trend-kpi-row{grid-template-columns:1fr 1fr;}
-  .charts-grid,.nps-charts-row,.trend-charts-grid{grid-template-columns:1fr;}
+  .charts-grid{grid-template-columns:1fr;}
   .nps-hero-row{grid-template-columns:1fr;}
   .logo-name{font-size:18px;}
   .topbar{padding:0 16px;}
@@ -397,7 +386,6 @@ tbody tr{transition:background 0.12s;}
     <div class="mm-section">
       <div class="mm-section-title">Performance KPIs</div>
       <div class="mm-kpi-grid" id="mmKpiGrid"></div>
-      <div class="mm-formula-note" id="mmFormulaNote"></div>
     </div>
     <div class="mm-section">
       <div class="mm-section-title">Overall Assessment</div>
@@ -417,8 +405,6 @@ tbody tr{transition:background 0.12s;}
         <div class="mm-rec-title">📋 Recommendation</div>
         <div class="mm-rec-text" id="mmRecText">—</div>
       </div>
-      <div id="mmLowResp" style="display:none;" class="mm-low-resp"></div>
-      <div style="font-size:10.5px;color:var(--ink4);margin-top:12px;padding-top:10px;border-top:1px solid var(--border);" id="mmFootnote"></div>
     </div>
   </div>
 </div>
@@ -548,9 +534,9 @@ tbody tr{transition:background 0.12s;}
         <div class="metric-value" id="avgRating">—</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Total Responses</div>
-        <div class="metric-value" id="totalResponses">—</div>
-        <div class="metric-sub" id="responseSub">—</div>
+        <div class="metric-label">Hit Ratio</div>
+        <div class="metric-value" id="hitRatioMetric">—</div>
+        <div class="metric-sub" id="hitRatioSub">—</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Mentors Tracked</div>
@@ -619,7 +605,6 @@ tbody tr{transition:background 0.12s;}
       <div id="mentorTableSummaryBar" style="display:flex;align-items:center;gap:24px;padding:14px 22px;background:linear-gradient(135deg,#4a2800,#7a4f00);flex-wrap:wrap;">
         <div style="color:#fde9a0;font-size:12px;"><span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Global Mean</span><span id="mtSumGlobalMean" style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;">—</span></div>
         <div style="color:#fde9a0;font-size:12px;"><span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Σ Total Responses</span><span id="mtSumTotalResp" style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;">—</span></div>
-        <div style="color:#fde9a0;font-size:12px;"><span style="opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px;">Σ Avg Rating × Responses</span><span id="mtSumAvgXResp" style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;">—</span></div>
         <div style="margin-left:auto;"><span class="badge badge-gold" id="mentorTableCountBadge">—</span></div>
       </div>
     </div>
@@ -633,11 +618,10 @@ tbody tr{transition:background 0.12s;}
             <th>Department</th>
             <th id="thAvgRating">Average Rating</th>
             <th id="thTotalResponses">Total Responses</th>
-            <th>Avg Rating × Responses</th>
             <th>Bayesian Value</th>
             <th>Status</th>
           </tr></thead>
-          <tbody id="mentorTableBody"><tr><td colspan="8" style="text-align:center;padding:40px;color:var(--ink3)">Select a college to view mentor data</td></tr></tbody>
+          <tbody id="mentorTableBody"><tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink3)">Select a college to view mentor data</td></tr></tbody>
         </table>
       </div>
       <div style="padding:12px 22px;font-size:11px;color:var(--ink4);border-top:1px solid var(--border);" id="mentorTableFootnote">* Bayesian = (Global Mean × Σ Responses + Avg Rating × Mentor Responses) / (Σ Responses + Mentor Responses)</div>
@@ -646,6 +630,8 @@ tbody tr{transition:background 0.12s;}
 
   <!-- NPS ANALYTICS PANEL -->
   <div class="panel" id="panel-nps">
+
+    <!-- Banner -->
     <div class="nps-index-banner">
       <div>
         <div class="nps-index-label">Net Promoter Score Index</div>
@@ -658,51 +644,31 @@ tbody tr{transition:background 0.12s;}
         <div class="nps-stat-block"><div class="nps-stat-val" id="npsMedianBig">—</div><div class="nps-stat-lbl">Median Score</div></div>
       </div>
     </div>
+
+    <!-- Hero cards -->
     <div class="nps-hero-row">
       <div class="nps-hero-card promoters-card"><div class="nps-hero-icon">😊</div><div class="nps-hero-val" id="npsP_count">—</div><div class="nps-hero-lbl">Promoters</div><div class="nps-hero-pct" id="npsP_pct">—</div><div class="nps-hero-range">Score 9 – 10</div></div>
       <div class="nps-hero-card passives-card"><div class="nps-hero-icon">😐</div><div class="nps-hero-val" id="npsN_count">—</div><div class="nps-hero-lbl">Passives</div><div class="nps-hero-pct" id="npsN_pct">—</div><div class="nps-hero-range">Score 7 – 8</div></div>
       <div class="nps-hero-card detractors-card"><div class="nps-hero-icon">😞</div><div class="nps-hero-val" id="npsD_count">—</div><div class="nps-hero-lbl">Detractors</div><div class="nps-hero-pct" id="npsD_pct">—</div><div class="nps-hero-range">Score 1 – 6</div></div>
     </div>
-    <div class="nps-charts-row">
-      <div class="nps-chart-card">
-        <div class="card-header"><div class="card-title">Segment Distribution</div><span class="badge badge-primary" id="npsDonutBadge">—</span></div>
-        <div style="position:relative;width:100%;height:260px;display:flex;align-items:center;justify-content:center;">
-          <canvas id="npsDonutChart"></canvas>
-          <div id="npsDonutCenter" style="position:absolute;text-align:center;pointer-events:none;">
-            <div style="font-family:var(--font-display);font-size:28px;color:var(--gold-dark);" id="npsDonutScore">—</div>
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);">NPS Index</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:center;gap:18px;margin-top:4px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink3);"><span style="width:10px;height:10px;border-radius:2px;background:#10b981;display:inline-block;"></span>Promoters</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink3);"><span style="width:10px;height:10px;border-radius:2px;background:#f59e0b;display:inline-block;"></span>Passives</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink3);"><span style="width:10px;height:10px;border-radius:2px;background:#ef4444;display:inline-block;"></span>Detractors</div>
-        </div>
-      </div>
-      <div class="nps-chart-card">
-        <div class="card-header"><div class="card-title">Score Distribution (1–10)</div><span class="badge badge-primary" id="npsBarBadge">—</span></div>
-        <div style="position:relative;width:100%;height:260px;"><canvas id="npsBarChart"></canvas></div>
-      </div>
-    </div>
+
+    <!-- Follow-up Yes/No Questions -->
     <div class="card">
-      <div class="card-header"><div class="card-title">Score Breakdown — Count per Rating</div><span class="badge badge-gold" id="npsBreakdownBadge">—</span></div>
-      <div class="nps-bar-enhanced" id="npsBarEnhanced"><div style="text-align:center;padding:24px;color:var(--ink3);">Select a college to view NPS breakdown</div></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-title">Segment Proportion — Visual Breakdown</div><span class="badge badge-primary" id="npsStackedBadge">—</span></div>
-      <div id="npsStackedWrap" style="position:relative;width:100%;height:80px;">
-        <div id="npsStackedBar" style="display:flex;height:48px;border-radius:10px;overflow:hidden;gap:2px;margin-top:10px;">
-          <div id="stkPromoters" style="background:#10b981;height:100%;border-radius:10px 0 0 10px;transition:width 1s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;"></div>
-          <div id="stkPassives"  style="background:#f59e0b;height:100%;transition:width 1s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;"></div>
-          <div id="stkDetractors" style="background:#ef4444;height:100%;border-radius:0 10px 10px 0;transition:width 1s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--ink3);">
-          <span id="stkPromLabel">Promoters —%</span><span id="stkPassLabel">Passives —%</span><span id="stkDetrLabel">Detractors —%</span>
-        </div>
+      <div class="card-header">
+        <div class="card-title">Follow-up Questions — Yes/No Analysis</div>
+        <span class="badge badge-gold" id="npsFollowupYesNoBadge">—</span>
       </div>
-      <div style="font-size:11px;color:var(--ink4);margin-top:10px;">* NPS = %Promoters − %Detractors · Passives are excluded from the index calculation.</div>
+      <div id="npsFollowupYesNoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;">
+        <div style="text-align:center;padding:32px;color:var(--ink3);grid-column:1/-1;">Select a college to view follow-up question data</div>
+      </div>
     </div>
-  </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Follow-up Responses — Overall Summary</div><span class="badge badge-primary" id="npsFollowupSummaryBadge">—</span></div>
+      <div id="npsFollowupTable" style="overflow-x:auto;margin-top:4px;"></div>
+    </div>
+
+  </div><!-- end panel-nps -->
 
   <!-- TREND OVER TIME PANEL -->
   <div class="panel" id="panel-trends">
@@ -780,6 +746,7 @@ tbody tr{transition:background 0.12s;}
 
 </main>
 </div>
+
 
 <script>
 /* ═══════════════════════════════════════════
@@ -883,11 +850,7 @@ const Q_ANALYSIS_TEXT=[
 ];
 
 function mmClassify(pct){
-  if(pct>=90)return'hp';
-  if(pct>=80)return'mp';
-  if(pct>=70)return'n';
-  if(pct>=60)return'mn';
-  return'hn';
+  if(pct>=90)return'hp';if(pct>=80)return'mp';if(pct>=70)return'n';if(pct>=60)return'mn';return'hn';
 }
 function mmClassLabel(cls){
   return{hp:'High positive',mp:'Moderate positive',n:'Neutral',mn:'Moderate negative',hn:'High negative'}[cls];
@@ -923,24 +886,18 @@ function mmInterpretStrength(s){
   return{level:'concern',label:'Critical',desc:'Critical teaching performance concerns requiring immediate intervention and mentoring support.'};
 }
 function mmInterpretConcern(s){
-  if(s<=10)return{level:'excellent',label:'Minimal'};
-  if(s<=20)return{level:'good',label:'Minor'};
-  if(s<=30)return{level:'average',label:'Noticeable'};
-  if(s<=40)return{level:'average',label:'Significant'};
+  if(s<=10)return{level:'excellent',label:'Minimal'};if(s<=20)return{level:'good',label:'Minor'};
+  if(s<=30)return{level:'average',label:'Noticeable'};if(s<=40)return{level:'average',label:'Significant'};
   return{level:'concern',label:'Critical'};
 }
 function mmInterpretTEI(s){
-  if(s>=90)return{level:'excellent',label:'Exceptional'};
-  if(s>=80)return{level:'excellent',label:'Highly effective'};
-  if(s>=70)return{level:'good',label:'Satisfactory'};
-  if(s>=60)return{level:'average',label:'Needs improvement'};
+  if(s>=90)return{level:'excellent',label:'Exceptional'};if(s>=80)return{level:'excellent',label:'Highly effective'};
+  if(s>=70)return{level:'good',label:'Satisfactory'};if(s>=60)return{level:'average',label:'Needs improvement'};
   return{level:'concern',label:'Major concerns'};
 }
 function mmInterpretSSI(s){
-  if(s>=90)return{level:'excellent',label:'Highly satisfied'};
-  if(s>=80)return{level:'excellent',label:'Strongly satisfied'};
-  if(s>=70)return{level:'good',label:'Moderately satisfied'};
-  if(s>=60)return{level:'average',label:'Below expectations'};
+  if(s>=90)return{level:'excellent',label:'Highly satisfied'};if(s>=80)return{level:'excellent',label:'Strongly satisfied'};
+  if(s>=70)return{level:'good',label:'Moderately satisfied'};if(s>=60)return{level:'average',label:'Below expectations'};
   return{level:'concern',label:'Significantly dissatisfied'};
 }
 function calcMentorKPIs(qs){
@@ -973,11 +930,11 @@ function mmVerdictConfig(strength,tei){
 ═══════════════════════════════════════════ */
 let currentMode='overview';
 let currentCollege=null;
-let MENTORS=[],TABLE_DATA=[],DEPT_LIST=[];
+let MENTORS=[],TABLE_DATA=[],DEPT_LIST=[],DEPT_STUDENT_COUNT={};
 let NPS_DATA={scores:[],promoters:0,passives:0,detractors:0,npsIndex:null,avg:0,total:0,scoreFreq:{}};
 let TREND_DATA={cycles:[],hasCycleCol:false,hasDedicatedSheet:false,cycleStats:{},mentorCycleStats:{}};
 let currentDetailPanel='summary',currentDeptFilter='all';
-let chartInstances={},npsDonutInst=null,npsBarChartInst=null;
+let chartInstances={};
 let trendRatingInst=null,trendNpsInst=null,trendHitRatioInst=null,trendSegInst=null;
 let needleAnimRAF=null;
 let landingData=[],landingSortState={col:'rank',dir:'asc'},landingLoaded=false;
@@ -1231,14 +1188,18 @@ function processDedicatedTrendData(rows,collegeName){
    PROCESS SHEET DATA
 ═══════════════════════════════════════════ */
 function processSheetData(rows){
+  window.RAW_SHEET_ROWS = rows;
   TABLE_DATA=[];
+  const deptStudentCount={};
   const mentorStats={},deptSet=new Set(),subjectSet=new Set(),npsScores=[];
   const cycleColNames=['cycle','batch','term','semester','month','period'];
   let cycleCol=null;
   if(rows.length>0){const keys=Object.keys(rows[0]);cycleCol=keys.find(k=>cycleColNames.includes(k.toLowerCase().trim()))||null;}
   const hasCycle=!!cycleCol;const cycleMap={};
+
   rows.forEach(row=>{
     const dept=(row.department||'Unknown').trim();
+    if(dept!=='Unknown'){deptStudentCount[dept]=(deptStudentCount[dept]||0)+1;}
     if(dept!=='Unknown')deptSet.add(dept);
     let cycleName='—';
     if(hasCycle){const raw=(row[cycleCol]||'').trim();cycleName=raw||'Unknown';const mapped=MONTH_ALIAS_MAP[cycleName.toLowerCase()];if(mapped)cycleName=mapped;}
@@ -1271,6 +1232,9 @@ function processSheetData(rows){
       }
     }
   });
+
+  DEPT_STUDENT_COUNT=deptStudentCount;
+
   const total=npsScores.length;
   const promoters=npsScores.filter(s=>s>=9).length;
   const passives=npsScores.filter(s=>s>=7&&s<=8).length;
@@ -1292,14 +1256,23 @@ function processSheetData(rows){
     const bayesianScore=((globalMean*totalAllResponses)+(avg*totalResponses))/(totalAllResponses+totalResponses);
     return{name:m.name,depts:Array.from(m.depts),rating:parseFloat(avg.toFixed(2)),avgXResponses:parseFloat(avgXResponses.toFixed(2)),bayesianRating:parseFloat(bayesianScore.toFixed(7)),subjects:m.subjects.size,responses:totalResponses,qs:m.qs,deptQs:m.deptQs,deptRatings:m.deptRatings};
   }).sort((a,b)=>b.bayesianRating-a.bayesianRating);
-  MENTORS.forEach((m,idx)=>{m.rank=idx+1;m.percentile=MENTORS.length>1?Math.round((1-idx/(MENTORS.length-1))*100):100;});
+  MENTORS.forEach((m,idx,arr)=>{
+    if(idx===0){m.rank=1;}
+    else if(m.bayesianRating===arr[idx-1].bayesianRating){m.rank=arr[idx-1].rank;}
+    else{m.rank=idx+1;}
+    m.percentile=MENTORS.length>1?Math.round((1-idx/(MENTORS.length-1))*100):100;
+  });
   DEPT_LIST=Array.from(deptSet).sort();
   updateDeptFilters();
   const tot=TABLE_DATA.length;
   const avgR=tot>0?TABLE_DATA.reduce((s,r)=>s+r.rating,0)/tot:0;
   document.getElementById('avgRating').textContent=avgR>0?`${avgR.toFixed(1)} / 5`:'—';
-  document.getElementById('totalResponses').textContent=rows.length;
-  document.getElementById('responseSub').textContent=`${tot} rated entries · ${DEPT_LIST.length} depts`;
+
+  const _landingMatch=currentCollege?landingData.find(r=>r.college===currentCollege.name):null;
+  const _hitRatio=_landingMatch&&_landingMatch.hit!==null?_landingMatch.hit:null;
+  document.getElementById('hitRatioMetric').textContent=_hitRatio!==null?`${_hitRatio.toFixed(1)}%`:'—';
+  document.getElementById('hitRatioSub').textContent=`${rows.length} responses · ${DEPT_LIST.length} depts`;
+
   document.getElementById('mentorCount').textContent=MENTORS.length;
   document.getElementById('mentorSub').textContent=`Across ${DEPT_LIST.length} departments`;
   const topMentor=MENTORS[0]||null;
@@ -1384,7 +1357,12 @@ function setDeptFilter(val,btn){
 }
 function getFilteredMentors(filterDept){
   let list=!filterDept||filterDept==='all'?[...MENTORS]:MENTORS.filter(m=>m.depts.some(d=>d===filterDept));
-  list.forEach((m,idx)=>{m.filteredRank=idx+1;m.filteredPercentile=list.length>1?Math.round((1-idx/(list.length-1))*100):100;});
+  list.forEach((m,idx,arr)=>{
+    if(idx===0){m.filteredRank=1;}
+    else if(m.bayesianRating===arr[idx-1].bayesianRating){m.filteredRank=arr[idx-1].filteredRank;}
+    else{m.filteredRank=idx+1;}
+    m.filteredPercentile=list.length>1?Math.round((1-idx/(list.length-1))*100):100;
+  });
   return list;
 }
 
@@ -1413,9 +1391,9 @@ function renderDeptStatsPanel(dept){
   const deptEntries=TABLE_DATA.filter(r=>r.dept===dept);
   const deptRatings=deptEntries.map(r=>r.rating);
   const deptAvgRating=deptRatings.length>0?deptRatings.reduce((a,b)=>a+b,0)/deptRatings.length:0;
-  const deptTotalResponses=deptRatings.length;
   const deptSubjects=new Set(deptEntries.map(r=>r.subject));
   const deptMentorCount=deptMentors.length;
+  const deptStudentResponses=DEPT_STUDENT_COUNT[dept]||0;
   const sortedByDeptRating=[...deptMentors].map(m=>({...m,_deptRating:getMentorDeptRating(m,dept),_deptResponses:getMentorDeptResponses(m,dept)})).sort((a,b)=>b._deptRating-a._deptRating);
   const topMentor=sortedByDeptRating[0];
   function barColor(r){if(r>=4.3)return'#10b981';if(r>=4.0)return'#c48a00';if(r>=3.5)return'#f59e0b';return'#ef4444';}
@@ -1433,13 +1411,17 @@ function renderDeptStatsPanel(dept){
   deptWrap.innerHTML=`
   <div class="dept-stats-panel">
     <div class="dept-stats-header">
-      <div><div class="dept-stats-title">${dept}</div><div class="dept-stats-subtitle">${deptMentorCount} mentor${deptMentorCount!==1?'s':''} · ${deptSubjects.size} subject${deptSubjects.size!==1?'s':''} · ${deptTotalResponses} responses (this dept only)</div></div>
+      <div><div class="dept-stats-title">${dept}</div><div class="dept-stats-subtitle">${deptMentorCount} mentor${deptMentorCount!==1?'s':''} · ${deptSubjects.size} subject${deptSubjects.size!==1?'s':''} · ${deptStudentResponses} students responded</div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span style="display:inline-flex;align-items:center;gap:5px;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(245,200,66,0.2);border:1px solid rgba(245,200,66,0.5);color:#fde9a0;">Dept Filter Active</span></div>
     </div>
     <div class="dept-stats-body">
       <div class="dept-kpi-row">
         <div class="dept-kpi-card" style="border-top-color:var(--gold-mid);"><div class="dept-kpi-label">Dept Avg Rating</div><div class="dept-kpi-val">${deptAvgRating.toFixed(2)}</div><div class="dept-kpi-sub">dept responses only</div></div>
-        <div class="dept-kpi-card" style="border-top-color:#10b981;"><div class="dept-kpi-label">Dept Responses</div><div class="dept-kpi-val" style="color:#065f46;">${deptTotalResponses}</div><div class="dept-kpi-sub">in ${dept}</div></div>
+        <div class="dept-kpi-card" style="border-top-color:var(--gold-mid);">
+          <div class="dept-kpi-label">Dept Responses</div>
+          <div class="dept-kpi-val" style="color:var(--gold-dark);">${deptStudentResponses}</div>
+          <div class="dept-kpi-sub">students responded</div>
+        </div>
         <div class="dept-kpi-card" style="border-top-color:#c48a00;"><div class="dept-kpi-label">Mentors</div><div class="dept-kpi-val">${deptMentorCount}</div><div class="dept-kpi-sub">${deptSubjects.size} subjects</div></div>
         <div class="dept-kpi-card" style="border-top-color:#f5c842;"><div class="dept-kpi-label">Top in Dept</div><div class="dept-kpi-val" style="font-size:14px;color:var(--gold-dark);">${topMentor.name.length>14?topMentor.name.slice(0,13)+'…':topMentor.name}</div><div class="dept-kpi-sub">${topMentor._deptRating.toFixed(2)} dept avg</div></div>
       </div>
@@ -1464,6 +1446,18 @@ function renderDeptStatsPanel(dept){
 /* ═══════════════════════════════════════════
    RENDER ALL
 ═══════════════════════════════════════════ */
+function calcDeptBayesian(mentor,dept){
+  const deptMentors=MENTORS.filter(m=>m.depts.some(d=>d===dept));
+  let deptTotalWeightedRating=0,deptTotalResponses=0;
+  deptMentors.forEach(m=>{const rs=m.deptRatings[dept];if(rs&&rs.length){deptTotalWeightedRating+=rs.reduce((a,b)=>a+b,0);deptTotalResponses+=rs.length;}});
+  const deptGlobalMean=deptTotalResponses>0?deptTotalWeightedRating/deptTotalResponses:0;
+  const mentorDeptRs=mentor.deptRatings[dept]||[];
+  const mentorDeptResponses=mentorDeptRs.length;
+  const mentorDeptAvg=mentorDeptResponses>0?mentorDeptRs.reduce((a,b)=>a+b,0)/mentorDeptResponses:deptGlobalMean;
+  if(deptTotalResponses===0||mentorDeptResponses===0)return mentorDeptAvg;
+  return(deptGlobalMean*deptTotalResponses+mentorDeptAvg*mentorDeptResponses)/(deptTotalResponses+mentorDeptResponses);
+}
+
 function renderAllData(){
   renderMentorTable();
   renderNPSSummary();renderNPSPanel();renderTrendPanel();
@@ -1553,61 +1547,120 @@ function renderNPSSummary(){
    NPS FULL PANEL
 ═══════════════════════════════════════════ */
 function renderNPSPanel(){
-  const{promoters,passives,detractors,npsIndex,avg:npsAvg,median,total,scoreFreq}=NPS_DATA;
-  const promoPct=total>0?Math.round(promoters/total*100):0;const passPct=total>0?Math.round(passives/total*100):0;const detrPct=total>0?Math.round(detractors/total*100):0;
-  const idxEl=document.getElementById('npsIndexBig');idxEl.style.color='#f5c842';
+  const{promoters,passives,detractors,npsIndex,avg:npsAvg,median,total}=NPS_DATA;
+  const promoPct=total>0?Math.round(promoters/total*100):0;
+  const passPct=total>0?Math.round(passives/total*100):0;
+  const detrPct=total>0?Math.round(detractors/total*100):0;
+
+  // Banner
+  const idxEl=document.getElementById('npsIndexBig');
+  idxEl.style.color='#f5c842';
   if(npsIndex!==null)animateCounter(idxEl,npsIndex,1400,'');else idxEl.textContent='—';
   document.getElementById('npsIndexDesc').textContent=total>0?getNpsLabel(npsIndex):'No NPS data available in sheet';
   document.getElementById('npsTotalBig').textContent=total>0?total:'—';
   document.getElementById('npsAvgBig').textContent=total>0?npsAvg.toFixed(1):'—';
   document.getElementById('npsMedianBig').textContent=total>0?median.toFixed(1):'—';
+
+  // Hero counts
   document.getElementById('npsP_count').textContent=total>0?promoters:'—';
   document.getElementById('npsN_count').textContent=total>0?passives:'—';
   document.getElementById('npsD_count').textContent=total>0?detractors:'—';
   document.getElementById('npsP_pct').textContent=total>0?`${promoPct}% of respondents`:'—';
   document.getElementById('npsN_pct').textContent=total>0?`${passPct}% of respondents`:'—';
   document.getElementById('npsD_pct').textContent=total>0?`${detrPct}% of respondents`:'—';
-  const dcs=document.getElementById('npsDonutScore');
-  if(npsIndex!==null){dcs.textContent=(npsIndex>0?'+':'')+npsIndex;dcs.style.color=getNpsColor(npsIndex);}else dcs.textContent='—';
-  document.getElementById('npsDonutBadge').textContent=total>0?`${total} responses`:'No data';
-  document.getElementById('npsBarBadge').textContent=total>0?'Scores 1–10':'No data';
-  document.getElementById('npsBreakdownBadge').textContent=total>0?`${total} total`:'No data';
-  document.getElementById('npsStackedBadge').textContent=total>0?`NPS = ${npsIndex!==null?(npsIndex>0?'+'+npsIndex:npsIndex):'—'}`:'No data';
-  if(total>0){
-    document.getElementById('stkPromoters').style.width=promoPct+'%';
-    document.getElementById('stkPassives').style.width=passPct+'%';
-    document.getElementById('stkDetractors').style.width=detrPct+'%';
-    document.getElementById('stkPromoters').innerHTML=promoPct>8?`<span style="color:white;font-size:11px;font-weight:600;">${promoPct}%</span>`:'';
-    document.getElementById('stkPassives').innerHTML=passPct>8?`<span style="color:white;font-size:11px;font-weight:600;">${passPct}%</span>`:'';
-    document.getElementById('stkDetractors').innerHTML=detrPct>8?`<span style="color:white;font-size:11px;font-weight:600;">${detrPct}%</span>`:'';
-    document.getElementById('stkPromLabel').textContent=`Promoters ${promoPct}%`;
-    document.getElementById('stkPassLabel').textContent=`Passives ${passPct}%`;
-    document.getElementById('stkDetrLabel').textContent=`Detractors ${detrPct}%`;
+
+  renderNPSFollowupYesNo();
+}
+
+function renderNPSFollowupYesNo() {
+  const wrap = document.getElementById('npsFollowupYesNoGrid');
+  const badge = document.getElementById('npsFollowupYesNoBadge');
+  if (!wrap) return;
+  if (!window.RAW_SHEET_ROWS || window.RAW_SHEET_ROWS.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;padding:32px;color:var(--ink3);grid-column:1/-1;">No data available. Please select a college to view follow-up questions.</div>';
+    if (badge) badge.textContent = 'No data';
+    return;
   }
-  if(total>0&&scoreFreq){
-    const maxCount=Math.max(...Object.values(scoreFreq),1);
-    const barColors={1:'#ef4444',2:'#ef4444',3:'#f97316',4:'#f97316',5:'#f97316',6:'#f59e0b',7:'#eab308',8:'#84cc16',9:'#10b981',10:'#059669'};
-    const labels={1:'Extremely Unlikely',5:'Neutral',10:'Extremely Likely'};
-    document.getElementById('npsBarEnhanced').innerHTML=Object.entries(scoreFreq).map(([score,count])=>{
-      const pct=total>0?Math.round(count/total*100):0;const w=Math.round(count/maxCount*100);
-      const seg=parseInt(score)>=9?'Promoter':parseInt(score)>=7?'Passive':'Detractor';
-      const segColor=parseInt(score)>=9?'#065f46':parseInt(score)>=7?'#78350f':'#7f1d1d';
-      const segBg=parseInt(score)>=9?'#d1fae5':parseInt(score)>=7?'#fef3c7':'#fee2e2';
-      return`<div class="nps-bar-item"><div class="nps-bar-score-num">${score}</div><div><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;"><span style="font-size:10px;color:var(--ink3);min-width:110px;">${labels[score]||''}</span><span style="font-size:10px;background:${segBg};color:${segColor};padding:1px 7px;border-radius:20px;font-weight:500;">${seg}</span></div><div class="nps-bar-outer"><div class="nps-bar-inner" style="width:0%;background:${barColors[score]};" data-width="${w}">${count>0&&w>15?`<span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)">${count}</span>`:''}</div></div></div><div class="nps-bar-count">${pct}%</div></div>`;
-    }).join('');
-    setTimeout(()=>{document.querySelectorAll('.nps-bar-inner').forEach(bar=>{bar.style.width=bar.getAttribute('data-width')+'%';});},300);
-  }else{
-    document.getElementById('npsBarEnhanced').innerHTML='<div style="text-align:center;padding:24px;color:var(--ink3);">No NPS data. Ensure a column named <code>nps_score</code> exists in the sheet.</div>';
-  }
-  if(npsDonutInst){npsDonutInst.destroy();npsDonutInst=null;}
-  if(npsBarChartInst){npsBarChartInst.destroy();npsBarChartInst=null;}
-  if(total>0){
-    npsDonutInst=new Chart(document.getElementById('npsDonutChart'),{type:'doughnut',data:{labels:['Promoters','Passives','Detractors'],datasets:[{data:[promoters,passives,detractors],backgroundColor:['#10b981','#f59e0b','#ef4444'],borderColor:['#d1fae5','#fef3c7','#fee2e2'],borderWidth:3,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(42,24,0,0.92)',titleColor:'#fde9a0',bodyColor:'#f5e9c8',borderColor:'#c48a00',borderWidth:1,padding:10,callbacks:{label:ctx=>{const pct=Math.round(ctx.parsed/total*100);return` ${ctx.label}: ${ctx.parsed} (${pct}%)`; }}},datalabels:{color:'#fff',font:{weight:'bold',size:12},formatter:(v)=>{const pct=Math.round(v/total*100);return pct>8?pct+'%':'';}}}},plugins:[ChartDataLabels]});
-    const scoreLabels=Object.keys(scoreFreq),scoreData=Object.values(scoreFreq);
-    const barBgColors=scoreLabels.map(s=>{const n=parseInt(s);if(n>=9)return'rgba(16,185,129,0.85)';if(n>=7)return'rgba(245,158,11,0.85)';return'rgba(239,68,68,0.80)';});
-    const barBorderColors=scoreLabels.map(s=>{const n=parseInt(s);if(n>=9)return'#059669';if(n>=7)return'#d97706';return'#dc2626';});
-    npsBarChartInst=new Chart(document.getElementById('npsBarChart'),{type:'bar',data:{labels:scoreLabels,datasets:[{label:'Responses',data:scoreData,backgroundColor:barBgColors,borderColor:barBorderColors,borderWidth:1.5,borderRadius:5,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(42,24,0,0.92)',titleColor:'#fde9a0',bodyColor:'#f5e9c8',callbacks:{title:ctx=>`Score ${ctx[0].label}`,label:ctx=>{const pct=total>0?Math.round(ctx.parsed.y/total*100):0;const seg=parseInt(ctx.label)>=9?'Promoter':parseInt(ctx.label)>=7?'Passive':'Detractor';return[` Count: ${ctx.parsed.y} (${pct}%)`,` Segment: ${seg}`];}}},datalabels:{anchor:'end',align:'end',color:ctx=>barBorderColors[ctx.dataIndex],font:{weight:'bold',size:10},formatter:v=>v>0?v:''}},scales:{x:{ticks:{font:{size:11},color:'#8a6020'},grid:{display:false},border:{display:false}},y:{ticks:{stepSize:1,font:{size:10},color:'#8a6020'},grid:{color:'rgba(120,80,10,0.07)'},border:{display:false}}},animation:{duration:800,easing:'easeOutQuart'}},plugins:[ChartDataLabels]});
-  }
+  const followupQuestions = [
+    {id:'Q2',question:'Are you satisfied with the overall campus experience (Classroom, Campus Infrastructure, Network / Wi-Fi)?',icon:'🏫',shortLabel:'Campus Experience'},
+    {id:'Q3',question:'Are you satisfied with the classroom engagement and experience (Quality of Faculty, Relevance of content delivered)?',icon:'👨‍🏫',shortLabel:'Classroom Engagement'},
+    {id:'Q4',question:'Are you happy with the Skill Development progress?',icon:'📈',shortLabel:'Skill Development'},
+    {id:'Q5',question:'Are you happy with Placement opportunities?',icon:'💼',shortLabel:'Placement Opportunities'}
+  ];
+
+  // Q2–Q5 are row-level (student-level) questions, NOT per-subject.
+  // Count them once per row regardless of how many subjects the row has.
+  const questionStats = {};
+  followupQuestions.forEach(q => { questionStats[q.id] = { yes:0, no:0, total:0 }; });
+
+  window.RAW_SHEET_ROWS.forEach(row => {
+    // Only count rows that have at least one subject entry (i.e. valid student rows)
+    const hasSubject = [1,2,3,4,5,6,7].some(i => (row[`subject${i}_Name`]||'').trim() !== '');
+    if (!hasSubject) return;
+
+    [2, 3, 4, 5].forEach(qNum => {
+      const qKey = `Q${qNum}`;
+      // Try both column name formats: subject1_Q2 and standalone Q2
+      // First check if there's a direct row-level column
+      let answer = row[`Q${qNum}`] || row[`q${qNum}`] || '';
+      // If not found at row level, fall back to subject1's answer (they're the same per student)
+      if (!answer) answer = row[`subject1_Q${qNum}`] || '';
+      answer = answer.trim();
+      if (answer === 'Yes') { questionStats[qKey].yes++; questionStats[qKey].total++; }
+      else if (answer === 'No') { questionStats[qKey].no++; questionStats[qKey].total++; }
+    });
+  });
+
+  const totalResponses = window.RAW_SHEET_ROWS.filter(row =>
+    [1,2,3,4,5,6,7].some(i => (row[`subject${i}_Name`]||'').trim() !== '')
+  ).length;
+
+  if (badge) badge.textContent = totalResponses > 0 ? `${totalResponses} total responses` : 'No data';
+
+  wrap.innerHTML = followupQuestions.map(q => {
+    const stats = questionStats[q.id];
+    const yesPercent = stats.total > 0 ? Math.round((stats.yes / stats.total) * 100) : 0;
+    const noPercent  = stats.total > 0 ? Math.round((stats.no  / stats.total) * 100) : 0;
+    const statusColor  = yesPercent >= 70 ? '#065f46' : yesPercent >= 50 ? '#78350f' : '#7f1d1d';
+    const statusBg     = yesPercent >= 70 ? '#d1fae5' : yesPercent >= 50 ? '#fef3c7' : '#fee2e2';
+    const statusBorder = yesPercent >= 70 ? '#6ee7b7' : yesPercent >= 50 ? '#fcd34d' : '#fca5a5';
+    const statusLabel  = yesPercent >= 70 ? 'Excellent' : yesPercent >= 50 ? 'Good' : 'Needs Improvement';
+    return `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;">
+          <span style="font-size:24px;flex-shrink:0;">${q.icon}</span>
+          <div style="flex:1;">
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:4px;">${q.id} · ${q.shortLabel}</div>
+            <div style="font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:8px;">${q.question}</div>
+            <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:${statusBg};color:${statusColor};border:1px solid ${statusBorder};">
+              ${statusLabel} · ${yesPercent}% positive
+            </span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:10px 12px;text-align:center;">
+            <div style="font-family:var(--font-display);font-size:24px;color:#065f46;line-height:1;">${stats.yes}</div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;margin-top:2px;">Yes</div>
+            <div style="font-size:11px;color:#065f46;opacity:0.75;">${yesPercent}%</div>
+          </div>
+          <div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:10px 12px;text-align:center;">
+            <div style="font-family:var(--font-display);font-size:24px;color:#7f1d1d;line-height:1;">${stats.no}</div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#7f1d1d;margin-top:2px;">No</div>
+            <div style="font-size:11px;color:#7f1d1d;opacity:0.75;">${noPercent}%</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;height:8px;background:var(--bg2);border-radius:6px;overflow:hidden;">
+            <div style="width:0%;height:100%;background:#10b981;border-radius:6px;transition:width 1s cubic-bezier(.22,1,.36,1);" data-width="${yesPercent}" class="nps-yesno-bar"></div>
+          </div>
+          <span style="font-size:11px;font-weight:600;color:var(--ink3);min-width:60px;text-align:right;">${stats.total} of ${totalResponses}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('.nps-yesno-bar').forEach(bar => { bar.style.width = bar.getAttribute('data-width') + '%'; });
+  }, 100);
 }
 
 /* ═══════════════════════════════════════════
@@ -1657,10 +1710,6 @@ function renderTrendKpis(cycle){
   setKpi('tkpiPromo','tkpiPromoDelta','tkpiPromoCycle',curr.promoterPct,prev?.promoterPct,v=>parseFloat(v).toFixed(2)+'%');
 }
 
-/* ═══════════════════════════════════════════
-   TREND CHARTS — FIXED: baseOpts defined cleanly
-   before chart instances are destroyed/created
-═══════════════════════════════════════════ */
 function renderTrendCharts(){
   const{cycles,cycleStats}=TREND_DATA;
   const labels=cycles;
@@ -1670,150 +1719,23 @@ function renderTrendCharts(){
   const proms=cycles.map(c=>cycleStats[c].promoterPct);
   const passes=cycles.map(c=>cycleStats[c].passivePct);
   const detrs=cycles.map(c=>cycleStats[c].detractorPct);
-
-  /* ── FIX 1: baseOpts is a clean plain object, no stray statements inside ── */
-  const baseOpts={
-    responsive:true,
-    maintainAspectRatio:false,
-    plugins:{
-      legend:{display:false},
-      datalabels:{display:false},
-      tooltip:{
-        backgroundColor:'rgba(42,24,0,0.92)',
-        titleColor:'#fde9a0',
-        bodyColor:'#f5e9c8',
-        borderColor:'#c48a00',
-        borderWidth:1,
-        padding:10
-      }
-    },
-    scales:{
-      x:{
-        ticks:{font:{size:11},color:'#8a6020'},
-        grid:{display:false},
-        border:{display:false}
-      },
-      y:{
-        ticks:{font:{size:10},color:'#8a6020'},
-        grid:{color:'rgba(120,80,10,0.07)'},
-        border:{display:false}
-      }
-    }
-  };
-
-  /* ── FIX 2: destroy old instances AFTER baseOpts is defined ── */
+  const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{display:false},tooltip:{backgroundColor:'rgba(42,24,0,0.92)',titleColor:'#fde9a0',bodyColor:'#f5e9c8',borderColor:'#c48a00',borderWidth:1,padding:10}},scales:{x:{ticks:{font:{size:11},color:'#8a6020'},grid:{display:false},border:{display:false}},y:{ticks:{font:{size:10},color:'#8a6020'},grid:{color:'rgba(120,80,10,0.07)'},border:{display:false}}}};
   if(trendRatingInst){trendRatingInst.destroy();trendRatingInst=null;}
   if(trendNpsInst){trendNpsInst.destroy();trendNpsInst=null;}
   if(trendHitRatioInst){trendHitRatioInst.destroy();trendHitRatioInst=null;}
   if(trendSegInst){trendSegInst.destroy();trendSegInst=null;}
-
-  /* Rating chart */
-  trendRatingInst=new Chart(document.getElementById('trendRatingChart'),{
-    type:'line',
-    data:{labels,datasets:[{
-      label:'Avg Rating',data:ratings,
-      borderColor:'#c48a00',backgroundColor:'rgba(196,138,0,0.10)',
-      borderWidth:2.5,fill:true,tension:0.4,
-      pointBackgroundColor:'#fff',pointBorderColor:'#c48a00',pointRadius:5,pointHoverRadius:7
-    }]},
-    options:{
-      ...baseOpts,
-      layout:{padding:{top:24}},
-      scales:{
-        ...baseOpts.scales,
-        y:{...baseOpts.scales.y,min:0,max:5,ticks:{...baseOpts.scales.y.ticks,stepSize:1,callback:v=>v.toFixed(1)}}
-      },
-      plugins:{
-        ...baseOpts.plugins,
-        datalabels:{display:true,anchor:'end',align:'top',color:'#5c3600',font:{weight:'bold',size:10},formatter:v=>v!==null?v.toFixed(1):''},
-        tooltip:{...baseOpts.plugins.tooltip,callbacks:{label:ctx=>`Avg Rating: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2):'—'}`}}
-      }
-    },
-    plugins:[ChartDataLabels]
-  });
-
-  /* NPS chart */
-  trendNpsInst=new Chart(document.getElementById('trendNpsChart'),{
-    type:'line',
-    data:{labels,datasets:[{
-      label:'NPS',data:npss,
-      borderColor:'#5c3600',backgroundColor:'rgba(92,54,0,0.08)',
-      borderWidth:2.5,fill:true,tension:0.4,
-      pointBackgroundColor:'#fff',pointBorderColor:'#5c3600',pointRadius:5,pointHoverRadius:7
-    }]},
-    options:{
-      ...baseOpts,
-      layout:{padding:{top:24}},
-      plugins:{
-        ...baseOpts.plugins,
-        datalabels:{display:true,anchor:'end',align:'top',color:'#5c3600',font:{weight:'bold',size:10},formatter:v=>v!==null?(v>0?'+':'')+v:''},
-        tooltip:{...baseOpts.plugins.tooltip,callbacks:{label:ctx=>{const v=ctx.parsed.y;return`NPS: ${v>0?'+':''}${v??'—'}`;} }}
-      }
-    },
-    plugins:[ChartDataLabels]
-  });
-
-  /* Hit Ratio chart */
+  trendRatingInst=new Chart(document.getElementById('trendRatingChart'),{type:'line',data:{labels,datasets:[{label:'Avg Rating',data:ratings,borderColor:'#c48a00',backgroundColor:'rgba(196,138,0,0.10)',borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#c48a00',pointRadius:5,pointHoverRadius:7}]},options:{...baseOpts,layout:{padding:{top:24}},scales:{...baseOpts.scales,y:{...baseOpts.scales.y,min:0,max:5,ticks:{...baseOpts.scales.y.ticks,stepSize:1,callback:v=>v.toFixed(2)}}},plugins:{...baseOpts.plugins,datalabels:{display:true,anchor:'end',align:'top',color:'#5c3600',font:{weight:'bold',size:10},formatter:v=>v!==null?v.toFixed(2):''},tooltip:{...baseOpts.plugins.tooltip,callbacks:{label:ctx=>`Avg Rating: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2):'—'}`}}}},plugins:[ChartDataLabels]});
+  trendNpsInst=new Chart(document.getElementById('trendNpsChart'),{type:'line',data:{labels,datasets:[{label:'NPS',data:npss,borderColor:'#5c3600',backgroundColor:'rgba(92,54,0,0.08)',borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#5c3600',pointRadius:5,pointHoverRadius:7}]},options:{...baseOpts,layout:{padding:{top:24}},plugins:{...baseOpts.plugins,datalabels:{display:true,anchor:'end',align:'top',color:'#5c3600',font:{weight:'bold',size:10},formatter:v=>v!==null?(v>0?'+':'')+v:''},tooltip:{...baseOpts.plugins.tooltip,callbacks:{label:ctx=>{const v=ctx.parsed.y;return`NPS: ${v>0?'+':''}${v??'—'}`; }}}}},plugins:[ChartDataLabels]});
   const hasHitRatioData=hitRatios.some(v=>v!==null&&v!==undefined);
   if(hasHitRatioData){
-    trendHitRatioInst=new Chart(document.getElementById('trendHitRatioChart'),{
-      type:'line',
-      data:{labels,datasets:[{
-        label:'Hit Ratio %',data:hitRatios,
-        borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.10)',
-        borderWidth:2.5,fill:true,tension:0.4,
-        pointBackgroundColor:'#fff',pointBorderColor:'#10b981',pointRadius:5,pointHoverRadius:7
-      }]},
-      options:{
-        ...baseOpts,
-        layout:{padding:{top:24}},
-        scales:{
-          ...baseOpts.scales,
-          y:{...baseOpts.scales.y,min:0,max:120,ticks:{...baseOpts.scales.y.ticks,stepSize:20,callback:v=>v+'%'}}
-        },
-        plugins:{
-          ...baseOpts.plugins,
-          datalabels:{display:true,anchor:'end',align:'top',color:'#065f46',font:{weight:'bold',size:10},formatter:v=>v!==null?v.toFixed(1)+'%':''},
-          tooltip:{...baseOpts.plugins.tooltip,callbacks:{label:ctx=>`Hit Ratio: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(1)+'%':'—'}`}}
-        }
-      },
-      plugins:[ChartDataLabels]
-    });
+    trendHitRatioInst=new Chart(document.getElementById('trendHitRatioChart'),{type:'line',data:{labels,datasets:[{label:'Hit Ratio %',data:hitRatios,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.10)',borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#10b981',pointRadius:5,pointHoverRadius:7}]},options:{...baseOpts,layout:{padding:{top:24}},scales:{...baseOpts.scales,y:{...baseOpts.scales.y,min:0,max:120,ticks:{...baseOpts.scales.y.ticks,stepSize:20,callback:v=>v+'%'}}},plugins:{...baseOpts.plugins,datalabels:{display:true,anchor:'end',align:'top',color:'#065f46',font:{weight:'bold',size:10},formatter:v=>v!==null?v.toFixed(1)+'%':''},tooltip:{...baseOpts.plugins.tooltip,callbacks:{label:ctx=>`Hit Ratio: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(1)+'%':'—'}`}}}},plugins:[ChartDataLabels]});
   }else{
     const canvas=document.getElementById('trendHitRatioChart');
-    const ctx2d=canvas.getContext('2d');
-    canvas.width=canvas.offsetWidth||400;canvas.height=240;
-    ctx2d.clearRect(0,0,canvas.width,canvas.height);
-    ctx2d.fillStyle='#c09840';ctx2d.font='13px Inter,sans-serif';ctx2d.textAlign='center';
+    const ctx2d=canvas.getContext('2d');canvas.width=canvas.offsetWidth||400;canvas.height=240;
+    ctx2d.clearRect(0,0,canvas.width,canvas.height);ctx2d.fillStyle='#c09840';ctx2d.font='13px Inter,sans-serif';ctx2d.textAlign='center';
     ctx2d.fillText('Add hit_ratio column to trend sheet for real data',canvas.width/2,120);
   }
-
-  /* Segment trend chart */
-  trendSegInst=new Chart(document.getElementById('trendSegChart'),{
-    type:'line',
-    data:{labels,datasets:[
-      {label:'Promoters %',data:proms,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',borderWidth:2,fill:false,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#10b981',pointRadius:4,pointHoverRadius:6},
-      {label:'Passives %',data:passes,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',borderWidth:2,fill:false,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#f59e0b',pointRadius:4,pointHoverRadius:6},
-      {label:'Detractors %',data:detrs,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:2,fill:false,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#ef4444',pointRadius:4,pointHoverRadius:6}
-    ]},
-    options:{
-      ...baseOpts,
-      scales:{
-        ...baseOpts.scales,
-        y:{...baseOpts.scales.y,min:0,max:100,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+'%'}}
-      },
-      plugins:{
-        ...baseOpts.plugins,
-        legend:{display:false},
-        datalabels:{display:false},
-        tooltip:{
-          ...baseOpts.plugins.tooltip,
-          callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y??'—'}%`}
-        }
-      }
-    },
-    plugins:[ChartDataLabels]
-  });
+  trendSegInst=new Chart(document.getElementById('trendSegChart'),{type:'line',data:{labels,datasets:[{label:'Promoters %',data:proms,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',borderWidth:2,fill:false,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#10b981',pointRadius:4,pointHoverRadius:6},{label:'Passives %',data:passes,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',borderWidth:2,fill:false,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#f59e0b',pointRadius:4,pointHoverRadius:6},{label:'Detractors %',data:detrs,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.08)',borderWidth:2,fill:false,tension:0.4,pointBackgroundColor:'#fff',pointBorderColor:'#ef4444',pointRadius:4,pointHoverRadius:6}]},options:{...baseOpts,interaction:{mode:'index',intersect:false},scales:{...baseOpts.scales,y:{...baseOpts.scales.y,min:0,max:100,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+'%'}}},plugins:{...baseOpts.plugins,legend:{display:false},datalabels:{display:false}}},plugins:[ChartDataLabels]});
 }
 
 function renderTrendCycleTable(){
@@ -1837,14 +1759,21 @@ function renderTrendCycleTable(){
 function renderMentorTable(){
   const list=getFilteredMentors(currentDeptFilter);
   const isDeptActive=currentDeptFilter&&currentDeptFilter!=='all';
-  const sumResponses=MENTORS.reduce((s,m)=>s+m.responses,0);
-  const sumAvgXResp=MENTORS.reduce((s,m)=>s+m.avgXResponses,0);
-  const gm=sumResponses>0?(sumAvgXResp/sumResponses):0;
-  document.getElementById('mtSumGlobalMean').textContent=gm>0?gm.toFixed(7):'—';
-  document.getElementById('mtSumTotalResp').textContent=sumResponses||'—';
-  document.getElementById('mtSumAvgXResp').textContent=sumAvgXResp>0?sumAvgXResp.toFixed(2):'—';
+  let displayMean,displayTotal;
+  if(isDeptActive){
+    const deptMs=MENTORS.filter(m=>m.depts.some(d=>d===currentDeptFilter));
+    let tw=0,tr=0;
+    deptMs.forEach(m=>{const rs=m.deptRatings[currentDeptFilter]||[];tw+=rs.reduce((a,b)=>a+b,0);tr+=rs.length;});
+    displayMean=tr>0?tw/tr:0;displayTotal=tr;
+  }else{
+    const sumResponses=MENTORS.reduce((s,m)=>s+m.responses,0);
+    const sumAvgXResp=MENTORS.reduce((s,m)=>s+m.avgXResponses,0);
+    displayMean=sumResponses>0?sumAvgXResp/sumResponses:0;displayTotal=sumResponses;
+  }
+  document.getElementById('mtSumGlobalMean').textContent=displayMean>0?displayMean.toFixed(7):'—';
+  document.getElementById('mtSumTotalResp').textContent=displayTotal||'—';
   document.getElementById('mentorTableCountBadge').textContent=list.length>0?`${list.length} mentors`:'No data';
-  if(!list.length){document.getElementById('mentorTableBody').innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--ink3)">No mentors found</td></tr>';return;}
+  if(!list.length){document.getElementById('mentorTableBody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink3)">No mentors found</td></tr>';return;}
   const deptLabel=isDeptActive?currentDeptFilter:null;
   const rankColors={1:'#f5c842',2:'#e0e0e0',3:'#f0c498'};
   document.getElementById('mentorTableBody').innerHTML=list.map(m=>{
@@ -1856,7 +1785,6 @@ function renderMentorTable(){
     const s=deptStyle(deptLabel||m.depts[0]||'');
     const displayRating=isDeptActive?getMentorDeptRating(m,currentDeptFilter):m.rating;
     const displayResponses=isDeptActive?getMentorDeptResponses(m,currentDeptFilter):m.responses;
-    const displayAvgXResp=isDeptActive?(displayRating*displayResponses):m.avgXResponses;
     const ratingColor=isDeptActive?getStatusColor(displayRating):'var(--gold-dark)';
     return`<tr>
       <td style="text-align:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:${rankBg};border:${rankBorder};font-size:11px;font-weight:700;color:${rankColor};">${displayRank}</span></td>
@@ -1871,8 +1799,12 @@ function renderMentorTable(){
         ${displayResponses}
         ${isDeptActive?`<div style="font-size:10px;color:var(--ink4);font-family:var(--font-body);">dept only</div>`:''}
       </td>
-      <td style="text-align:center;font-family:var(--font-display);font-size:16px;color:var(--gold-dark);">${isDeptActive?displayAvgXResp.toFixed(2):m.avgXResponses.toFixed(2)}</td>
-      <td style="text-align:center;"><span style="font-family:var(--font-display);font-size:16px;color:var(--gold-dark);">${m.bayesianRating.toFixed(7)}</span></td>
+      <td style="text-align:center;">
+        <span style="font-family:var(--font-display);font-size:16px;color:var(--gold-dark);">
+          ${isDeptActive?calcDeptBayesian(m,currentDeptFilter).toFixed(7):m.bayesianRating.toFixed(7)}
+        </span>
+        ${isDeptActive?`<div style="font-size:10px;color:var(--ink4);font-family:var(--font-body);">dept bayesian</div>`:''}
+      </td>
       <td>${statusBadge(displayRating)}</td>
     </tr>`;
   }).join('');
@@ -1916,163 +1848,50 @@ function openMentorModal(mentorName,dept){
   const activeQs=deptCtx?getMentorDeptQs(m,deptCtx):m.qs;
   const activeRating=deptCtx?getMentorDeptRating(m,deptCtx):m.rating;
   const activeResponses=deptCtx?getMentorDeptResponses(m,deptCtx):m.responses;
-
   document.getElementById('mmName').textContent=m.name;
-  document.getElementById('mmSub').textContent=deptCtx
-    ?`${deptCtx} · ${activeResponses} responses in this dept · ${m.subjects} subject(s) total`
-    :m.depts.join(', ')+' · '+m.responses+' responses (all depts) · '+m.subjects+' subject(s)';
-
+  document.getElementById('mmSub').textContent=deptCtx?`${deptCtx} · ${activeResponses} responses in this dept · ${m.subjects} subject(s) total`:m.depts.join(', ')+' · '+m.responses+' responses (all depts) · '+m.subjects+' subject(s)';
   const banner=document.getElementById('mmDeptScopeBanner');
-  if(deptCtx){
-    banner.style.display='flex';
-    banner.innerHTML=`<span>🔍</span> <span>Showing data for <strong>${deptCtx}</strong> only — ${activeResponses} responses, ${activeRating.toFixed(2)} avg rating in this dept. <em style="opacity:.7;">(Total across all depts: ${m.responses} responses.)</em></span>`;
-  }else{banner.style.display='none';}
-
+  if(deptCtx){banner.style.display='flex';banner.innerHTML=`<span>🔍</span> <span>Showing data for <strong>${deptCtx}</strong> only — ${activeResponses} responses, ${activeRating.toFixed(2)} avg rating in this dept. <em style="opacity:.7;">(Total across all depts: ${m.responses} responses.)</em></span>`;}
+  else{banner.style.display='none';}
   const totalYes=activeQs.reduce((s,q)=>s+q.y,0);
   const totalAll=activeQs.reduce((s,q)=>s+q.y+q.n,0);
   const overallYesPct=totalAll>0?Math.round(totalYes/totalAll*100):0;
   document.getElementById('mmStats').innerHTML=`
-    <div class="mm-qs-card">
-      <div class="mm-qs-label">${deptCtx?'Dept avg rating':'Avg rating'}</div>
-      <div class="mm-qs-val">${activeRating.toFixed(2)}</div>
-      <div class="mm-qs-sub">${deptCtx?`in ${deptCtx}`:'out of 5'}</div>
-    </div>
-    <div class="mm-qs-card">
-      <div class="mm-qs-label">${deptCtx?'Dept responses':'Total responses'}</div>
-      <div class="mm-qs-val">${activeResponses}</div>
-      <div class="mm-qs-sub">${deptCtx?'in this dept':'feedback entries'}</div>
-    </div>
-    <div class="mm-qs-card">
-      <div class="mm-qs-label">Overall yes rate${deptCtx?' (dept)':''}</div>
-      <div class="mm-qs-val" style="color:${overallYesPct>=70?'#065f46':overallYesPct>=50?'#c48a00':'#7f1d1d'};">${overallYesPct}%</div>
-      <div class="mm-qs-sub">across 5 questions</div>
-    </div>`;
-
+    <div class="mm-qs-card"><div class="mm-qs-label">${deptCtx?'Dept avg rating':'Avg rating'}</div><div class="mm-qs-val">${activeRating.toFixed(2)}</div><div class="mm-qs-sub">${deptCtx?`in ${deptCtx}`:'out of 5'}</div></div>
+    <div class="mm-qs-card"><div class="mm-qs-label">${deptCtx?'Dept responses':'Total responses'}</div><div class="mm-qs-val">${activeResponses}</div><div class="mm-qs-sub">${deptCtx?'in this dept':'feedback entries'}</div></div>
+    <div class="mm-qs-card"><div class="mm-qs-label">Overall yes rate${deptCtx?' (dept)':''}</div><div class="mm-qs-val" style="color:${overallYesPct>=70?'#065f46':overallYesPct>=50?'#c48a00':'#7f1d1d'};">${overallYesPct}%</div><div class="mm-qs-sub">across 5 questions</div></div>`;
   const sc=calcMentorKPIs(activeQs);
   const{pcts,strength,concern,tei,ssi}=sc;
-  const si=mmInterpretStrength(strength);
-  const ci=mmInterpretConcern(concern);
-  const ti=mmInterpretTEI(tei);
-  const ssii=mmInterpretSSI(ssi);
-
+  const si=mmInterpretStrength(strength);const ci=mmInterpretConcern(concern);const ti=mmInterpretTEI(tei);const ssii=mmInterpretSSI(ssi);
   const kpiDefs=[
     {label:'Strength score',val:Math.round(strength),sub:'out of 100',interp:si,barColor:mmKpiBarColor(si.level)},
-    {label:'Concern score', val:Math.round(concern), sub:'out of 100',interp:ci,barColor:mmKpiBarColor(ci.level)},
+    {label:'Concern score',val:Math.round(concern),sub:'out of 100',interp:ci,barColor:mmKpiBarColor(ci.level)},
     {label:'Teaching Effectiveness Index',val:Math.round(tei),sub:'teaching effectiveness',interp:ti,barColor:mmKpiBarColor(ti.level)},
     {label:'Student Satisfaction Index',val:Math.round(ssi),sub:'student satisfaction',interp:ssii,barColor:mmKpiBarColor(ssii.level)},
   ];
   document.getElementById('mmKpiGrid').innerHTML=kpiDefs.map(k=>`
-    <div class="mm-kpi-card">
-      <div class="mm-kpi-label">${k.label}</div>
-      <div class="mm-kpi-val">${k.val}</div>
-      <div class="mm-kpi-sub">${k.sub}</div>
-      ${mmKpiBadge(k.interp.level,k.interp.label)}
-      <div class="mm-kpi-bar"><div class="mm-kpi-bar-fill" style="width:0%;background:${k.barColor};" data-w="${k.val}"></div></div>
-    </div>`).join('');
-
-  document.getElementById('mmFormulaNote').innerHTML=`
-    <strong>Strength</strong> = Q1×25 + Q2×10 + Q3×30 + Q4×20 + Q5×15 / 100 &nbsp;·&nbsp;
-    <strong>TEI</strong> = Q1×30 + Q3×35 + Q4×25 + Q5×10 / 100 &nbsp;·&nbsp;
-    <strong>SSI</strong> = avg(Q1–Q5) &nbsp;·&nbsp;
-    <strong>Concern</strong> = weighted No%`;
-
+    <div class="mm-kpi-card"><div class="mm-kpi-label">${k.label}</div><div class="mm-kpi-val">${k.val}</div><div class="mm-kpi-sub">${k.sub}</div>${mmKpiBadge(k.interp.level,k.interp.label)}<div class="mm-kpi-bar"><div class="mm-kpi-bar-fill" style="width:0%;background:${k.barColor};" data-w="${k.val}"></div></div></div>`).join('');
   const vc=mmVerdictConfig(strength,tei);
-  document.getElementById('mmVerdict').innerHTML=`
-    <div class="mm-verdict" style="background:${vc.bg};color:${vc.color};border-color:${vc.border};">
-      <span style="font-size:18px;flex-shrink:0;">${vc.icon}</span>
-      <span>${vc.text}</span>
-    </div>
-    <div style="font-size:11px;color:var(--ink3);margin-top:8px;">${si.desc}</div>`;
-
-  document.getElementById('mmQTitle').textContent=deptCtx
-    ?`Question-by-question breakdown — ${deptCtx} only`
-    :'Question-by-question breakdown';
-
+  document.getElementById('mmVerdict').innerHTML=`<div class="mm-verdict" style="background:${vc.bg};color:${vc.color};border-color:${vc.border};"><span style="font-size:18px;flex-shrink:0;">${vc.icon}</span><span>${vc.text}</span></div><div style="font-size:11px;color:var(--ink3);margin-top:8px;">${si.desc}</div>`;
+  document.getElementById('mmQTitle').textContent=deptCtx?`Question-by-question breakdown — ${deptCtx} only`:'Question-by-question breakdown';
   document.getElementById('mmQRows').innerHTML=MM_QUESTIONS.map((q,i)=>{
     const yp=pcts[i];const np=100-yp;const cls=mmClassify(yp);const cs=mmClassStyle(cls);
     const analysisText=Q_ANALYSIS_TEXT[i][cls];
-    return`<div class="mm-q-row">
-      <div>
-        <div class="mm-q-num">Q${i+1} · ${Q_DEFS[i].label}</div>
-        <div class="mm-q-label">${q}</div>
-        <span class="mm-q-class" style="background:${cs.bg};color:${cs.color};border:1px solid ${cs.border};">${mmClassLabel(cls)} · ${yp}% yes</span>
-        <div class="mm-q-analysis">${analysisText}</div>
-      </div>
-      <div>
-        <div class="mm-bar-row">
-          <span class="mm-bar-lbl" style="color:#065f46;">Yes</span>
-          <div class="mm-bar-track"><div class="mm-bar-fill" style="width:${yp}%;background:#10b981;"></div></div>
-          <span class="mm-bar-pct">${activeQs[i].y} (${yp}%)</span>
-        </div>
-        <div class="mm-bar-row">
-          <span class="mm-bar-lbl" style="color:#ef4444;">No</span>
-          <div class="mm-bar-track"><div class="mm-bar-fill" style="width:${np}%;background:#ef4444;"></div></div>
-          <span class="mm-bar-pct">${activeQs[i].n} (${np}%)</span>
-        </div>
-        <div style="font-size:10px;color:var(--ink4);margin-top:4px;">Weight: Strength ${Q_DEFS[i].w_strength}% · TEI ${Q_DEFS[i].w_tei}%</div>
-      </div>
-    </div>`;
+    return`<div class="mm-q-row"><div><div class="mm-q-num">Q${i+1} · ${Q_DEFS[i].label}</div><div class="mm-q-label">${q}</div><span class="mm-q-class" style="background:${cs.bg};color:${cs.color};border:1px solid ${cs.border};">${mmClassLabel(cls)} · ${yp}% yes</span><div class="mm-q-analysis">${analysisText}</div></div><div><div class="mm-bar-row"><span class="mm-bar-lbl" style="color:#065f46;">Yes</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:${yp}%;background:#10b981;"></div></div><span class="mm-bar-pct">${activeQs[i].y} (${yp}%)</span></div><div class="mm-bar-row"><span class="mm-bar-lbl" style="color:#ef4444;">No</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:${np}%;background:#ef4444;"></div></div><span class="mm-bar-pct">${activeQs[i].n} (${np}%)</span></div><div style="font-size:10px;color:var(--ink4);margin-top:4px;">Weight: Strength ${Q_DEFS[i].w_strength}% · TEI ${Q_DEFS[i].w_tei}%</div></div></div>`;
   }).join('');
-
   const strengths=[],weaknesses=[],neutrals=[];
-  pcts.forEach((p,i)=>{
-    const cls=mmClassify(p);
-    const item={label:Q_DEFS[i].label,pct:p,cls};
-    if(cls==='hp'||cls==='mp')strengths.push(item);
-    else if(cls==='mn'||cls==='hn')weaknesses.push(item);
-    else neutrals.push(item);
-  });
-
-  function swItem(item){
-    const cs=mmClassStyle(item.cls);
-    return`<div class="mm-sw-item">
-      <span style="color:var(--ink2);">${item.label}</span>
-      <span class="mm-mini-badge" style="background:${cs.bg};color:${cs.color};border:1px solid ${cs.border};">${item.pct}%</span>
-    </div>`;
-  }
-
+  pcts.forEach((p,i)=>{const cls=mmClassify(p);const item={label:Q_DEFS[i].label,pct:p,cls};if(cls==='hp'||cls==='mp')strengths.push(item);else if(cls==='mn'||cls==='hn')weaknesses.push(item);else neutrals.push(item);});
+  function swItem(item){const cs=mmClassStyle(item.cls);return`<div class="mm-sw-item"><span style="color:var(--ink2);">${item.label}</span><span class="mm-mini-badge" style="background:${cs.bg};color:${cs.color};border:1px solid ${cs.border};">${item.pct}%</span></div>`;}
   document.getElementById('mmSwGrid').innerHTML=`
-    <div class="mm-sw-card" style="background:#d1fae5;border-color:#6ee7b7;">
-      <div class="mm-sw-title" style="color:#065f46;">✓ Strengths (≥70% yes)</div>
-      ${strengths.length?strengths.map(swItem).join(''):`<div style="font-size:12px;color:#065f46;opacity:0.7;">No standout strengths above 70% threshold.</div>`}
-    </div>
-    <div class="mm-sw-card" style="background:#fee2e2;border-color:#fca5a5;">
-      <div class="mm-sw-title" style="color:#7f1d1d;">✗ Areas to improve (≤60%)</div>
-      ${weaknesses.length?weaknesses.map(swItem).join(''):`<div style="font-size:12px;color:#7f1d1d;opacity:0.7;">No critical weaknesses below 60% threshold.</div>`}
-    </div>`;
-
+    <div class="mm-sw-card" style="background:#d1fae5;border-color:#6ee7b7;"><div class="mm-sw-title" style="color:#065f46;">✓ Strengths (≥70% yes)</div>${strengths.length?strengths.map(swItem).join(''):`<div style="font-size:12px;color:#065f46;opacity:0.7;">No standout strengths above 70% threshold.</div>`}</div>
+    <div class="mm-sw-card" style="background:#fee2e2;border-color:#fca5a5;"><div class="mm-sw-title" style="color:#7f1d1d;">✗ Areas to improve (≤60%)</div>${weaknesses.length?weaknesses.map(swItem).join(''):`<div style="font-size:12px;color:#7f1d1d;opacity:0.7;">No critical weaknesses below 60% threshold.</div>`}</div>`;
   const neutralWrap=document.getElementById('mmNeutralWrap');
-  if(neutrals.length){
-    neutralWrap.innerHTML=`<div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;">
-      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);margin-bottom:8px;">~ Neutral areas (60–69%)</div>
-      <div class="mm-neutral-pills">
-        ${neutrals.map(n=>{const cs=mmClassStyle(n.cls);return`<span class="mm-neutral-pill" style="background:${cs.bg};color:${cs.color};border-color:${cs.border};">${n.label} <strong>${n.pct}%</strong></span>`;}).join('')}
-      </div>
-    </div>`;
-  }else{neutralWrap.innerHTML='';}
-
+  if(neutrals.length){neutralWrap.innerHTML=`<div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);margin-bottom:8px;">~ Neutral areas (60–69%)</div><div class="mm-neutral-pills">${neutrals.map(n=>{const cs=mmClassStyle(n.cls);return`<span class="mm-neutral-pill" style="background:${cs.bg};color:${cs.color};border-color:${cs.border};">${n.label} <strong>${n.pct}%</strong></span>`;}).join('')}</div></div>`;}
+  else{neutralWrap.innerHTML='';}
   document.getElementById('mmRecText').innerHTML=mmBuildRec(strengths,weaknesses);
-
-  const lrEl=document.getElementById('mmLowResp');
-  if(activeResponses<20){lrEl.style.display='flex';lrEl.innerHTML=`⚠ Low response count (${activeResponses}${deptCtx?` in ${deptCtx}`:''}) — interpret scores with caution.`;}
-  else{lrEl.style.display='none';}
-
-  document.getElementById('mmFootnote').textContent=deptCtx
-    ?`* Yes/No counts are from rows where department = "${deptCtx}" only. Classification: High Positive ≥90% · Moderate Positive 80–89% · Neutral 70–79% · Moderate Negative 60–69% · High Negative <60%.`
-    :`* Yes/No counts are aggregated across all subjects and departments this mentor teaches. Classification: High Positive ≥90% · Moderate Positive 80–89% · Neutral 70–79% · Moderate Negative 60–69% · High Negative <60%.`;
-
   document.getElementById('mentorModalOverlay').classList.add('open');
-
-  requestAnimationFrame(()=>{
-    setTimeout(()=>{
-      document.querySelectorAll('.mm-kpi-bar-fill').forEach(bar=>{
-        bar.style.transition='width 0.9s cubic-bezier(.22,1,.36,1)';
-        bar.style.width=bar.getAttribute('data-w')+'%';
-      });
-    },80);
-  });
+  requestAnimationFrame(()=>{setTimeout(()=>{document.querySelectorAll('.mm-kpi-bar-fill').forEach(bar=>{bar.style.transition='width 0.9s cubic-bezier(.22,1,.36,1)';bar.style.width=bar.getAttribute('data-w')+'%';});},80);});
 }
-
 function closeMentorModal(){document.getElementById('mentorModalOverlay').classList.remove('open');}
 
 /* ═══════════════════════════════════════════
@@ -2181,9 +2000,7 @@ function landingFilterRender(){
     const hc=landingHitColor(r.hit);
     const hitCell=`<div style="display:flex;align-items:center;gap:8px;justify-content:center;"><div style="flex:1;max-width:80px;height:6px;background:var(--bg2);border-radius:6px;overflow:hidden;"><div style="width:${hitW}%;height:100%;background:${hc};border-radius:6px;"></div></div><span style="font-size:12px;font-weight:500;color:${hc};min-width:44px;text-align:right;">${r.hit!==null?r.hit.toFixed(1)+'%':'—'}</span></div>`;
     const collegeIdx=COLLEGES.findIndex(c=>c.name===r.college);
-    const viewBtn=collegeIdx>=0
-      ?`<button onclick="selectCollege(${collegeIdx})" style="padding:5px 14px;background:var(--gold-dark);color:#fde9a0;border:none;border-radius:20px;font-family:var(--font-body);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#7a4f00'" onmouseout="this.style.background='var(--gold-dark)'">View →</button>`
-      :`<span style="font-size:11px;color:var(--ink4);">—</span>`;
+    const viewBtn=collegeIdx>=0?`<button onclick="selectCollege(${collegeIdx})" style="padding:5px 14px;background:var(--gold-dark);color:#fde9a0;border:none;border-radius:20px;font-family:var(--font-body);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#7a4f00'" onmouseout="this.style.background='var(--gold-dark)'">View →</button>`:`<span style="font-size:11px;color:var(--ink4);">—</span>`;
     return`<tr><td style="text-align:center;">${rankBadge}</td><td style="font-size:13px;font-weight:500;color:#7a4f00;">${r.college}</td><td style="text-align:center;">${ratingCell}</td><td style="text-align:center;font-family:var(--font-display);font-size:17px;color:${landingNpsColor(r.nps)};">${npsDisplay}</td><td>${hitCell}</td><td style="text-align:center;">${viewBtn}</td></tr>`;
   }).join('');
 }
@@ -2192,7 +2009,6 @@ function landingFilterRender(){
    DOWNLOAD
 ═══════════════════════════════════════════ */
 function statusBadgeInline(r){if(r>=4.3)return'<span style="background:#fde9a0;color:#5c3600;border:1px solid #e6b84a;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Excellent</span>';if(r>=4.0)return'<span style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Good</span>';if(r>=3.5)return'<span style="background:#fef3c7;color:#78350f;border:1px solid #fcd34d;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Average</span>';return'<span style="background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:20px;font-size:11px;padding:2px 9px;font-weight:500">Needs work</span>';}
-
 function downloadReport(){
   if(currentMode==='overview'){
     if(!landingData.length){alert('No data to download.');return;}
