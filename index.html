@@ -653,8 +653,6 @@ tbody tr{transition:background 0.12s;}
       </div>
       <div class="nps-index-right">
         <div class="nps-stat-block"><div class="nps-stat-val" id="npsTotalBig">—</div><div class="nps-stat-lbl">Total Responses</div></div>
-        <div class="nps-stat-block"><div class="nps-stat-val" id="npsAvgBig">—</div><div class="nps-stat-lbl">Avg Score</div></div>
-        <div class="nps-stat-block"><div class="nps-stat-val" id="npsMedianBig">—</div><div class="nps-stat-lbl">Median</div></div>
       </div>
     </div>
 
@@ -837,6 +835,7 @@ const DEDICATED_TREND_SHEETS={
 const FIXED_CYCLES=['Sep 2025','Oct 2025','Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026','Apr 2026'];
 const MONTH_ALIAS_MAP={
   'sep 2025':'Sep 2025','september 2025':'Sep 2025','sep-2025':'Sep 2025','sep':'Sep 2025',
+  'sept 2025':'Sep 2025','sept-2025':'Sep 2025','sept':'Sep 2025',   // ← ADD THIS LINE
   'oct 2025':'Oct 2025','october 2025':'Oct 2025','oct-2025':'Oct 2025','oct':'Oct 2025',
   'nov 2025':'Nov 2025','november 2025':'Nov 2025','nov-2025':'Nov 2025','nov':'Nov 2025',
   'dec 2025':'Dec 2025','december 2025':'Dec 2025','dec-2025':'Dec 2025','dec':'Dec 2025',
@@ -1173,8 +1172,6 @@ function renderNPSPanel(){
   if(npsIndex!==null)animateCounter(idxEl,npsIndex,1400,'');else idxEl.textContent='—';
   document.getElementById('npsIndexDesc').textContent=total>0?getNpsLabel(npsIndex):'No NPS data available in sheet';
   document.getElementById('npsTotalBig').textContent=total>0?total:'—';
-  document.getElementById('npsAvgBig').textContent=total>0?npsAvg.toFixed(1):'—';
-  document.getElementById('npsMedianBig').textContent=total>0?median.toFixed(1):'—';
   document.getElementById('npsP_count').textContent=total>0?promoters:'—';document.getElementById('npsN_count').textContent=total>0?passives:'—';document.getElementById('npsD_count').textContent=total>0?detractors:'—';
   document.getElementById('npsP_pct').textContent=total>0?`${promoPct}% of respondents`:'—';document.getElementById('npsN_pct').textContent=total>0?`${passPct}% of respondents`:'—';document.getElementById('npsD_pct').textContent=total>0?`${detrPct}% of respondents`:'—';
   renderNPSFollowupYesNo();
