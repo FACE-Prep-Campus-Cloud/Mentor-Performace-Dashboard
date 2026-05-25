@@ -931,7 +931,7 @@ function buildDropdown(){
   const dd=document.getElementById('collegeDropdown');
   const ovItem=document.createElement('div');ovItem.className='college-dropdown-item overview-item active';ovItem.id='dditem-overview';ovItem.innerHTML='<span class="item-dot"></span> ⊞ College Overview (All)';ovItem.onclick=()=>selectOverview();dd.appendChild(ovItem);
   const sep=document.createElement('div');sep.style.cssText='padding:6px 16px 4px;font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink4);border-bottom:1px solid var(--border);';sep.textContent='Individual Colleges';dd.appendChild(sep);
-  COLLEGES.forEach((c,i)=>{const hasTrend=!!DEDICATED_TREND_SHEETS[c.name];const el=document.createElement('div');el.className='college-dropdown-item'+(hasTrend?' has-trend':'');el.id=`dditem-${i}`;el.innerHTML=`<span class="item-dot"></span>${c.name}${hasTrend?' <span style="font-size:9px;color:#065f46;font-weight:600;margin-left:4px;">●LIVE</span>':''}`;el.onclick=()=>selectCollege(i);dd.appendChild(el);});
+  COLLEGES.forEach((c,i)=>{const hasTrend=!!DEDICATED_TREND_SHEETS[c.name];const el=document.createElement('div');el.className='college-dropdown-item'+(hasTrend?' has-trend':'');el.id=`dditem-${i}`;el.innerHTML=`<span class="item-dot"></span>${c.name}`;el.onclick=()=>selectCollege(i);dd.appendChild(el);});
 }
 function toggleDropdown(){const dd=document.getElementById('collegeDropdown'),btn=document.getElementById('collegeSelectBtn');const isOpen=dd.classList.contains('open');dd.classList.toggle('open',!isOpen);btn.classList.toggle('open',!isOpen);if(!isOpen)document.addEventListener('click',closeDropdownOutside,{once:true,capture:true});}
 function closeDropdownOutside(e){if(!document.getElementById('collegeDropdownWrap').contains(e.target)){document.getElementById('collegeDropdown').classList.remove('open');document.getElementById('collegeSelectBtn').classList.remove('open');}}
@@ -1380,7 +1380,7 @@ function getTrendDateRange(){
 function renderTrendPanel(){
   const{cycles,hasCycleCol,hasDedicatedSheet,cycleStats}=TREND_DATA;const collegeName=currentCollege?currentCollege.name:'';const hasConfig=!!DEDICATED_TREND_SHEETS[collegeName];
   const srcIndicator=document.getElementById('trendSourceIndicator');
-  if(hasDedicatedSheet){srcIndicator.style.display='inline-flex';srcIndicator.innerHTML=`<span class="trend-source-badge">● Live Sheet Data</span>`;document.getElementById('trendHeroSub').textContent=`Live trend data from dedicated sheet · ${cycles.length} months tracked`;}
+  if(hasDedicatedSheet){srcIndicator.style.display='none';srcIndicator.innerHTML='';document.getElementById('trendHeroSub').textContent=`Live trend data from dedicated sheet · ${cycles.length} months tracked`;}
   else if(hasConfig){srcIndicator.style.display='inline-flex';srcIndicator.innerHTML=`<span class="trend-source-badge simulated">Sheet load failed — showing simulated</span>`;document.getElementById('trendHeroSub').textContent=`Could not load dedicated trend sheet — showing simulated preview data`;}
   else if(hasCycleCol){srcIndicator.style.display='none';document.getElementById('trendHeroSub').textContent=`Tracking ${cycles.length} months with real cycle data from your sheet`;}
 // REPLACE WITH:
