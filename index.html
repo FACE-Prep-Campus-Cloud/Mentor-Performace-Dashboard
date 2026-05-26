@@ -154,7 +154,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-siz
 .dept-kpi-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--gold-mid);border-radius:var(--radius-sm);padding:14px 16px;text-align:center;transition:box-shadow 0.2s,transform 0.2s;}
 .dept-kpi-card:hover{box-shadow:var(--shadow-sm);transform:translateY(-1px);}
 .dept-kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:4px;}
-.dept-kpi-val{font-family:var(--font-display);font-size:26px;color:var(--gold-dark);line-height:1.1;}
+.dept-kpi-val{font-family:var(--font-display);font-size:28px;color:var(--gold-dark);line-height:1.1;}
 .dept-kpi-sub{font-size:10px;color:var(--ink4);margin-top:3px;}
 .dept-mentor-bars{margin-top:4px;}
 .dept-mentor-bar-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:10px;}
@@ -1121,7 +1121,7 @@ function renderDeptStatsPanel(dept){
         <div class="dept-kpi-card" style="border-top-color:var(--gold-mid);"><div class="dept-kpi-label">Dept Avg Rating</div><div class="dept-kpi-val">${deptAvgRating.toFixed(2)}</div><div class="dept-kpi-sub">dept responses only</div></div>
         <div class="dept-kpi-card" style="border-top-color:var(--gold-mid);"><div class="dept-kpi-label">Dept Responses</div><div class="dept-kpi-val" style="color:var(--gold-dark);">${deptStudentResponses}</div><div class="dept-kpi-sub">students responded</div></div>
         <div class="dept-kpi-card" style="border-top-color:#c48a00;"><div class="dept-kpi-label">Mentors</div><div class="dept-kpi-val">${deptMentorCount}</div><div class="dept-kpi-sub">${deptSubjects.size} subjects</div></div>
-        <div class="dept-kpi-card" style="border-top-color:#f5c842;"><div class="dept-kpi-label">Top in Dept</div><div class="dept-kpi-val" style="font-size:14px;color:var(--gold-dark);">${topMentor.name.length>14?topMentor.name.slice(0,13)+'…':topMentor.name}</div><div class="dept-kpi-sub">${topMentor._deptRating.toFixed(2)} dept avg</div></div>
+        <div class="dept-kpi-card" style="border-top-color:#f5c842;"><div class="dept-kpi-label">Top in Dept</div><div class="dept-kpi-val" style="color:var(--gold-dark);">${topMentor.name.length>14?topMentor.name.slice(0,13)+'…':topMentor.name}</div><div class="dept-kpi-sub">${topMentor._deptRating.toFixed(2)} dept avg</div></div>
       </div>
       <div>
         <div class="dept-mentor-bar-title">Qualitative Feedback Breakdown — ${dept} Only</div>
