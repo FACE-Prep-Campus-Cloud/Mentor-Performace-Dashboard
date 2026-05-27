@@ -1141,8 +1141,26 @@ function renderDeptStatsPanel(dept){
 /* ═══════════════════════════════════════════
    RENDER ALL
 ═══════════════════════════════════════════ */
-function calcDeptBayesian(mentor,dept){const deptMentors=MENTORS.filter(m=>m.depts.some(d=>d===dept));let deptTotalWeightedRating=0,deptTotalResponses=0;deptMentors.forEach(m=>{const rs=m.deptRatings[dept];if(rs&&rs.length){deptTotalWeightedRating+=rs.reduce((a,b)=>a+b,0);deptTotalResponses+=rs.length;}});const deptGlobalMean=deptTotalResponses>0?deptTotalWeightedRating/deptTotalResponses:0;const mentorDeptRs=mentor.deptRatings[dept]||[];const mentorDeptResponses=mentorDeptRs.length;const mentorDeptAvg=mentorDeptResponses>0?mentorDeptRs.reduce((a,b)=>a+b,0)/mentorDeptResponses:deptGlobalMean;if(deptTotalResponses===0||mentorDeptResponses===0)return mentorDeptAvg;return(deptGlobalMean*deptTotalResponses+mentorDeptAvg*mentorDeptResponses)/(deptTotalResponses+mentorDeptResponses);}
-
+function calcDeptBayesian(mentor,dept){
+  const deptMentors=MENTORS.filter(m=>m.depts.some(d=>d===dept));
+  let deptTotalWeightedRating=0,deptTotalResponses=0,deptMentorCount=0;
+  deptMentors.forEach(m=>{
+    const rs=m.deptRatings[dept];
+    if(rs&&rs.length){
+      deptTotalWeightedRating+=rs.reduce((a,b)=>a+b,0);
+      deptTotalResponses+=rs.length;
+      deptMentorCount++;
+    }
+  });
+  const deptGlobalMean=deptTotalResponses>0?deptTotalWeightedRating/deptTotalResponses:0;
+  // C = average responses per mentor (correct Bayesian threshold)
+  const C=deptMentorCount>0?deptTotalResponses/deptMentorCount:0;
+  const mentorDeptRs=mentor.deptRatings[dept]||[];
+  const mentorDeptResponses=mentorDeptRs.length;
+  const mentorDeptAvg=mentorDeptResponses>0?mentorDeptRs.reduce((a,b)=>a+b,0)/mentorDeptResponses:deptGlobalMean;
+  if(C===0||mentorDeptResponses===0)return mentorDeptAvg;
+  return(deptGlobalMean*C+mentorDeptAvg*mentorDeptResponses)/(C+mentorDeptResponses);
+}
 function renderAllData(){
   renderMentorTable();renderNPSSummary();renderNPSPanel();renderTrendPanel();renderDeptStatsPanel(currentDeptFilter);
   if(!chartInstances._summaryInit){initSummaryCharts();chartInstances._summaryInit=true;}else updateSummaryCharts();
