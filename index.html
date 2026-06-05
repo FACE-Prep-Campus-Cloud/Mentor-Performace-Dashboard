@@ -841,7 +841,7 @@ const DEDICATED_TREND_SHEETS={
 const FIXED_CYCLES=['Sep 2025','Oct 2025','Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026','Apr 2026'];
 const MONTH_ALIAS_MAP={
   'sep 2025':'Sep 2025','september 2025':'Sep 2025','sep-2025':'Sep 2025','sep':'Sep 2025',
-  'sept 2025':'Sep 2025','sept-2025':'Sep 2025','sept':'Sep 2025',   // ← ADD THIS LINE
+  'sept 2025':'Sep 2025','sept-2025':'Sep 2025','sept':'Sep 2025',
   'oct 2025':'Oct 2025','october 2025':'Oct 2025','oct-2025':'Oct 2025','oct':'Oct 2025',
   'nov 2025':'Nov 2025','november 2025':'Nov 2025','nov-2025':'Nov 2025','nov':'Nov 2025',
   'dec 2025':'Dec 2025','december 2025':'Dec 2025','dec-2025':'Dec 2025','dec':'Dec 2025',
@@ -949,7 +949,7 @@ function showDetailPanel(id,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(el)el.classList.add('active');
   currentDetailPanel=id;
-const meta={summary:['Performance Analytics','Overview'],mentors:['Mentor Analytics','Performance'],nps:['NPS Analytics','NPS Score Distribution'],trends:['','']};
+  const meta={summary:['Performance Analytics','Overview'],mentors:['Mentor Analytics','Performance'],nps:['NPS Analytics','NPS Score Distribution'],trends:['','']};
   document.getElementById('pageEyebrow').textContent=meta[id][0];
   document.getElementById('pageTitle').textContent=meta[id][1];
   document.getElementById('pageSub').textContent=currentCollege?currentCollege.name:'—';
@@ -1044,9 +1044,28 @@ function processSheetData(rows){
   const total=npsScores.length;const promoters=npsScores.filter(s=>s>=9).length;const passives=npsScores.filter(s=>s>=7&&s<=8).length;const detractors=npsScores.filter(s=>s<=6).length;const npsIndex=total>0?Math.round((promoters/total-detractors/total)*100):null;const avg=total>0?npsScores.reduce((a,b)=>a+b,0)/total:0;const sorted=[...npsScores].sort((a,b)=>a-b);const median=total>0?(total%2===0?(sorted[total/2-1]+sorted[total/2])/2:sorted[Math.floor(total/2)]):0;const scoreFreq={};for(let i=1;i<=10;i++)scoreFreq[i]=0;npsScores.forEach(s=>{if(scoreFreq[s]!==undefined)scoreFreq[s]++;});
   NPS_DATA={scores:npsScores,promoters,passives,detractors,npsIndex,avg,median,total,scoreFreq};
   const allRatings=TABLE_DATA.map(r=>r.rating);const globalMean=allRatings.length>0?allRatings.reduce((a,b)=>a+b,0)/allRatings.length:0;const totalAllResponses=allRatings.length;
-  MENTORS=Object.values(mentorStats).map(m=>{const avg=m.ratings.reduce((a,b)=>a+b,0)/m.ratings.length;const totalResponses=m.ratings.length;const avgXResponses=avg*totalResponses;const mentorCount=Object.values(mentorStats).length||1;
-const C=totalAllResponses/mentorCount;
-const bayesianScore=((globalMean*C)+(avg*totalResponses))/(C+totalResponses);return{name:m.name,depts:Array.from(m.depts),rating:parseFloat(avg.toFixed(2)),avgXResponses:parseFloat(avgXResponses.toFixed(2)),bayesianRating:parseFloat(bayesianScore.toFixed(7)),subjects:m.subjects.size,responses:totalResponses,qs:m.qs,deptQs:m.deptQs,deptRatings:m.deptRatings};}).sort((a,b)=>b.bayesianRating-a.bayesianRating);
+  MENTORS=Object.values(mentorStats).map(m=>{
+    const avg=m.ratings.reduce((a,b)=>a+b,0)/m.ratings.length;
+    const totalResponses=m.ratings.length;
+    const avgXResponses=avg*totalResponses;
+    const mentorCount=Object.values(mentorStats).length||1;
+
+    // ─── BAYESIAN FIX: Response-confidence penalty ───────────────────────────
+    // Standard Bayesian (C = avg responses per mentor)
+    const avgResp = totalAllResponses / Math.max(mentorCount, 1);
+    const C = avgResp;
+    const rawBayes = ((globalMean * C) + (avg * totalResponses)) / (C + totalResponses);
+    // Penalize mentors who are BELOW the global mean AND have fewer responses
+    // than average. Mentors above the mean are never penalized (Math.max(...,0)).
+    // responseRatio is capped at 1.0 so high-response mentors get no penalty.
+    const responseRatio = Math.min(totalResponses / avgResp, 1.0);
+    const confidencePenalty = (1 - responseRatio) * Math.max(globalMean - avg, 0);
+    const bayesianScore = rawBayes - confidencePenalty;
+    // ────────────────────────────────────────────────────────────────────────
+
+    return{name:m.name,depts:Array.from(m.depts),rating:parseFloat(avg.toFixed(2)),avgXResponses:parseFloat(avgXResponses.toFixed(2)),bayesianRating:parseFloat(bayesianScore.toFixed(7)),subjects:m.subjects.size,responses:totalResponses,qs:m.qs,deptQs:m.deptQs,deptRatings:m.deptRatings};
+  }).sort((a,b)=>b.bayesianRating-a.bayesianRating);
+
   MENTORS.forEach((m,idx,arr)=>{if(idx===0){m.rank=1;}else if(m.bayesianRating===arr[idx-1].bayesianRating){m.rank=arr[idx-1].rank;}else{m.rank=idx+1;}m.percentile=MENTORS.length>1?Math.round((1-idx/(MENTORS.length-1))*100):100;});
   DEPT_LIST=Array.from(deptSet).sort();updateDeptFilters();
   const tot=TABLE_DATA.length;const avgR=tot>0?TABLE_DATA.reduce((s,r)=>s+r.rating,0)/tot:0;
@@ -1155,7 +1174,6 @@ function calcDeptBayesian(mentor,dept){
     }
   });
   const deptGlobalMean=deptTotalResponses>0?deptTotalWeightedRating/deptTotalResponses:0;
-  // C = average responses per mentor (correct Bayesian threshold)
   const C=deptMentorCount>0?deptTotalResponses/deptMentorCount:0;
   const mentorDeptRs=mentor.deptRatings[dept]||[];
   const mentorDeptResponses=mentorDeptRs.length;
@@ -1190,7 +1208,7 @@ function renderNPSSummary(){
 }
 
 /* ═══════════════════════════════════════════
-   NPS FULL PANEL  — FIX: npsAvgBig + npsMedianBig now exist in HTML
+   NPS FULL PANEL
 ═══════════════════════════════════════════ */
 function renderNPSPanel(){
   const{promoters,passives,detractors,npsIndex,avg:npsAvg,median,total}=NPS_DATA;
@@ -1388,8 +1406,7 @@ function renderTrendPanel(){
   if(hasDedicatedSheet){srcIndicator.style.display='none';srcIndicator.innerHTML='';document.getElementById('trendHeroSub').textContent=`Live trend data from dedicated sheet · ${cycles.length} months tracked`;}
   else if(hasConfig){srcIndicator.style.display='inline-flex';srcIndicator.innerHTML=`<span class="trend-source-badge simulated">Sheet load failed — showing simulated</span>`;document.getElementById('trendHeroSub').textContent=`Could not load dedicated trend sheet — showing simulated preview data`;}
   else if(hasCycleCol){srcIndicator.style.display='none';document.getElementById('trendHeroSub').textContent=`Tracking ${cycles.length} months with real cycle data from your sheet`;}
-// REPLACE WITH:
-else{srcIndicator.style.display='none';document.getElementById('trendHeroSub').textContent=`Preview mode — simulated trend for Sep 2025–Apr 2026.`;}
+  else{srcIndicator.style.display='none';document.getElementById('trendHeroSub').textContent=`Preview mode — simulated trend for Sep 2025–Apr 2026.`;}
   const _tdr=getTrendDateRange();
   const _eyebrow=document.getElementById('trendEyebrow');
   if(_eyebrow)_eyebrow.textContent=`Historical Analytics · ${_tdr}`;
@@ -1590,20 +1607,16 @@ async function downloadReport(){
       }
     }
 
-    // Hide all panels
     const allPanels=document.querySelectorAll('.panel');
     allPanels.forEach(p=>{p.style.display='none';p.classList.remove('active');});
 
     let isFirstPage=true;
 
     if(currentMode==='overview'){
-      // === PAGE: Landing overview ===
       const panel=document.getElementById('panel-landing');
       const canvas=await captureElement(panel);
       await addCanvasToPdf(canvas,true);
-
     } else {
-      // === PAGE 1: Summary (metrics + charts) — force single page ===
       const summaryPanel=document.getElementById('panel-summary');
       summaryPanel.style.display='flex';
       summaryPanel.style.opacity='1';
@@ -1620,23 +1633,17 @@ async function downloadReport(){
       pdf.addImage(summaryCanvas.toDataURL('image/jpeg',0.92),'JPEG',margin,headerH+2,imgW,summaryImgH);
       isFirstPage=false;
 
-      // === PAGE 2: Mentor Performance ===
       const mentorPanel=document.getElementById('panel-mentors');
       const mentorCanvas=await captureElement(mentorPanel);
       mentorPanel.style.display='none';
       await addCanvasToPdf(mentorCanvas,false);
 
-      // === PAGE 3: NPS — banner + hero cards + followup questions (all in one page) ===
-      // Render nps panel but only capture up to studentVoiceCard
       const npsPanel=document.getElementById('panel-nps');
       npsPanel.style.display='flex';
       npsPanel.style.opacity='1';
-
-      // Temporarily hide student voice card
       const svCard=document.getElementById('studentVoiceCard');
       const svPrev=svCard.style.display;
       svCard.style.display='none';
-
       await new Promise(r=>setTimeout(r,400));
       const npsTopCanvas=await html2canvas(npsPanel,{
         scale:1.2,useCORS:true,allowTaint:true,
@@ -1650,14 +1657,12 @@ async function downloadReport(){
       const npsImgH=Math.min((npsTopCanvas.height*imgW)/npsTopCanvas.width, usableH);
       pdf.addImage(npsTopCanvas.toDataURL('image/jpeg',0.92),'JPEG',margin,headerH+2,imgW,npsImgH);
 
-      // === PAGE 4: Trend Over Time ===
       const trendPanel=document.getElementById('panel-trends');
       const trendCanvas=await captureElement(trendPanel);
       trendPanel.style.display='none';
       await addCanvasToPdf(trendCanvas,false);
     }
 
-    // Restore active panel
     allPanels.forEach(p=>p.style.display='none');
     const activePanelId=currentMode==='overview'?'panel-landing':'panel-'+currentDetailPanel;
     const ap=document.getElementById(activePanelId);
@@ -1677,7 +1682,9 @@ async function downloadReport(){
     btn.disabled=false;
     btn.innerHTML='↓ <span>Download Report</span>';
   }
-}/* ═══════════════════════════════════════════
+}
+
+/* ═══════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded',()=>{buildDropdown();document.getElementById('loadingOverlay').classList.add('hidden');landingFetchData();});
